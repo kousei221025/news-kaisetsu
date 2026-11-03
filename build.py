@@ -40,6 +40,7 @@ SITE_PATH = "/news-kaisetsu/"
 SITE_NAME = "3分ニュース解説"
 TAGLINE = "世界と経済のニュースを、会社員目線で3分で"
 AUTHOR = "ミナト"
+GOOGLE_VERIFICATION = "NpGkUOpVZOv7Xnzv4UJs-QAGNuditPmdn-a93lYZJIo"  # Google Search Console の所有権確認
 EDGE = Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
 CATS = {
@@ -228,6 +229,7 @@ def page(rel, title, description, body, canonical, active=None, og_type="website
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#1b4f8c">
+<meta name="google-site-verification" content="{GOOGLE_VERIFICATION}">
 <link rel="icon" href="{FAVICON}">
 <link rel="apple-touch-icon" href="{rel}apple-touch-icon.png">
 <link rel="alternate" type="application/rss+xml" title="{SITE_NAME}" href="{SITE_URL}feed.xml">
