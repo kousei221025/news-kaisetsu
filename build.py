@@ -397,7 +397,7 @@ def rank_list(arts, rel):
     )
 
 
-def sidebar(arts, rel, toc_html="", exclude=()):
+def sidebar(arts, rel, toc_html="", exclude=(), home=False):
     news = [a for a in arts if a["category"] != "basics" and a["slug"] not in exclude]
     basics = [a for a in arts if a["category"] == "basics" and a["slug"] not in exclude]
     topics = "".join(
@@ -405,6 +405,21 @@ def sidebar(arts, rel, toc_html="", exclude=()):
         for k, v in TOPICS.items() if any(k in topics_of(a) for a in arts))
     basics_li = "".join(f'<li><a href="{rel}articles/{b["slug"]}.html">{e(b["title"])}</a></li>' for b in basics[:6])
     toc_box = f'<section class="side-box side-toc">{toc_html}</section>' if toc_html else ""
+    if home:
+        genres = "".join(
+            f'<li><a href="{rel}category/{k}.html"><b>{v}</b><span>{sum(1 for a in arts if a["category"] == k)}本</span></a></li>'
+            for k, v in CATS.items())
+        return f"""<aside class="sidebar" aria-label="サイドメニュー">
+  <section class="side-box guide"><h2 class="side-title">このサイトの読み方</h2>
+    <ol class="steps"><li><b>3行まとめ</b>で、何が起きたかを10秒でつかむ</li>
+    <li><b>生活への影響</b>（オレンジの枠）で、自分のお金や仕事との関係を知る</li>
+    <li>点線の言葉をタップすると、<b>基礎解説</b>で用語が分かる</li></ol></section>
+  <section class="side-box"><h2 class="side-title">注目のテーマ</h2><div class="chips-wrap">{topics}</div></section>
+  <section class="side-box"><h2 class="side-title">ジャンルから探す</h2><ul class="genre-list">{genres}</ul></section>
+  <section class="side-box about-box"><h2 class="side-title">このサイトについて</h2>
+    <p>ニュースを見ても「で、自分の生活にどう関係あるの？」と思う会社員のために、世界と経済のニュースを3分で読めるように解説しています。</p>
+    <a class="more" href="{rel}about.html">運営者・記事の作り方 ›</a></section>
+</aside>"""
     return f"""<aside class="sidebar" aria-label="サイドメニュー">
   <section class="side-box"><h2 class="side-title">今日のポイント</h2><ol class="rank">{rank_list(news[:5], rel)}</ol></section>
   <section class="side-box"><h2 class="side-title">注目のテーマ</h2><div class="chips-wrap">{topics}</div></section>
@@ -573,7 +588,7 @@ def build_index(arts):
   <section class="basics-band"><h2 class="section-title">基礎から学ぶ<small>ニュースがもっと分かる</small><a class="more" href="category/basics.html">すべて見る ›</a></h2>
     {cards(basics[:8], "", "grid-4 compact")}</section>
 </div>
-{sidebar(arts, "")}
+{sidebar(arts, "", home=True)}
 </div>"""
     ld = {"@context": "https://schema.org", "@type": "WebSite", "name": SITE_NAME, "url": SITE_URL,
           "potentialAction": {"@type": "SearchAction", "target": SITE_URL + "search.html?q={q}",
