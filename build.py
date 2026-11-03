@@ -307,6 +307,7 @@ def page(rel, title, description, body, canonical, active=None, og_type="website
     <small>© 2026 {SITE_NAME}</small>
   </div>
 </footer>
+<script>(function(){{var n=Date.now();document.querySelectorAll('time[datetime]').forEach(function(t){{var d=new Date(t.getAttribute('datetime')+'T00:00:00+09:00');if(n-d<36*3600*1000&&!t.closest('.post-meta')){{var s=document.createElement('span');s.className='new';s.textContent='NEW';t.parentNode.insertBefore(s,t)}}}});}})();</script>
 <script>(function(){{var d=new Date(),w="日月火水木金土"[d.getDay()],el=document.querySelector('[data-today]');if(el)el.textContent=(d.getMonth()+1)+"月"+d.getDate()+"日（"+w+"）";}})();</script>
 {extra_body}</body>
 </html>
@@ -364,7 +365,7 @@ def cards(arts, rel, cls="grid-3"):
 def rank_list(arts, rel):
     return "".join(
         f'<li><a href="{rel}articles/{a["slug"]}.html"><span class="no">{i}</span>'
-        f'<span class="rt">{e(a["title"])}</span></a></li>' for i, a in enumerate(arts, 1)
+        f'<span class="rt">{e(a["title"])}</span>{thumb(a, rel, "rank-thumb")}</a></li>' for i, a in enumerate(arts, 1)
     )
 
 
@@ -480,6 +481,10 @@ def build_article(a, all_arts, by_slug, backlinks):
   <div class="post-meta">{tag(a["category"])} {meta_line(a)}</div>
   <h1>{e(a["title"])}</h1>
   {updated}
+  <div class="post-tools">
+    <div class="share-mini"><a class="x" href="https://twitter.com/intent/tweet?url={quote(url)}&text={quote(share_text)}" target="_blank" rel="noopener" aria-label="Xでポスト">X</a><a class="line" href="https://social-plugins.line.me/lineit/share?url={quote(url)}" target="_blank" rel="noopener" aria-label="LINEで送る">LINE</a><button class="copy" type="button" data-url="{url}">URLをコピー</button></div>
+    <div class="font-size" role="group" aria-label="文字の大きさ"><span>文字</span><button type="button" data-fs="s">小</button><button type="button" data-fs="m">中</button><button type="button" data-fs="l">大</button></div>
+  </div>
   {thumb(a, rel, "post-thumb", lazy=False)}
   <div class="summary"><b>3行まとめ</b><ul>{summary}</ul></div>
   <nav class="toc" aria-label="目次"><b>目次</b><ol>{toc}</ol></nav>
@@ -500,6 +505,12 @@ def build_article(a, all_arts, by_slug, backlinks):
 document.querySelectorAll('.copy').forEach(function(b){b.addEventListener('click',function(){
   navigator.clipboard&&navigator.clipboard.writeText(b.dataset.url).then(function(){b.textContent='コピーしました';setTimeout(function(){b.textContent='URLをコピー'},2000)});
 })});
+(function(){
+  var post=document.querySelector('article.post'),btns=document.querySelectorAll('[data-fs]'),fs='m';
+  try{fs=localStorage.getItem('fs')||'m'}catch(e){}
+  function set(v){post.dataset.fs=v;btns.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.fs===v)});try{localStorage.setItem('fs',v)}catch(e){}}
+  btns.forEach(function(b){b.addEventListener('click',function(){set(b.dataset.fs)})});set(fs);
+})();
 </script>
 """
     out = ROOT / "articles" / f"{a['slug']}.html"
