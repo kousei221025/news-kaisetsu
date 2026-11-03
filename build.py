@@ -13,6 +13,7 @@
   "rank": 5,                      # 同じ日付の中で大きいほど上に出る（省略可）
   "terms": ["basics-yen"],        # 用語メモに出す基礎解説記事のスラッグ（無ければ省略）
   "eyecatch": "円安",             # サムネイル画像に大きく出す言葉（短く。省略するとジャンル名）
+  "impact": "輸入品が値上がりしやすい",  # ニュースだけ：一覧に出す「生活への影響」1行（記事の内容から）
   "keywords": ["円安", "円高"],   # 基礎解説だけ：他の記事の本文でこの言葉が出たら自動でリンクする
   "sources": [["出典名", "URL"]]
 }
@@ -370,6 +371,10 @@ def lead_text(a):
     return a["summary"][0] if a.get("summary") else a["description"]
 
 
+def impact(a):
+    return f'<p class="impact"><b>くらしへの影響</b>{e(a["impact"])}</p>' if a.get("impact") else ""
+
+
 def list_items(arts, rel):
     """横長の一覧（小さいサムネイル付き）。"""
     return "".join(
@@ -384,7 +389,7 @@ def cards(arts, rel, cls="grid-3"):
     items = "".join(
         f'<a class="card" href="{rel}articles/{a["slug"]}.html">{thumb(a, rel)}'
         f'<div class="card-body">{tag(a["category"])} {short_meta(a)}<h3>{e(a["title"])}</h3>'
-        f'<p>{e(lead_text(a))}</p></div></a>'
+        f'{impact(a) or "<p>" + e(lead_text(a)) + "</p>"}</div></a>'
         for a in arts
     )
     return f'<div class="cards {cls}">{items}</div>'
@@ -572,7 +577,7 @@ def build_index(arts):
     lead_sum = "".join(f"<li>{e(s)}</li>" for s in lead.get("summary", []))
     side_news = "".join(
         f'<li><a href="articles/{a["slug"]}.html">{thumb(a, "", "mini-thumb")}<div>{tag(a["category"])}'
-        f'<h3>{e(a["title"])}</h3><p class="meta">{e(lead_text(a))}</p></div></a></li>' for a in news[1:4])
+        f'<h3>{e(a["title"])}</h3>{impact(a)}</div></a></li>' for a in news[1:4])
     body = f"""<section class="strip"><p><b>むずかしいニュースを、会社員目線で3分で。</b><span>世界情勢・経済のニュースが「自分の生活にどう関係するか」まで解説します。</span></p><p class="strip-date">{jp_date(latest)} 更新</p></section>
 <div class="layout">
 <div class="main-col">
@@ -580,7 +585,7 @@ def build_index(arts):
     <a class="lead-main" href="articles/{lead["slug"]}.html">
       {thumb(lead, "", "lead-thumb", lazy=False)}
       <div class="lead-body"><span class="label">今日の1本目</span>{tag(lead["category"])} {meta_line(lead)}
-        <h2>{e(lead["title"])}</h2><ul>{lead_sum}</ul></div>
+        <h2>{e(lead["title"])}</h2><ul>{lead_sum}</ul>{impact(lead)}</div>
     </a>
     <ul class="lead-side">{side_news}</ul>
   </section>
