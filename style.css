@@ -403,3 +403,18 @@ footer.site li { margin-bottom: 6px; }
   .list a { grid-template-columns: 112px minmax(0, 1fr); gap: 12px; padding: 12px 14px; }
   .list h3 { font-size: 14px; }
 }
+
+/* ===== 印刷・PDF保存 ===== */
+@media print {
+  :root { --bg: #fff; --card: #fff; --shadow: none; }
+  header.site, nav.cats, .sidebar, .tabbar, .to-top, .progress, .post-tools, .share, .topics, .crumbs, footer.site, .skip, .post-thumb, main section:has(.cards) { display: none !important; }
+  .layout { display: block; }
+  article.post { padding: 0; box-shadow: none; font-size: 11pt; line-height: 1.8; }
+  article.post h1 { font-size: 18pt; }
+  article.post h2 { font-size: 13pt; break-after: avoid; }
+  .life, .summary, .box { break-inside: avoid; }
+  .post .toc { display: none; }
+  a { color: inherit; text-decoration: none; }
+  .sources a::after { content: "（" attr(href) "）"; font-size: 8pt; word-break: break-all; }
+  body::after { content: "3分ニュース解説  https://kousei221025.github.io/news-kaisetsu/"; display: block; margin-top: 16pt; font-size: 8pt; color: #666; }
+}
