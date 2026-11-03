@@ -263,8 +263,12 @@ def make_thumbs(arts):
 
 
 def thumb(a, rel, cls="thumb", lazy=True):
-    return (f'<img class="{cls}" src="{rel}thumb/{a["slug"]}.png" alt="" width="800" height="450"'
-            f'{" loading=\"lazy\"" if lazy else ""} decoding="async">')
+    """サムネイル。画像ファイルを使わず CSS で描く（表示が速い）。"""
+    word = a.get("eyecatch") or CATS[a["category"]]
+    size = "w1" if len(word) <= 3 else "w2" if len(word) <= 4 else "w3" if len(word) <= 5 else "w4"
+    return (f'<span class="{cls} art c-{a["category"]} {size}" role="img" aria-label="{e(word)}">'
+            f'<span class="art-cat">{CATS[a["category"]]}</span><span class="art-word">{e(word)}</span>'
+            f'<span class="art-logo">3分ニュース解説</span></span>')
 
 
 def og_url(slug):
@@ -810,7 +814,6 @@ def main():
                 print(f"注意：{a['slug']} の用語メモ {t} はまだ記事がありません（表示されません）")
     (ROOT / "articles").mkdir(exist_ok=True)
     make_og_images(arts)
-    make_thumbs(arts)
     make_icons()
     backlinks = {}
     for a in arts:  # どの記事がどの基礎解説を使っているか（新しい順）

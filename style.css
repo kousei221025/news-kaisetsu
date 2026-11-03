@@ -89,6 +89,28 @@ nav.cats .sep { width: 1px; height: 18px; background: rgba(255,255,255,.25); mar
 .skip:focus { left: 8px; }
 :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
 
+/* ===== CSSで描くサムネイル ===== */
+.art { position: relative; display: block; overflow: hidden; aspect-ratio: 16 / 9; container-type: inline-size; color: #fff; background: linear-gradient(135deg, var(--c1), var(--c2)); }
+.art::before, .art::after { content: ""; position: absolute; border-radius: 50%; background: rgba(255,255,255,.09); }
+.art::before { width: 65cqi; height: 65cqi; right: -15cqi; top: -17cqi; }
+.art::after { width: 47cqi; height: 47cqi; right: 15cqi; bottom: -27cqi; background: rgba(255,255,255,.06); }
+.c-world { --c1: #1b4f8c; --c2: #0d2c52; }
+.c-economy { --c1: #6b3590; --c2: #3b1a55; }
+.c-life { --c1: #b5560f; --c2: #7a3605; }
+.c-basics { --c1: #2e7d5b; --c2: #164a34; }
+.art-cat { position: absolute; left: 6cqi; top: 5cqi; font-size: 3cqi; font-weight: 700; padding: .2em 1em; border: max(1px, .25cqi) solid rgba(255,255,255,.7); border-radius: 999px; line-height: 1.4; }
+.art-word { position: absolute; left: 5.7cqi; top: 50%; transform: translateY(-46%); font-weight: 900; line-height: 1.1; letter-spacing: .02em; white-space: nowrap; text-shadow: 0 .5cqi 2.2cqi rgba(0,0,0,.18); z-index: 1; }
+.w1 .art-word { font-size: 18.5cqi; }
+.w2 .art-word { font-size: 15cqi; }
+.w3 .art-word { font-size: 12.5cqi; }
+.w4 .art-word { font-size: 10.5cqi; }
+.art-logo { position: absolute; left: 6cqi; bottom: 4.2cqi; font-size: 2.75cqi; font-weight: 700; opacity: .85; }
+.mini-thumb.art .art-cat, .rank-thumb.art .art-cat, .mini-thumb.art .art-logo, .rank-thumb.art .art-logo { display: none; }
+.post-thumb.art { aspect-ratio: 16 / 5; }
+.post-thumb.art .art-word { font-size: 9cqi; }
+.post-thumb.art .art-cat { font-size: 1.6cqi; }
+.post-thumb.art .art-logo { font-size: 1.5cqi; }
+
 /* ===== 2段組み ===== */
 .layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 40px; }
 .main-col { min-width: 0; }
