@@ -254,7 +254,7 @@ def page(rel, title, description, body, canonical, active=None, og_type="website
   <div class="wrap">
     <p class="foot-logo">3分<b>ニュース解説</b></p>
     <p class="foot-tag">{TAGLINE}</p>
-    <div class="links">{foot_cats}<a href="{rel}search.html">記事を検索</a><a href="{rel}about.html">このサイトについて・プライバシーポリシー</a><a href="{SITE_URL}feed.xml">RSS</a></div>
+    <div class="links">{foot_cats}<a href="{rel}search.html">記事を検索</a><a href="{rel}about.html">このサイトについて・プライバシーポリシー</a><a href="{rel}about.html#contact">お問い合わせ</a><a href="{SITE_URL}feed.xml">RSS</a></div>
     <small>© 2026 {SITE_NAME}</small>
   </div>
 </footer>
@@ -386,7 +386,7 @@ def build_article(a, all_arts, by_slug, backlinks):
   {terms_box}
   <div class="sources">
     <b>出典</b><ul>{srcs}</ul>
-    <p class="note-ai">この記事はAIの補助を受けて作成し、上記の出典で内容を確認しています。{caution}誤りに気づいた方は<a href="{rel}about.html">お問い合わせ</a>からお知らせください。</p>
+    <p class="note-ai">この記事はAIの補助を受けて作成し、上記の出典で内容を確認しています。{caution}誤りに気づいた方は<a href="{rel}about.html#contact">お問い合わせ</a>からお知らせください。</p>
   </div>
   {share}
   {('<div class="topics"><span>この記事のテーマ</span>' + topic_chips(topics_of(a), rel) + '</div>') if topics_of(a) else ''}
