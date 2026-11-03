@@ -29,9 +29,10 @@
 <header class="site">
   <div class="wrap bar">
     <a class="logo" href="index.html">3分<b>ニュース解説</b><small>世界と経済のニュースを、会社員目線で3分で</small></a>
-    <a class="search-btn" href="search.html" aria-label="記事を検索"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><span>検索</span></a>
+    <p class="today" data-today></p>
+    <a class="search-btn" href="search.html" aria-label="記事を検索"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><span>記事を検索</span></a>
   </div>
-  <nav class="cats" aria-label="ジャンル"><div class="wrap"><ul><li><a href="index.html">トップ</a></li><li><a href="category/world.html">世界情勢</a></li><li><a href="category/economy.html">経済</a></li><li><a href="category/life.html">くらし・お金</a></li><li><a href="category/basics.html">基礎解説</a></li></ul></div></nav>
+  <nav class="cats" aria-label="ジャンル"><div class="wrap"><ul><li><a href="index.html">トップ</a></li><li><a href="category/world.html">世界情勢</a></li><li><a href="category/economy.html">経済</a></li><li><a href="category/life.html">くらし・お金</a></li><li><a href="category/basics.html">基礎解説</a></li><li class="sep" aria-hidden="true"></li><li><a class="tp" href="topic/energy.html">#中東・エネルギー</a></li><li><a class="tp" href="topic/rates.html">#金利・円相場</a></li><li><a class="tp" href="topic/household.html">#税金・家計</a></li><li><a class="tp" href="topic/us.html">#アメリカ政治</a></li><li><a class="tp" href="topic/russia.html">#ロシア・ウクライナ</a></li></ul></div></nav>
 </header>
 <main class="wrap" id="main">
 <div class="narrow"><article class="post"><h1>このサイトについて</h1>
@@ -65,5 +66,6 @@
     <small>© 2026 3分ニュース解説</small>
   </div>
 </footer>
+<script>(function(){var d=new Date(),w="日月火水木金土"[d.getDay()],el=document.querySelector('[data-today]');if(el)el.textContent=(d.getMonth()+1)+"月"+d.getDate()+"日（"+w+"）";})();</script>
 </body>
 </html>
