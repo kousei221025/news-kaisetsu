@@ -54,6 +54,19 @@ CAT_INTRO = {
     "life": "税金、ガソリン代、電気代など、家計に直接関わるニュースを解説します。",
     "basics": "ニュースを読むための基礎知識。一度読んでおくと、毎日のニュースがぐっと分かりやすくなります。",
 }
+# テーマ：タイトル・説明・3行まとめにキーワードが入っている記事を自動で集める
+TOPICS = {
+    "energy": ("中東・エネルギー", "原油・ガソリン・電気代など、中東情勢とエネルギー価格の動き。",
+               ["原油", "ガソリン", "電気", "ホルムズ", "イラン", "中東"]),
+    "rates": ("金利・円相場", "日銀の金融政策、金利、円安・円高の動き。",
+              ["金利", "円安", "円高", "日銀", "利上げ", "ドル円", "158円"]),
+    "household": ("税金・家計", "年末調整や補助金など、手取りや家計に直接関わる話題。",
+                  ["年末調整", "税", "補助", "控除", "手取り"]),
+    "us": ("アメリカ政治", "中間選挙や議会など、アメリカの政治の動き。",
+           ["中間選挙", "上院", "下院"]),
+    "russia": ("ロシア・ウクライナ", "ロシアとウクライナの戦闘と和平交渉の動き。", ["ロシア", "ウクライナ"]),
+}
+
 CAT_COLOR = {"world": "#1b4f8c", "economy": "#7a3e9d", "life": "#a8500e", "basics": "#2e7d5b"}
 
 FAVICON = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E"
@@ -216,6 +229,7 @@ def page(rel, title, description, body, canonical, active=None, og_type="website
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#1b4f8c">
 <link rel="icon" href="{FAVICON}">
+<link rel="apple-touch-icon" href="{rel}apple-touch-icon.png">
 <link rel="alternate" type="application/rss+xml" title="{SITE_NAME}" href="{SITE_URL}feed.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -245,6 +259,15 @@ def page(rel, title, description, body, canonical, active=None, og_type="website
 {extra_body}</body>
 </html>
 """
+
+
+def topics_of(a):
+    text = a["title"] + a["description"] + "".join(a.get("summary", []))
+    return [k for k, (_, _, kws) in TOPICS.items() if any(w in text for w in kws)]
+
+
+def topic_chips(keys, rel):
+    return "".join(f'<a class="chip" href="{rel}topic/{k}.html">#{TOPICS[k][0]}</a>' for k in keys)
 
 
 def tag(cat):
@@ -324,7 +347,8 @@ def build_article(a, all_arts, by_slug):
         "dateModified": a.get("updated", a["date"]),
         "inLanguage": "ja",
         "author": {"@type": "Person", "name": AUTHOR, "url": SITE_URL + "about.html"},
-        "publisher": {"@type": "Organization", "name": SITE_NAME},
+        "publisher": {"@type": "Organization", "name": SITE_NAME,
+                      "logo": {"@type": "ImageObject", "url": SITE_URL + "icon-512.png"}},
         "mainEntityOfPage": url,
     }, {
         "@context": "https://schema.org",
@@ -355,6 +379,7 @@ def build_article(a, all_arts, by_slug):
     <p class="note-ai">この記事はAIの補助を受けて作成し、上記の出典で内容を確認しています。{caution}誤りに気づいた方は<a href="{rel}about.html">お問い合わせ</a>からお知らせください。</p>
   </div>
   {share}
+  {('<div class="topics"><span>この記事のテーマ</span>' + topic_chips(topics_of(a), rel) + '</div>') if topics_of(a) else ''}
 </article>
 {related_html}
 </div>"""
@@ -384,6 +409,10 @@ def build_index(arts):
         f'<a href="articles/{a["slug"]}.html">{tag("basics")}<h3>{e(a["title"])}</h3>'
         f'<p>{e(a["summary"][0] if a.get("summary") else "")}</p></a>' for a in basics[:8]
     )
+    topic_cards = "".join(
+        f'<a href="topic/{k}.html"><b>#{v[0]}</b><span>{sum(1 for a in arts if k in topics_of(a))}本</span></a>'
+        for k, v in TOPICS.items() if any(k in topics_of(a) for a in arts)
+    )
     cat_count = "".join(
         f'<a href="category/{k}.html"><b>{v}</b><span>{sum(1 for a in arts if a["category"] == k)}本</span></a>'
         for k, v in CATS.items()
@@ -396,6 +425,10 @@ def build_index(arts):
 <section>
   <h2 class="section-title">{md_date(latest)}のポイント<small>まずはこの3本</small></h2>
   <ol class="points">{points}</ol>
+</section>
+<section>
+  <h2 class="section-title">注目のテーマ</h2>
+  <div class="topic-row">{topic_cards}</div>
 </section>
 <section>
   <h2 class="section-title">基礎から学ぶ<small>ニュースがもっと分かる</small><a class="more" href="category/basics.html">すべて見る ›</a></h2>
@@ -429,6 +462,44 @@ def build_categories(arts):
         url = f"{SITE_URL}category/{key}.html"
         (ROOT / "category" / f"{key}.html").write_text(
             page("../", label, f"{label}の記事一覧。{CAT_INTRO[key]}", body, url, active=key), encoding="utf-8")
+
+
+# ---------- テーマ別 ----------
+def build_topics(arts):
+    (ROOT / "topic").mkdir(exist_ok=True)
+    for key, (label, intro, _) in TOPICS.items():
+        items = [a for a in arts if key in topics_of(a)]
+        news = [a for a in items if a["category"] != "basics"]
+        basics = [a for a in items if a["category"] == "basics"]
+        basics_html = (f'<h2 class="section-title">まず読みたい基礎解説</h2><ul class="list">{list_items(basics, "../")}</ul>'
+                       if basics else "")
+        body = (f'<section class="hero"><p class="hero-date">テーマ</p><h1>#{label}</h1><p>{intro}</p>'
+                f'<p class="count">{len(items)}本の記事</p></section>{basics_html}'
+                f'<h2 class="section-title">ニュース解説</h2><ul class="list">{list_items(news, "../")}</ul>')
+        url = f"{SITE_URL}topic/{key}.html"
+        (ROOT / "topic" / f"{key}.html").write_text(
+            page("../", f"#{label}", f"{label}に関する記事の一覧。{intro}", body, url), encoding="utf-8")
+
+
+# ---------- アイコン ----------
+ICON_HTML = """<!doctype html><html><head><meta charset="utf-8"><style>html,body{{margin:0;width:{s}px;height:{s}px;overflow:hidden}}
+body{{background:#1b4f8c;color:#fff;font-family:"Noto Sans JP","Yu Gothic",sans-serif;display:flex;align-items:center;justify-content:center;
+font-weight:900;font-size:{f}px}}</style></head><body>3</body></html>"""
+
+
+def make_icons():
+    if not EDGE.exists():
+        return
+    with tempfile.TemporaryDirectory() as tmp:
+        for name, s in [("apple-touch-icon.png", 180), ("icon-512.png", 512)]:
+            if (ROOT / name).exists():
+                continue
+            src = Path(tmp) / "icon.html"
+            src.write_text(ICON_HTML.format(s=s, f=int(s * .62)), encoding="utf-8")
+            subprocess.run([str(EDGE), "--headless=new", "--disable-gpu", "--hide-scrollbars", "--no-first-run",
+                            f"--user-data-dir={Path(tmp) / 'profile'}", f"--window-size={s},{s}",
+                            f"--screenshot={ROOT / name}", src.as_uri()], capture_output=True, timeout=60)
+            print(f"アイコンを作成：{name}")
 
 
 # ---------- 検索 ----------
@@ -526,6 +597,7 @@ def build_sitemap(arts):
     today = date.today().isoformat()
     urls = [(SITE_URL, today)]
     urls += [(f"{SITE_URL}category/{k}.html", today) for k in CATS]
+    urls += [(f"{SITE_URL}topic/{k}.html", today) for k in TOPICS]
     urls += [(f"{SITE_URL}articles/{a['slug']}.html", a.get("updated", a["date"])) for a in arts]
     urls += [(SITE_URL + "about.html", today)]
     xml = "".join(f"<url><loc>{u}</loc><lastmod>{d}</lastmod></url>\n" for u, d in urls)
@@ -545,10 +617,12 @@ def main():
                 print(f"注意：{a['slug']} の用語メモ {t} はまだ記事がありません（表示されません）")
     (ROOT / "articles").mkdir(exist_ok=True)
     make_og_images(arts)
+    make_icons()
     for a in arts:
         build_article(a, arts, by_slug)
     build_index(arts)
     build_categories(arts)
+    build_topics(arts)
     build_search(arts)
     build_404(arts)
     build_pages()

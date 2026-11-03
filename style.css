@@ -197,6 +197,14 @@ a.term:hover { color: var(--basics); }
 .chips button:hover { border-color: var(--accent); color: var(--accent); }
 #results p { margin: 2px 0 0; font-size: 14px; color: var(--sub); line-height: 1.7; }
 
+.topic-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.topic-row a { display: inline-flex; align-items: baseline; gap: 8px; background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 8px 16px; text-decoration: none; color: var(--text); font-size: 15px; }
+.topic-row a:hover { border-color: var(--accent); color: var(--accent); }
+.topic-row span { font-size: 12px; color: var(--sub); }
+.topics { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 18px; font-size: 13px; color: var(--sub); }
+.chip { font-size: 13px; font-weight: 700; text-decoration: none; padding: 3px 12px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+.chip:hover { text-decoration: underline; }
+
 /* ===== フッター ===== */
 .foot-logo { font-weight: 900; font-size: 18px; color: var(--text); margin: 0; }
 .foot-logo b { color: var(--accent); }
