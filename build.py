@@ -160,6 +160,26 @@ def link_terms(body, arts, self_slug):
     return body, linked
 
 
+# ---------- 数字を太字に ----------
+NUM_RE = re.compile(r"\d[\d,.]*(?:万|億|兆)?(?:円|ドル|%|％|件|倍|人)(?:台|超|分)?")
+
+
+def bold_numbers(body):
+    """本文（p と li）の中の金額・％などを太字にする。見出しやリンクの中は触らない。"""
+    parts = re.split(r"(<[^>]+>)", body)
+    skip = 0
+    for i, s in enumerate(parts):
+        if s.startswith("<"):
+            if re.match(r"<(a|h[1-3]|b|strong)[ >]", s):
+                skip += 1
+            elif re.match(r"</(a|h[1-3]|b|strong)>", s):
+                skip -= 1
+            continue
+        if not skip:
+            parts[i] = NUM_RE.sub(lambda m: f'<strong class="num">{m.group(0)}</strong>', s)
+    return "".join(parts)
+
+
 # ---------- SNS用画像 ----------
 OG_TEMPLATE = """<!doctype html><html><head><meta charset="utf-8"><style>
 html,body{{margin:0;width:1200px;height:630px;overflow:hidden}}
@@ -418,6 +438,7 @@ def build_article(a, all_arts, by_slug, backlinks):
     rel = "../"
     body, heads = add_heading_ids(a["body"])
     body, linked = link_terms(body, all_arts, a["slug"])
+    body = bold_numbers(body)
     url = f"{SITE_URL}articles/{a['slug']}.html"
 
     summary = "".join(f"<li>{e(s)}</li>" for s in a.get("summary", []))
@@ -495,7 +516,7 @@ def build_article(a, all_arts, by_slug, backlinks):
   </div>
   {thumb(a, rel, "post-thumb", lazy=False)}
   <div class="summary"><b>3行まとめ</b><ul>{summary}</ul></div>
-  <nav class="toc" aria-label="目次"><b>目次</b><ol>{toc}</ol></nav>
+  <details class="toc"><summary>この記事の目次</summary><ol>{toc}</ol></details>
   {body}
   {terms_box}
   <div class="sources">
