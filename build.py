@@ -262,11 +262,33 @@ def make_thumbs(arts):
             print(f"サムネイルを作成：{a['slug']}")
 
 
+ICON_RULES = [  # 言葉 → サムネイルのアイコン（上から順に判定。どれにも当たらなければジャンルのアイコン）
+    ("fuel", ["原油", "ガソリン", "ホルムズ", "中東"]),
+    ("bolt", ["電気"]),
+    ("yen", ["円安", "円高", "ドル"]),
+    ("receipt", ["年末調整", "万円", "税"]),
+    ("ballot", ["選挙", "議会"]),
+    ("bank", ["日銀", "金利", "利上げ"]),
+    ("percent", ["物価", "インフレ", "%"]),
+]
+
+
+def icon_class(a):
+    text = (a.get("eyecatch") or "") + a["title"]
+    for name, words in ICON_RULES:
+        if any(w in (a.get("eyecatch") or "") for w in words):
+            return f" i-{name}"
+    for name, words in ICON_RULES:
+        if any(w in text for w in words):
+            return f" i-{name}"
+    return ""
+
+
 def thumb(a, rel, cls="thumb", lazy=True):
     """サムネイル。画像ファイルを使わず CSS で描く（表示が速い）。"""
     word = a.get("eyecatch") or CATS[a["category"]]
     size = "w1" if len(word) <= 3 else "w2" if len(word) <= 4 else "w3" if len(word) <= 5 else "w4"
-    return (f'<span class="{cls} art c-{a["category"]} {size}" role="img" aria-label="{e(word)}">'
+    return (f'<span class="{cls} art c-{a["category"]} {size}{icon_class(a)}" role="img" aria-label="{e(word)}">'
             f'<span class="art-cat">{CATS[a["category"]]}</span><span class="art-word">{e(word)}</span>'
             f'<span class="art-logo">3分ニュース解説</span></span>')
 
@@ -400,7 +422,7 @@ def cards(arts, rel, cls="grid-3"):
     """サムネイルが上にあるカードの並び。"""
     items = "".join(
         f'<a class="card" href="{rel}articles/{a["slug"]}.html">{thumb(a, rel)}'
-        f'<div class="card-body">{tag(a["category"])} {short_meta(a)}<h3>{e(a["title"])}</h3>'
+        f'<div class="card-body">{tag(a["category"])} {short_meta(a) if a["category"] != "basics" else ""}<h3>{e(a["title"])}</h3>'
         f'{impact(a) or "<p>" + e(lead_text(a)) + "</p>"}</div></a>'
         for a in arts
     )
