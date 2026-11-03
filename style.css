@@ -226,6 +226,8 @@ article.post[data-fs="l"] .summary li { font-size: 18px; }
 .rank a { grid-template-columns: 28px minmax(0, 1fr) 76px; }
 .rank-thumb { width: 76px; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 4px; }
 
+.tabbar { display: none; }
+
 /* ===== 一覧（検索・404など） ===== */
 .list { list-style: none; margin: 0; padding: 0; background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); }
 .list li + li { border-top: 1px solid var(--line); }
@@ -269,7 +271,22 @@ footer.site .links { display: flex; flex-wrap: wrap; gap: 6px 20px; margin-botto
   .grid-4 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 @media (max-width: 760px) {
+  body { padding-bottom: 64px; }
+  .tabbar { display: grid; grid-template-columns: repeat(6, 1fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 15; background: var(--card); border-top: 1px solid var(--line); padding: 4px 0 calc(4px + env(safe-area-inset-bottom)); }
+  .tabbar a { display: flex; flex-direction: column; align-items: center; gap: 1px; font-size: 10px; font-weight: 700; color: var(--sub); text-decoration: none; padding: 4px 0; }
+  .tabbar svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .tabbar a.on { color: var(--accent); }
+  .to-top { bottom: 78px; }
   .wrap { padding: 0 16px; }
+  .strip p:first-child { display: none; }
+  .strip { padding: 8px 14px; margin: 12px 0 14px; }
+  .lead-thumb { border-radius: 0; margin: 0 -16px; width: calc(100% + 32px); max-width: none; }
+  .cards:not(.compact) { grid-template-columns: minmax(0, 1fr); gap: 0; background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); }
+  .cards:not(.compact) .card { display: grid; grid-template-columns: minmax(0, 1fr) 120px; gap: 12px; align-items: start; padding: 14px; border-radius: 0; box-shadow: none; transform: none; }
+  .cards:not(.compact) .card + .card { border-top: 1px solid var(--line); }
+  .cards:not(.compact) .card .thumb { grid-column: 2; grid-row: 1; border-radius: 6px; }
+  .cards:not(.compact) .card-body { grid-column: 1; grid-row: 1; padding: 0; }
+  .cards:not(.compact) .card .meta { display: inline; }
   header.site .bar { height: 52px; gap: 10px; }
   .logo { font-size: 19px; }
   .logo small, .today, .search-btn span { display: none; }
@@ -279,7 +296,10 @@ footer.site .links { display: flex; flex-wrap: wrap; gap: 6px 20px; margin-botto
   .strip span { display: block; }
   .lead { grid-template-columns: minmax(0, 1fr); gap: 18px; }
   .lead-body h2 { font-size: 21px; }
-  .lead-side a { grid-template-columns: 112px minmax(0, 1fr); gap: 12px; }
+  .lead-side a { grid-template-columns: minmax(0, 1fr) 120px; gap: 12px; }
+  .lead-side .mini-thumb { order: 2; }
+  .lead-side p { display: none; }
+  .lead-body ul { font-size: 14px; }
   .lead-side h3 { font-size: 15px; }
   .grid-3, .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
   .card-body { padding: 10px 12px 14px; }
