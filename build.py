@@ -348,7 +348,7 @@ def page(rel, title, description, body, canonical, active=None, og_type="website
   <a href="{rel}category/basics.html"{' class="on"' if active == "basics" else ''}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5c3-1 5.5-1 8 1 2.5-2 5-2 8-1v13c-3-1-5.5-1-8 1-2.5-2-5-2-8-1z"/><path d="M12 6.5v13"/></svg>基礎</a>
   <a href="{rel}search.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>検索</a>
 </nav>
-<script>(function(){{var n=Date.now();document.querySelectorAll('time[datetime]').forEach(function(t){{var d=new Date(t.getAttribute('datetime')+'T00:00:00+09:00');if(n-d<36*3600*1000&&!t.closest('.post-meta')){{var s=document.createElement('span');s.className='new';s.textContent='NEW';t.parentNode.insertBefore(s,t)}}}});}})();</script>
+<script>(function(){{var n=Date.now();document.querySelectorAll('time[datetime]').forEach(function(t){{var d=new Date(t.getAttribute('datetime')+'T00:00:00+09:00');if(n-d<36*3600*1000&&!t.closest('.post-meta,.timeline')){{var s=document.createElement('span');s.className='new';s.textContent='NEW';t.parentNode.insertBefore(s,t)}}}});}})();</script>
 <script>(function(){{var d=new Date(),w="日月火水木金土"[d.getDay()],el=document.querySelector('[data-today]');if(el)el.textContent=(d.getMonth()+1)+"月"+d.getDate()+"日（"+w+"）";}})();</script>
 {extra_body}</body>
 </html>
@@ -414,7 +414,26 @@ def rank_list(arts, rel):
     )
 
 
-def sidebar(arts, rel, toc_html="", exclude=(), home=False):
+def timeline_box(a, arts, rel):
+    """同じテーマの記事を古い順に並べた「これまでの流れ」。"""
+    tps = topics_of(a)
+    if not tps:
+        return ""
+    key = tps[0]
+    items = sorted([x for x in arts if key in topics_of(x) and x["category"] != "basics"],
+                   key=lambda x: (x["date"], x.get("rank", 0)))
+    if len(items) < 2:
+        return ""
+    lis = "".join(
+        f'<li{" class=\"here\"" if x["slug"] == a["slug"] else ""}><time datetime="{x["date"]}">{md_date(x["date"])}</time>'
+        + (f'<span>{e(x["title"])}（この記事）</span>' if x["slug"] == a["slug"]
+           else f'<a href="{rel}articles/{x["slug"]}.html">{e(x["title"])}</a>') + '</li>'
+        for x in items[-6:])
+    return (f'<section class="side-box"><h2 class="side-title">#{TOPICS[key][0]} これまでの流れ</h2>'
+            f'<ol class="timeline">{lis}</ol><a class="more" href="{rel}topic/{key}.html">このテーマの記事をすべて見る ›</a></section>')
+
+
+def sidebar(arts, rel, toc_html="", exclude=(), home=False, extra=""):
     news = [a for a in arts if a["category"] != "basics" and a["slug"] not in exclude]
     basics = [a for a in arts if a["category"] == "basics" and a["slug"] not in exclude]
     topics = "".join(
@@ -438,6 +457,7 @@ def sidebar(arts, rel, toc_html="", exclude=(), home=False):
     <a class="more" href="{rel}about.html">運営者・記事の作り方 ›</a></section>
 </aside>"""
     return f"""<aside class="sidebar" aria-label="サイドメニュー">
+  {extra}
   <section class="side-box"><h2 class="side-title">今日のポイント</h2><ol class="rank">{rank_list(news[:5], rel)}</ol></section>
   <section class="side-box"><h2 class="side-title">注目のテーマ</h2><div class="chips-wrap">{topics}</div></section>
   <section class="side-box"><h2 class="side-title">基礎から学ぶ</h2><ul class="side-list">{basics_li}</ul>
@@ -563,7 +583,7 @@ def build_article(a, all_arts, by_slug, backlinks):
 </article>
 {related_html}
 </div>
-{sidebar(all_arts, rel, toc_side, exclude=(a["slug"],))}
+{sidebar(all_arts, rel, toc_side, exclude=(a["slug"],), extra=timeline_box(a, all_arts, rel))}
 </div>"""
     copy_js = """<script>
 document.querySelectorAll('.copy').forEach(function(b){b.addEventListener('click',function(){
