@@ -612,7 +612,7 @@ def numbers_html(by_slug, rel):
         f'<li><a href="{rel}articles/{n["article"]}.html"><span class="nl">{e(n["label"])}</span>'
         f'<b class="nv">{e(n["value"])}</b><span class="nn">{e(n["note"])}</span></a></li>'
         for n in json.loads(f.read_text(encoding="utf-8")) if n["article"] in by_slug)
-    return f'<section class="numbers" aria-label="数字で見るいま"><p class="numbers-h">数字で見るいま</p><ul>{items}</ul></section>'
+    return f'<section class="numbers" aria-label="数字で見るいま"><p class="numbers-h"><span>数字で</span><span>見るいま</span></p><ul>{items}</ul></section>'
 
 
 # ---------- トップ ----------
