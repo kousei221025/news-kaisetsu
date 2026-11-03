@@ -305,7 +305,7 @@ ARTICLE_JS = """<button class="to-top" type="button" aria-label="ページの先
 
 
 # ---------- 記事ページ ----------
-def build_article(a, all_arts, by_slug):
+def build_article(a, all_arts, by_slug, backlinks):
     rel = "../"
     body, heads = add_heading_ids(a["body"])
     body, linked = link_terms(body, all_arts, a["slug"])
@@ -336,6 +336,14 @@ def build_article(a, all_arts, by_slug):
                (r["category"] == a["category"] or set(r["terms"]) & set(a["terms"]) or a["slug"] in r["terms"])][:4]
     related_html = (f'<section><h2 class="section-title">関連記事</h2><ul class="list">{list_items(related, rel)}</ul></section>'
                     if related else "")
+    if a["category"] == "basics":
+        users = [by_slug[s] for s in backlinks.get(a["slug"], []) if by_slug[s]["category"] != "basics"]
+        others = [r for r in all_arts if r["category"] == "basics" and r["slug"] != a["slug"]][:4]
+        related_html = (f'<section><h2 class="section-title">ほかの基礎解説</h2><ul class="list">{list_items(others, rel)}</ul></section>'
+                        if others else "")
+        if users:
+            related_html = (f'<section><h2 class="section-title">この用語が出てくるニュース</h2>'
+                            f'<ul class="list">{list_items(users[:8], rel)}</ul></section>') + related_html
 
     ld = [{
         "@context": "https://schema.org",
@@ -618,8 +626,13 @@ def main():
     (ROOT / "articles").mkdir(exist_ok=True)
     make_og_images(arts)
     make_icons()
+    backlinks = {}
+    for a in arts:  # どの記事がどの基礎解説を使っているか（新しい順）
+        _, linked = link_terms(a["body"], arts, a["slug"])
+        for t in dict.fromkeys(a["terms"] + linked):
+            backlinks.setdefault(t, []).append(a["slug"])
     for a in arts:
-        build_article(a, arts, by_slug)
+        build_article(a, arts, by_slug, backlinks)
     build_index(arts)
     build_categories(arts)
     build_topics(arts)
