@@ -325,6 +325,9 @@ def og_url(slug):
 
 
 # ---------- 共通の枠 ----------
+LATEST_HTML = ""  # ヘッダーに出す最新ニュース（main() で設定）
+
+
 def page(rel, title, description, body, canonical, active=None, og_type="website", extra_head="",
          og_image=None, extra_body=""):
     full_title = title if title == SITE_NAME else f"{title}｜{SITE_NAME}"
@@ -369,6 +372,7 @@ def page(rel, title, description, body, canonical, active=None, og_type="website
 <header class="site">
   <div class="wrap bar">
     <a class="logo" href="{rel}index.html"><svg class="mark" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="9" fill="#1b4f8c"/><path d="M8 31h24" stroke="#f0a560" stroke-width="3" stroke-linecap="round"/><text x="20" y="26" text-anchor="middle" font-size="22" font-weight="900" fill="#fff" font-family="sans-serif">3</text></svg><span class="logo-text">3分<b>ニュース解説</b><small>{TAGLINE}</small></span></a>
+    {LATEST_HTML.replace("{rel}", rel)}
     <p class="today" data-today></p>
     <a class="search-btn" href="{rel}search.html" aria-label="記事を検索"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><span>記事を検索</span></a>
   </div>
@@ -398,6 +402,7 @@ def page(rel, title, description, body, canonical, active=None, og_type="website
   <a href="{rel}search.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>検索</a>
 </nav>
 <script>(function(){{var n=Date.now();document.querySelectorAll('time[datetime]').forEach(function(t){{var d=new Date(t.getAttribute('datetime')+'T00:00:00+09:00');if(n-d<36*3600*1000&&!t.closest('.post-meta,.timeline')){{var s=document.createElement('span');s.className='new';s.textContent='NEW';t.parentNode.insertBefore(s,t)}}}});}})();</script>
+<script>(function(){{var a=document.querySelectorAll('.latest-items a'),i=0;if(a.length<2||matchMedia('(prefers-reduced-motion: reduce)').matches)return;setInterval(function(){{a[i].classList.remove('on');i=(i+1)%a.length;a[i].classList.add('on')}},4500);}})();</script>
 <script>(function(){{var d=new Date(),w="日月火水木金土"[d.getDay()],el=document.querySelector('[data-today]');if(el)el.textContent=(d.getMonth()+1)+"月"+d.getDate()+"日（"+w+"）";}})();</script>
 {extra_body}</body>
 </html>
@@ -890,6 +895,12 @@ def main():
     (ROOT / "articles").mkdir(exist_ok=True)
     make_og_images(arts)
     make_icons()
+    global LATEST_HTML
+    ON_CLASS = ' class="on"'
+    latest_news = [a for a in arts if a["category"] != "basics"][:3]
+    LATEST_HTML = ('<div class="latest"><span class="latest-label">最新</span><div class="latest-items">' + "".join(
+        f'<a{ON_CLASS if i == 0 else ""} href="{{rel}}articles/{a["slug"]}.html">{e(a["title"])}</a>'
+        for i, a in enumerate(latest_news)) + '</div></div>')
     backlinks = {}
     for a in arts:  # どの記事がどの基礎解説を使っているか（新しい順）
         _, linked = link_terms(a["body"], arts, a["slug"])

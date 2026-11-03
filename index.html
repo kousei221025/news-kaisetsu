@@ -30,6 +30,7 @@
 <header class="site">
   <div class="wrap bar">
     <a class="logo" href="index.html"><svg class="mark" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="9" fill="#1b4f8c"/><path d="M8 31h24" stroke="#f0a560" stroke-width="3" stroke-linecap="round"/><text x="20" y="26" text-anchor="middle" font-size="22" font-weight="900" fill="#fff" font-family="sans-serif">3</text></svg><span class="logo-text">3分<b>ニュース解説</b><small>世界と経済のニュースを、会社員目線で3分で</small></span></a>
+    <div class="latest"><span class="latest-label">最新</span><div class="latest-items"><a class="on" href="articles/2026-11-04-us-iran-qeshm.html">米軍がイランの島を攻撃と報道。原油の値段と日本への影響は？</a><a href="articles/2026-11-04-gasoline-subsidy.html">ガソリン補助金が見直しへ。1リットル170円はいつまで続く？</a><a href="articles/2026-11-04-yen-158.html">円安が再び進み1ドル158円台に。なぜ？私たちへの影響は？</a></div></div>
     <p class="today" data-today></p>
     <a class="search-btn" href="search.html" aria-label="記事を検索"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><span>記事を検索</span></a>
   </div>
@@ -88,6 +89,7 @@
   <a href="search.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>検索</a>
 </nav>
 <script>(function(){var n=Date.now();document.querySelectorAll('time[datetime]').forEach(function(t){var d=new Date(t.getAttribute('datetime')+'T00:00:00+09:00');if(n-d<36*3600*1000&&!t.closest('.post-meta,.timeline')){var s=document.createElement('span');s.className='new';s.textContent='NEW';t.parentNode.insertBefore(s,t)}});})();</script>
+<script>(function(){var a=document.querySelectorAll('.latest-items a'),i=0;if(a.length<2||matchMedia('(prefers-reduced-motion: reduce)').matches)return;setInterval(function(){a[i].classList.remove('on');i=(i+1)%a.length;a[i].classList.add('on')},4500);})();</script>
 <script>(function(){var d=new Date(),w="日月火水木金土"[d.getDay()],el=document.querySelector('[data-today]');if(el)el.textContent=(d.getMonth()+1)+"月"+d.getDate()+"日（"+w+"）";})();</script>
 </body>
 </html>

@@ -61,6 +61,13 @@ header.site .bar { display: flex; align-items: center; gap: 20px; height: 64px; 
 .logo b { color: var(--accent); }
 .logo small { display: block; font-size: 11px; font-weight: 400; color: var(--sub); letter-spacing: .04em; }
 .today { margin: 0 0 0 auto; font-size: 13px; font-weight: 700; color: var(--sub); }
+.latest { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; margin-left: 24px; max-width: 620px; }
+.latest-label { flex: none; font-size: 11px; font-weight: 900; color: #fff; background: #c8102e; padding: 1px 8px; border-radius: 4px; }
+.latest-items { position: relative; flex: 1; min-width: 0; height: 24px; overflow: hidden; }
+.latest-items a { position: absolute; inset: 0; font-size: 13px; font-weight: 700; color: var(--text); text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 24px; visibility: hidden; opacity: 0; transition: opacity .4s; }
+.latest-items a.on { visibility: visible; opacity: 1; }
+.latest-items a:hover { color: var(--accent); text-decoration: underline; }
+@media (max-width: 1080px) { .latest { display: none; } }
 .search-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: var(--text); text-decoration: none; padding: 8px 16px; border: 1px solid var(--line); border-radius: 999px; background: var(--bg); }
 .search-btn:hover { color: var(--accent); border-color: var(--accent); }
 
