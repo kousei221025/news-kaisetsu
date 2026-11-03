@@ -116,6 +116,9 @@ nav.cats .sep { width: 1px; height: 18px; background: rgba(255,255,255,.25); mar
 .w3 .art-word { font-size: 12.5cqi; }
 .w4 .art-word { font-size: 10.5cqi; }
 .art-logo { position: absolute; left: 6cqi; bottom: 4.2cqi; font-size: 2.75cqi; font-weight: 700; opacity: .85; }
+@container (max-width: 240px) {
+  .art-cat, .art-logo { display: none; }
+}
 .mini-thumb.art .art-cat, .rank-thumb.art .art-cat, .mini-thumb.art .art-logo, .rank-thumb.art .art-logo { display: none; }
 .post-thumb.art { aspect-ratio: 16 / 5; }
 .post-thumb.art .art-word { font-size: 9cqi; }
