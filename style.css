@@ -262,6 +262,11 @@ article.post[data-fs="l"] .summary li { font-size: 18px; }
 
 .tabbar { display: none; }
 
+.author { display: flex; gap: 14px; align-items: flex-start; margin-top: 24px; padding: 16px 18px; border-radius: 8px; background: var(--bg); }
+.author .mark { width: 44px; height: 44px; flex: none; }
+.author p { margin: 0 !important; font-size: 13px; line-height: 1.7; color: var(--sub); }
+.author .author-name { font-weight: 700; color: var(--text); font-size: 14px; }
+
 /* ===== 一覧（検索・404など） ===== */
 .list { list-style: none; margin: 0; padding: 0; background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); }
 .list li + li { border-top: 1px solid var(--line); }
