@@ -277,7 +277,8 @@ def page(rel, title, description, body, canonical, active=None, og_type="website
         for key, href, label in [("home", "index.html", "トップ")]
         + [(k, f"category/{k}.html", v) for k, v in CATS.items()]
     )
-    foot_cats = "".join(f'<a href="{rel}category/{k}.html">{v}</a>' for k, v in CATS.items())
+    foot_cats_li = "".join(f'<li><a href="{rel}category/{k}.html">{v}</a></li>' for k, v in CATS.items())
+    foot_topics_li = "".join(f'<li><a href="{rel}topic/{k}.html">#{v[0]}</a></li>' for k, v in TOPICS.items())
     topic_nav = "".join(f'<li><a class="tp{" on" if active == "topic-" + k else ""}" href="{rel}topic/{k}.html">#{v[0]}</a></li>'
                         for k, v in TOPICS.items())
     og_image = og_image or f"{SITE_URL}og/default.png"
@@ -311,7 +312,7 @@ def page(rel, title, description, body, canonical, active=None, og_type="website
 <a class="skip" href="#main">本文へスキップ</a>
 <header class="site">
   <div class="wrap bar">
-    <a class="logo" href="{rel}index.html">3分<b>ニュース解説</b><small>{TAGLINE}</small></a>
+    <a class="logo" href="{rel}index.html"><svg class="mark" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="9" fill="#1b4f8c"/><path d="M8 31h24" stroke="#f0a560" stroke-width="3" stroke-linecap="round"/><text x="20" y="26" text-anchor="middle" font-size="22" font-weight="900" fill="#fff" font-family="sans-serif">3</text></svg><span class="logo-text">3分<b>ニュース解説</b><small>{TAGLINE}</small></span></a>
     <p class="today" data-today></p>
     <a class="search-btn" href="{rel}search.html" aria-label="記事を検索"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><span>記事を検索</span></a>
   </div>
@@ -321,12 +322,16 @@ def page(rel, title, description, body, canonical, active=None, og_type="website
 {body}
 </main>
 <footer class="site">
-  <div class="wrap">
-    <p class="foot-logo">3分<b>ニュース解説</b></p>
-    <p class="foot-tag">{TAGLINE}</p>
-    <div class="links">{foot_cats}<a href="{rel}search.html">記事を検索</a><a href="{rel}about.html">このサイトについて・プライバシーポリシー</a><a href="{rel}about.html#contact">お問い合わせ</a><a href="{SITE_URL}feed.xml">RSS</a></div>
-    <small>© 2026 {SITE_NAME}</small>
+  <div class="wrap foot-grid">
+    <div class="foot-about">
+      <p class="foot-logo"><svg class="mark" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="9" fill="#1b4f8c"/><path d="M8 31h24" stroke="#f0a560" stroke-width="3" stroke-linecap="round"/><text x="20" y="26" text-anchor="middle" font-size="22" font-weight="900" fill="#fff" font-family="sans-serif">3</text></svg><span>3分<b>ニュース解説</b></span></p>
+      <p class="foot-tag">{TAGLINE}。むずかしいニュースが「自分の生活にどう関係するか」まで、やさしく解説します。</p>
+    </div>
+    <nav aria-label="ジャンル"><p class="foot-h">ジャンル</p><ul>{foot_cats_li}</ul></nav>
+    <nav aria-label="テーマ"><p class="foot-h">テーマ</p><ul>{foot_topics_li}</ul></nav>
+    <nav aria-label="サイト情報"><p class="foot-h">サイト情報</p><ul><li><a href="{rel}search.html">記事を検索</a></li><li><a href="{rel}about.html">このサイトについて</a></li><li><a href="{rel}about.html#contact">お問い合わせ</a></li><li><a href="{rel}about.html">プライバシーポリシー</a></li><li><a href="{SITE_URL}feed.xml">RSS</a></li></ul></nav>
   </div>
+  <div class="wrap foot-copy"><small>© 2026 {SITE_NAME}</small></div>
 </footer>
 <nav class="tabbar" aria-label="スマホ用メニュー">
   <a href="{rel}index.html"{' class="on"' if active == "home" else ''}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg>トップ</a>
@@ -722,12 +727,13 @@ def build_404(arts):
 
 
 # ---------- 固定ページ ----------
-def build_pages():
+def build_pages(arts):
     for f in (SRC / "pages").glob("*.html"):
         text = f.read_text(encoding="utf-8")
         m = re.match(r"\s*<!--(.*?)-->(.*)", text, re.S)
         meta = json.loads(m.group(1))
-        content = f'<div class="narrow"><article class="post">{m.group(2).strip()}</article></div>'
+        content = (f'<div class="layout page-layout"><div class="main-col"><article class="post">{m.group(2).strip()}</article></div>'
+                   f'{sidebar(arts, "", home=True)}</div>')
         (ROOT / f.name).write_text(
             page("", meta["title"], meta["description"], content, SITE_URL + f.name), encoding="utf-8")
 
@@ -789,7 +795,7 @@ def main():
     build_topics(arts)
     build_search(arts)
     build_404(arts)
-    build_pages()
+    build_pages(arts)
     build_feed(arts)
     build_sitemap(arts)
     print(f"完了：記事{len(arts)}本")
