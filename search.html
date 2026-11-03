@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>記事を検索｜3分ニュース解説</title>
+<meta name="description" content="3分ニュース解説の記事をキーワードで検索できます。">
+<link rel="canonical" href="https://kousei221025.github.io/news-kaisetsu/search.html">
+<meta property="og:site_name" content="3分ニュース解説">
+<meta property="og:title" content="記事を検索">
+<meta property="og:description" content="3分ニュース解説の記事をキーワードで検索できます。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kousei221025.github.io/news-kaisetsu/search.html">
+<meta property="og:image" content="https://kousei221025.github.io/news-kaisetsu/og/default.png">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#1b4f8c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231b4f8c'/%3E%3Ctext x='16' y='23' font-size='20' font-weight='900' text-anchor='middle' fill='white' font-family='sans-serif'%3E3%3C/text%3E%3C/svg%3E">
+<link rel="alternate" type="application/rss+xml" title="3分ニュース解説" href="https://kousei221025.github.io/news-kaisetsu/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">本文へスキップ</a>
+<header class="site">
+  <div class="wrap bar">
+    <a class="logo" href="index.html">3分<b>ニュース解説</b><small>世界と経済のニュースを、会社員目線で3分で</small></a>
+    <a class="search-btn" href="search.html" aria-label="記事を検索"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><span>検索</span></a>
+  </div>
+  <nav class="cats" aria-label="ジャンル"><div class="wrap"><ul><li><a href="index.html">トップ</a></li><li><a href="category/world.html">世界情勢</a></li><li><a href="category/economy.html">経済</a></li><li><a href="category/life.html">くらし・お金</a></li><li><a href="category/basics.html">基礎解説</a></li></ul></div></nav>
+</header>
+<main class="wrap" id="main">
+<section class="hero"><h1>記事を検索</h1></section>
+<div class="search-box"><input id="q" type="search" placeholder="例：円安、住宅ローン、ガソリン" aria-label="検索キーワード" autofocus></div>
+<div class="chips"><span>よく読まれる言葉：</span><button type="button">円安</button><button type="button">金利</button><button type="button">ガソリン</button><button type="button">電気代</button><button type="button">日銀</button><button type="button">原油</button><button type="button">年末調整</button><button type="button">選挙</button></div>
+<p id="info" class="meta"></p>
+<ul class="list" id="results"></ul>
+</main>
+<footer class="site">
+  <div class="wrap">
+    <p class="foot-logo">3分<b>ニュース解説</b></p>
+    <p class="foot-tag">世界と経済のニュースを、会社員目線で3分で</p>
+    <div class="links"><a href="category/world.html">世界情勢</a><a href="category/economy.html">経済</a><a href="category/life.html">くらし・お金</a><a href="category/basics.html">基礎解説</a><a href="search.html">記事を検索</a><a href="about.html">このサイトについて・プライバシーポリシー</a><a href="https://kousei221025.github.io/news-kaisetsu/feed.xml">RSS</a></div>
+    <small>© 2026 3分ニュース解説</small>
+  </div>
+</footer>
+<script>
+(function(){
+  var input=document.getElementById('q'),out=document.getElementById('results'),info=document.getElementById('info'),data=[];
+  var cats={"world": "世界情勢", "economy": "経済", "life": "くらし・お金", "basics": "基礎解説"};
+  function esc(s){return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  function run(){
+    var q=input.value.trim();
+    history.replaceState(null,'',q?'?q='+encodeURIComponent(q):location.pathname);
+    if(!q){out.innerHTML='';info.textContent='キーワードを入れると、タイトルや本文から記事を探します。';return}
+    var words=q.split(/[\s　]+/);
+    var hits=data.map(function(a){
+      var score=0;
+      for(var i=0;i<words.length;i++){
+        var w=words[i];
+        if(a.t.indexOf(w)>=0)score+=10; else if(a.d.indexOf(w)>=0)score+=4; else if(a.b.indexOf(w)>=0)score+=1; else return null;
+      }
+      return {a:a,s:score};
+    }).filter(Boolean).sort(function(x,y){return y.s-x.s||(y.a.date>x.a.date?1:-1)});
+    info.textContent='「'+q+'」の検索結果：'+hits.length+'件';
+    out.innerHTML=hits.map(function(h){var a=h.a;
+      return '<li><a href="articles/'+a.s+'.html"><span class="tag t-'+a.c+'">'+cats[a.c]+'</span> <span class="meta"><time>'+a.jd+'</time></span><h3>'+esc(a.t)+'</h3><p>'+esc(a.d)+'</p></a></li>'
+    }).join('');
+  }
+  fetch('search.json').then(function(r){return r.json()}).then(function(j){
+    data=j;var p=new URLSearchParams(location.search).get('q');if(p){input.value=p}run();
+  });
+  input.addEventListener('input',run);
+  document.querySelectorAll('.chips button').forEach(function(b){b.addEventListener('click',function(){input.value=b.textContent;run();input.focus()})});
+})();
+</script>
+</body>
+</html>

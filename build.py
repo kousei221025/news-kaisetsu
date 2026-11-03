@@ -12,25 +12,35 @@
   "summary": ["3行まとめ1", "3行まとめ2", "3行まとめ3"],
   "rank": 5,                      # 同じ日付の中で大きいほど上に出る（省略可）
   "terms": ["basics-yen"],        # 用語メモに出す基礎解説記事のスラッグ（無ければ省略）
+  "keywords": ["円安", "円高"],   # 基礎解説だけ：他の記事の本文でこの言葉が出たら自動でリンクする
   "sources": [["出典名", "URL"]]
 }
 -->
 <h2>何が起きた？</h2>
 <p>本文…</p>
+
+作られるもの：articles/*.html、index.html、category/*.html、search.html、search.json、
+404.html、feed.xml、sitemap.xml、robots.txt、固定ページ（src/pages）、og/*.png（SNS用画像）
 """
 import html
 import json
 import math
 import re
+import subprocess
 import sys
-from datetime import date
+import tempfile
+from datetime import date, datetime, timezone, timedelta
 from pathlib import Path
+from urllib.parse import quote
 
 ROOT = Path(__file__).parent
 SRC = ROOT / "src"
 SITE_URL = "https://kousei221025.github.io/news-kaisetsu/"
+SITE_PATH = "/news-kaisetsu/"
 SITE_NAME = "3分ニュース解説"
 TAGLINE = "世界と経済のニュースを、会社員目線で3分で"
+AUTHOR = "ミナト"
+EDGE = Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
 CATS = {
     "world": "世界情勢",
@@ -38,6 +48,13 @@ CATS = {
     "life": "くらし・お金",
     "basics": "基礎解説",
 }
+CAT_INTRO = {
+    "world": "戦争や選挙、外交など、世界の動きが私たちの暮らしにどう関わるかを解説します。",
+    "economy": "金利、円相場、物価など、ニュースでよく聞く経済の話題を会社員目線で解説します。",
+    "life": "税金、ガソリン代、電気代など、家計に直接関わるニュースを解説します。",
+    "basics": "ニュースを読むための基礎知識。一度読んでおくと、毎日のニュースがぐっと分かりやすくなります。",
+}
+CAT_COLOR = {"world": "#1b4f8c", "economy": "#7a3e9d", "life": "#a8500e", "basics": "#2e7d5b"}
 
 FAVICON = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E"
            "%3Crect width='32' height='32' rx='7' fill='%231b4f8c'/%3E%3Ctext x='16' y='23' "
@@ -60,6 +77,7 @@ def load_articles():
         meta["body"] = m.group(2).strip()
         meta.setdefault("terms", [])
         meta.setdefault("sources", [])
+        meta.setdefault("keywords", [])
         if meta["category"] not in CATS:
             raise SystemExit(f"ジャンルが不正です: {f.name} {meta['category']}")
         items.append(meta)
@@ -67,14 +85,22 @@ def load_articles():
     return items
 
 
+def plain(body):
+    return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", body)).strip()
+
+
 def reading_minutes(body):
-    chars = len(re.sub(r"<[^>]+>|\s", "", body))
-    return max(1, math.ceil(chars / 500))
+    return max(1, math.ceil(len(plain(body).replace(" ", "")) / 500))
 
 
 def jp_date(d):
     y, m, dd = d.split("-")
     return f"{int(y)}年{int(m)}月{int(dd)}日"
+
+
+def md_date(d):
+    _, m, dd = d.split("-")
+    return f"{int(m)}月{int(dd)}日"
 
 
 def add_heading_ids(body):
@@ -88,15 +114,90 @@ def add_heading_ids(body):
     return re.sub(r"<h2>(.*?)</h2>", repl, body), heads
 
 
+# ---------- 用語の自動リンク ----------
+def link_terms(body, arts, self_slug):
+    """基礎解説の keywords が本文に出てきたら、記事ごとに最初の1回だけリンクする。"""
+    linked = []
+    for b in arts:
+        if b["category"] != "basics" or b["slug"] == self_slug or not b["keywords"]:
+            continue
+        kws = sorted(b["keywords"], key=len, reverse=True)
+        pattern = re.compile("|".join(re.escape(k) for k in kws))
+        parts = re.split(r"(<[^>]+>)", body)
+        depth = 0  # a / h1-h3 / b の中はリンクしない
+        done = False
+        for i, p in enumerate(parts):
+            if p.startswith("<"):
+                if re.match(r"<(a|h[1-3]|b)\b", p):
+                    depth += 1
+                elif re.match(r"</(a|h[1-3]|b)>", p):
+                    depth -= 1
+                continue
+            if depth or done:
+                continue
+            m = pattern.search(p)
+            if m:
+                parts[i] = (p[:m.start()] + f'<a class="term" href="{b["slug"]}.html" title="基礎解説：{e(b["title"])}">'
+                            + m.group(0) + "</a>" + p[m.end():])
+                done = True
+                linked.append(b["slug"])
+        body = "".join(parts)
+    return body, linked
+
+
+# ---------- SNS用画像 ----------
+OG_TEMPLATE = """<!doctype html><html><head><meta charset="utf-8"><style>
+html,body{{margin:0;width:1200px;height:630px;overflow:hidden}}
+body{{background:#f6f5f1;font-family:"Noto Sans JP","Yu Gothic",sans-serif;color:#1c2024;
+ display:flex;flex-direction:column;justify-content:space-between;padding:64px 72px;box-sizing:border-box;
+ border-top:18px solid {color}}}
+.cat{{display:inline-block;background:{color};color:#fff;font-weight:700;font-size:30px;padding:6px 26px;border-radius:999px}}
+h1{{font-size:{size}px;line-height:1.45;font-weight:900;margin:28px 0 0;letter-spacing:.01em}}
+.foot{{display:flex;justify-content:space-between;align-items:center;font-size:30px;color:#5b636c}}
+.logo{{font-weight:900;font-size:40px;color:#1c2024}} .logo b{{color:#1b4f8c}}
+</style></head><body><div><span class="cat">{cat}</span><h1>{title}</h1></div>
+<div class="foot"><span class="logo">3分<b>ニュース解説</b></span><span>{tagline}</span></div></body></html>"""
+
+
+def make_og_images(arts):
+    """og/<スラッグ>.png が無い記事だけ、Edge で画像にする。Edge が無ければ何もしない。"""
+    out_dir = ROOT / "og"
+    out_dir.mkdir(exist_ok=True)
+    if not EDGE.exists():
+        print("注意：Edge が見つからないため、SNS用画像は作りません")
+        return
+    jobs = [(a["slug"], CATS[a["category"]], a["title"], CAT_COLOR[a["category"]]) for a in arts
+            if not (out_dir / f"{a['slug']}.png").exists()]
+    if not (out_dir / "default.png").exists():
+        jobs.append(("default", "ニュース解説", "むずかしいニュースを、会社員目線で3分で。", "#1b4f8c"))
+    with tempfile.TemporaryDirectory() as tmp:
+        for slug, cat, title, color in jobs:
+            size = 64 if len(title) <= 30 else 56 if len(title) <= 40 else 50
+            src = Path(tmp) / f"{slug}.html"
+            src.write_text(OG_TEMPLATE.format(cat=e(cat), title=e(title), color=color, size=size,
+                                              tagline=TAGLINE), encoding="utf-8")
+            subprocess.run([str(EDGE), "--headless=new", "--disable-gpu", "--hide-scrollbars", "--no-first-run",
+                            f"--user-data-dir={Path(tmp) / 'profile'}", "--window-size=1200,630",
+                            f"--screenshot={out_dir / (slug + '.png')}", src.as_uri()],
+                           capture_output=True, timeout=60)
+            print(f"SNS用画像を作成：{slug}")
+
+
+def og_url(slug):
+    return f"{SITE_URL}og/{slug if (ROOT / 'og' / f'{slug}.png').exists() else 'default'}.png"
+
+
 # ---------- 共通の枠 ----------
-def page(rel, title, description, body, canonical, active=None, og_type="website", extra_head=""):
+def page(rel, title, description, body, canonical, active=None, og_type="website", extra_head="",
+         og_image=None, extra_body=""):
     full_title = title if title == SITE_NAME else f"{title}｜{SITE_NAME}"
     nav = "".join(
-        f'<li><a href="{rel}{href}"{" class=\"on\"" if key == active else ""}>{label}</a></li>'
+        f'<li><a href="{rel}{href}"{" class=\"on\" aria-current=\"page\"" if key == active else ""}>{label}</a></li>'
         for key, href, label in [("home", "index.html", "トップ")]
         + [(k, f"category/{k}.html", v) for k, v in CATS.items()]
     )
     foot_cats = "".join(f'<a href="{rel}category/{k}.html">{v}</a>' for k, v in CATS.items())
+    og_image = og_image or f"{SITE_URL}og/default.png"
     return f"""<!doctype html>
 <html lang="ja">
 <head>
@@ -110,43 +211,49 @@ def page(rel, title, description, body, canonical, active=None, og_type="website
 <meta property="og:description" content="{e(description)}">
 <meta property="og:type" content="{og_type}">
 <meta property="og:url" content="{canonical}">
+<meta property="og:image" content="{og_image}">
 <meta property="og:locale" content="ja_JP">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#1b4f8c">
 <link rel="icon" href="{FAVICON}">
+<link rel="alternate" type="application/rss+xml" title="{SITE_NAME}" href="{SITE_URL}feed.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{rel}style.css">
 {extra_head}</head>
 <body>
+<a class="skip" href="#main">本文へスキップ</a>
 <header class="site">
   <div class="wrap bar">
     <a class="logo" href="{rel}index.html">3分<b>ニュース解説</b><small>{TAGLINE}</small></a>
-    <a class="head-link" href="{rel}about.html">このサイトについて</a>
+    <a class="search-btn" href="{rel}search.html" aria-label="記事を検索"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><span>検索</span></a>
   </div>
   <nav class="cats" aria-label="ジャンル"><div class="wrap"><ul>{nav}</ul></div></nav>
 </header>
-<main class="wrap">
+<main class="wrap" id="main">
 {body}
 </main>
 <footer class="site">
   <div class="wrap">
-    <div class="links">{foot_cats}<a href="{rel}about.html">このサイトについて・プライバシーポリシー</a></div>
-    © 2026 {SITE_NAME}
+    <p class="foot-logo">3分<b>ニュース解説</b></p>
+    <p class="foot-tag">{TAGLINE}</p>
+    <div class="links">{foot_cats}<a href="{rel}search.html">記事を検索</a><a href="{rel}about.html">このサイトについて・プライバシーポリシー</a><a href="{SITE_URL}feed.xml">RSS</a></div>
+    <small>© 2026 {SITE_NAME}</small>
   </div>
 </footer>
-</body>
+{extra_body}</body>
 </html>
 """
 
 
-def tag(cat, rel=""):
-    cls = "tag basics" if cat == "basics" else "tag"
+def tag(cat):
+    cls = f"tag t-{cat}"
     return f'<span class="{cls}">{CATS[cat]}</span>'
 
 
 def meta_line(a):
-    return (f'<span class="meta"><span>{jp_date(a["date"])}</span>'
+    return (f'<span class="meta"><time datetime="{a["date"]}">{jp_date(a["date"])}</time>'
             f'<span>{reading_minutes(a["body"])}分で読めます</span></span>')
 
 
@@ -158,59 +265,89 @@ def list_items(arts, rel):
     )
 
 
+ARTICLE_JS = """<button class="to-top" type="button" aria-label="ページの先頭へ戻る">↑</button>
+<script>
+(function(){
+  var bar=document.querySelector('.progress'),top=document.querySelector('.to-top'),post=document.querySelector('article.post');
+  function upd(){
+    var r=post.getBoundingClientRect(),h=r.height-innerHeight,p=h>0?Math.min(1,Math.max(0,-r.top/h)):1;
+    bar.style.transform='scaleX('+p+')';
+    top.classList.toggle('show',scrollY>600);
+  }
+  addEventListener('scroll',upd,{passive:true});upd();
+  top.addEventListener('click',function(){scrollTo({top:0,behavior:'smooth'})});
+})();
+</script>
+"""
+
+
 # ---------- 記事ページ ----------
 def build_article(a, all_arts, by_slug):
     rel = "../"
     body, heads = add_heading_ids(a["body"])
+    body, linked = link_terms(body, all_arts, a["slug"])
     url = f"{SITE_URL}articles/{a['slug']}.html"
 
     summary = "".join(f"<li>{e(s)}</li>" for s in a.get("summary", []))
     toc = "".join(f'<li><a href="#s{i}">{e(h)}</a></li>' for i, h in enumerate(heads, 1))
 
-    terms = [by_slug[t] for t in a["terms"] if t in by_slug and t != a["slug"]]
+    term_slugs = [t for t in a["terms"] if t in by_slug and t != a["slug"]]
+    term_slugs += [t for t in linked if t not in term_slugs]
+    terms = [by_slug[t] for t in term_slugs]
     terms_box = ""
     if terms:
         lis = "".join(f'<li><a href="{t["slug"]}.html">{e(t["title"])}</a></li>' for t in terms)
-        terms_box = f'<div class="box terms"><b>用語メモ：あわせて読むと分かりやすい基礎解説</b><ul>{lis}</ul></div>'
+        terms_box = f'<aside class="box terms"><b>用語メモ：あわせて読むと分かりやすい基礎解説</b><ul>{lis}</ul></aside>'
 
     srcs = "".join(f'<li><a href="{e(u)}" rel="nofollow noopener" target="_blank">{e(n)}</a></li>'
                    for n, u in a["sources"])
     caution = "投資やローンの判断はご自身でお願いします。" if a["category"] in ("economy", "life", "basics") else ""
 
     share_text = f"{a['title']}｜{SITE_NAME}"
-    from urllib.parse import quote
     share = (f'<div class="share"><span>この記事をシェア</span>'
-             f'<a class="x" href="https://twitter.com/intent/tweet?url={quote(url)}&text={quote(share_text)}" target="_blank" rel="noopener">X</a>'
-             f'<a class="line" href="https://social-plugins.line.me/lineit/share?url={quote(url)}" target="_blank" rel="noopener">LINE</a></div>')
+             f'<a class="x" href="https://twitter.com/intent/tweet?url={quote(url)}&text={quote(share_text)}" target="_blank" rel="noopener">Xでポスト</a>'
+             f'<a class="line" href="https://social-plugins.line.me/lineit/share?url={quote(url)}" target="_blank" rel="noopener">LINEで送る</a>'
+             f'<button class="copy" type="button" data-url="{url}">URLをコピー</button></div>')
 
     related = [r for r in all_arts if r["slug"] != a["slug"] and r not in terms and
                (r["category"] == a["category"] or set(r["terms"]) & set(a["terms"]) or a["slug"] in r["terms"])][:4]
-    related_html = (f'<h2 class="section-title">関連記事</h2><ul class="list">{list_items(related, rel)}</ul>'
+    related_html = (f'<section><h2 class="section-title">関連記事</h2><ul class="list">{list_items(related, rel)}</ul></section>'
                     if related else "")
 
-    ld = {
+    ld = [{
         "@context": "https://schema.org",
         "@type": "Article" if a["category"] == "basics" else "NewsArticle",
         "headline": a["title"],
         "description": a["description"],
+        "image": [og_url(a["slug"])],
         "datePublished": a["date"],
         "dateModified": a.get("updated", a["date"]),
         "inLanguage": "ja",
-        "author": {"@type": "Person", "name": "ミナト"},
+        "author": {"@type": "Person", "name": AUTHOR, "url": SITE_URL + "about.html"},
         "publisher": {"@type": "Organization", "name": SITE_NAME},
         "mainEntityOfPage": url,
-    }
-    extra = f'<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>\n'
+    }, {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "トップ", "item": SITE_URL},
+            {"@type": "ListItem", "position": 2, "name": CATS[a["category"]],
+             "item": f"{SITE_URL}category/{a['category']}.html"},
+            {"@type": "ListItem", "position": 3, "name": a["title"]},
+        ],
+    }]
+    extra = "".join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>\n' for x in ld)
 
-    updated = f'<p class="meta">{jp_date(a["updated"])} 更新</p>' if a.get("updated") else ""
-    content = f"""<div class="narrow">
-<nav class="crumbs"><a href="{rel}index.html">トップ</a> ＞ <a href="{rel}category/{a["category"]}.html">{CATS[a["category"]]}</a></nav>
+    updated = f'<p class="updated">{jp_date(a["updated"])} 更新</p>' if a.get("updated") else ""
+    content = f"""<div class="progress" aria-hidden="true"></div>
+<div class="narrow">
+<nav class="crumbs" aria-label="現在地"><a href="{rel}index.html">トップ</a> <span aria-hidden="true">›</span> <a href="{rel}category/{a["category"]}.html">{CATS[a["category"]]}</a></nav>
 <article class="post">
-  {tag(a["category"])} {meta_line(a)}
+  <div class="post-meta">{tag(a["category"])} {meta_line(a)}</div>
   <h1>{e(a["title"])}</h1>
   {updated}
   <div class="summary"><b>3行まとめ</b><ul>{summary}</ul></div>
-  <nav class="toc"><b>目次</b><ol>{toc}</ol></nav>
+  <nav class="toc" aria-label="目次"><b>目次</b><ol>{toc}</ol></nav>
   {body}
   {terms_box}
   <div class="sources">
@@ -221,36 +358,65 @@ def build_article(a, all_arts, by_slug):
 </article>
 {related_html}
 </div>"""
+    copy_js = """<script>
+document.querySelectorAll('.copy').forEach(function(b){b.addEventListener('click',function(){
+  navigator.clipboard&&navigator.clipboard.writeText(b.dataset.url).then(function(){b.textContent='コピーしました';setTimeout(function(){b.textContent='URLをコピー'},2000)});
+})});
+</script>
+"""
     out = ROOT / "articles" / f"{a['slug']}.html"
-    out.write_text(page(rel, a["title"], a["description"], content, url,
-                        active=a["category"], og_type="article", extra_head=extra), encoding="utf-8")
+    out.write_text(page(rel, a["title"], a["description"], content, url, active=a["category"],
+                        og_type="article", extra_head=extra, og_image=og_url(a["slug"]),
+                        extra_body=ARTICLE_JS + copy_js), encoding="utf-8")
 
 
 # ---------- トップ ----------
 def build_index(arts):
     news = [a for a in arts if a["category"] != "basics"]
     basics = [a for a in arts if a["category"] == "basics"]
+    latest = news[0]["date"] if news else date.today().isoformat()
     points = "".join(
         f'<li><a href="articles/{a["slug"]}.html"><span>{tag(a["category"])} {meta_line(a)}</span>'
-        f'<h3>{e(a["title"])}</h3><p>{e(a["description"])}</p></a></li>'
+        f'<h3>{e(a["title"])}</h3><p>{e(a["summary"][0] if a.get("summary") else a["description"])}</p></a></li>'
         for a in news[:3]
     )
     shelf = "".join(
-        f'<a href="articles/{a["slug"]}.html">{tag("basics")}<h3>{e(a["title"])}</h3></a>' for a in basics
+        f'<a href="articles/{a["slug"]}.html">{tag("basics")}<h3>{e(a["title"])}</h3>'
+        f'<p>{e(a["summary"][0] if a.get("summary") else "")}</p></a>' for a in basics[:8]
+    )
+    cat_count = "".join(
+        f'<a href="category/{k}.html"><b>{v}</b><span>{sum(1 for a in arts if a["category"] == k)}本</span></a>'
+        for k, v in CATS.items()
     )
     body = f"""<section class="hero">
+  <p class="hero-date">{jp_date(latest)} 更新</p>
   <h1>むずかしいニュースを、<br>会社員目線で3分で。</h1>
   <p>世界情勢・経済のニュースが「自分の生活にどう関係するか」まで、やさしく解説します。</p>
 </section>
-<h2 class="section-title">今日のポイント<small>まずはこの3本</small></h2>
-<ol class="points">{points}</ol>
-<h2 class="section-title">基礎から学ぶ<small>ニュースがもっと分かる</small></h2>
-<div class="shelf">{shelf}</div>
-<h2 class="section-title">新着記事</h2>
-<ul class="list">{list_items(news[3:23], "")}</ul>"""
+<section>
+  <h2 class="section-title">{md_date(latest)}のポイント<small>まずはこの3本</small></h2>
+  <ol class="points">{points}</ol>
+</section>
+<section>
+  <h2 class="section-title">基礎から学ぶ<small>ニュースがもっと分かる</small><a class="more" href="category/basics.html">すべて見る ›</a></h2>
+  <div class="shelf">{shelf}</div>
+</section>
+<section>
+  <h2 class="section-title">新着記事</h2>
+  <ul class="list">{list_items(news[3:23], "")}</ul>
+</section>
+<section>
+  <h2 class="section-title">ジャンルから探す</h2>
+  <nav class="cat-grid" aria-label="ジャンル一覧">{cat_count}</nav>
+</section>"""
+    ld = {"@context": "https://schema.org", "@type": "WebSite", "name": SITE_NAME, "url": SITE_URL,
+          "potentialAction": {"@type": "SearchAction", "target": SITE_URL + "search.html?q={q}",
+                              "query-input": "required name=q"}}
     (ROOT / "index.html").write_text(
         page("", SITE_NAME, "世界情勢や経済のむずかしいニュースを、会社員の生活にどう関係するかという目線で、3分で読めるように解説します。",
-             body, SITE_URL, active="home"), encoding="utf-8")
+             body, SITE_URL, active="home",
+             extra_head=f'<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>\n'),
+        encoding="utf-8")
 
 
 # ---------- ジャンル別 ----------
@@ -258,11 +424,72 @@ def build_categories(arts):
     (ROOT / "category").mkdir(exist_ok=True)
     for key, label in CATS.items():
         items = [a for a in arts if a["category"] == key]
-        body = (f'<section class="hero"><h1>{label}</h1><p>{len(items)}本の記事</p></section>'
+        body = (f'<section class="hero"><h1>{label}</h1><p>{CAT_INTRO[key]}</p><p class="count">{len(items)}本の記事</p></section>'
                 f'<ul class="list">{list_items(items, "../")}</ul>')
         url = f"{SITE_URL}category/{key}.html"
         (ROOT / "category" / f"{key}.html").write_text(
-            page("../", label, f"{label}の記事一覧。{TAGLINE}。", body, url, active=key), encoding="utf-8")
+            page("../", label, f"{label}の記事一覧。{CAT_INTRO[key]}", body, url, active=key), encoding="utf-8")
+
+
+# ---------- 検索 ----------
+SEARCH_JS = """<script>
+(function(){
+  var input=document.getElementById('q'),out=document.getElementById('results'),info=document.getElementById('info'),data=[];
+  var cats=%s;
+  function esc(s){return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  function run(){
+    var q=input.value.trim();
+    history.replaceState(null,'',q?'?q='+encodeURIComponent(q):location.pathname);
+    if(!q){out.innerHTML='';info.textContent='キーワードを入れると、タイトルや本文から記事を探します。';return}
+    var words=q.split(/[\\s　]+/);
+    var hits=data.map(function(a){
+      var score=0;
+      for(var i=0;i<words.length;i++){
+        var w=words[i];
+        if(a.t.indexOf(w)>=0)score+=10; else if(a.d.indexOf(w)>=0)score+=4; else if(a.b.indexOf(w)>=0)score+=1; else return null;
+      }
+      return {a:a,s:score};
+    }).filter(Boolean).sort(function(x,y){return y.s-x.s||(y.a.date>x.a.date?1:-1)});
+    info.textContent='「'+q+'」の検索結果：'+hits.length+'件';
+    out.innerHTML=hits.map(function(h){var a=h.a;
+      return '<li><a href="articles/'+a.s+'.html"><span class="tag t-'+a.c+'">'+cats[a.c]+'</span> <span class="meta"><time>'+a.jd+'</time></span><h3>'+esc(a.t)+'</h3><p>'+esc(a.d)+'</p></a></li>'
+    }).join('');
+  }
+  fetch('search.json').then(function(r){return r.json()}).then(function(j){
+    data=j;var p=new URLSearchParams(location.search).get('q');if(p){input.value=p}run();
+  });
+  input.addEventListener('input',run);
+  document.querySelectorAll('.chips button').forEach(function(b){b.addEventListener('click',function(){input.value=b.textContent;run();input.focus()})});
+})();
+</script>
+"""
+
+
+def build_search(arts):
+    data = [{"s": a["slug"], "t": a["title"], "d": a["description"], "c": a["category"], "date": a["date"],
+             "jd": jp_date(a["date"]), "b": plain(a["body"])[:1500]} for a in arts]
+    (ROOT / "search.json").write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    chips = "".join(f"<button type=\"button\">{w}</button>" for w in ["円安", "金利", "ガソリン", "電気代", "日銀", "原油", "年末調整", "選挙"])
+    body = f"""<section class="hero"><h1>記事を検索</h1></section>
+<div class="search-box"><input id="q" type="search" placeholder="例：円安、住宅ローン、ガソリン" aria-label="検索キーワード" autofocus></div>
+<div class="chips"><span>よく読まれる言葉：</span>{chips}</div>
+<p id="info" class="meta"></p>
+<ul class="list" id="results"></ul>"""
+    (ROOT / "search.html").write_text(
+        page("", "記事を検索", "3分ニュース解説の記事をキーワードで検索できます。", body, SITE_URL + "search.html",
+             extra_body=SEARCH_JS % json.dumps(CATS, ensure_ascii=False)), encoding="utf-8")
+
+
+# ---------- 404 ----------
+def build_404(arts):
+    news = [a for a in arts if a["category"] != "basics"][:5]
+    body = f"""<section class="hero"><h1>ページが見つかりませんでした</h1>
+<p>URLが間違っているか、ページが移動した可能性があります。<a href="{SITE_PATH}search.html">記事を検索</a>するか、新しい記事からお探しください。</p></section>
+<ul class="list">{list_items(news, SITE_PATH)}</ul>"""
+    (ROOT / "404.html").write_text(
+        page(SITE_PATH, "ページが見つかりません", "お探しのページは見つかりませんでした。", body, SITE_URL)
+        .replace('<meta name="description"', '<meta name="robots" content="noindex">\n<meta name="description"'),
+        encoding="utf-8")
 
 
 # ---------- 固定ページ ----------
@@ -276,12 +503,31 @@ def build_pages():
             page("", meta["title"], meta["description"], content, SITE_URL + f.name), encoding="utf-8")
 
 
-# ---------- sitemap / robots ----------
+# ---------- RSS / sitemap / robots ----------
+def build_feed(arts):
+    jst = timezone(timedelta(hours=9))
+
+    def rfc822(d):
+        return datetime.strptime(d, "%Y-%m-%d").replace(hour=6, tzinfo=jst).strftime("%a, %d %b %Y %H:%M:%S +0900")
+
+    items = "".join(
+        f"<item><title>{e(a['title'])}</title><link>{SITE_URL}articles/{a['slug']}.html</link>"
+        f"<guid>{SITE_URL}articles/{a['slug']}.html</guid><pubDate>{rfc822(a['date'])}</pubDate>"
+        f"<category>{CATS[a['category']]}</category><description>{e(a['description'])}</description></item>\n"
+        for a in arts[:30]
+    )
+    (ROOT / "feed.xml").write_text(
+        '<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel>'
+        f"<title>{SITE_NAME}</title><link>{SITE_URL}</link><description>{TAGLINE}</description>"
+        f"<language>ja</language>\n{items}</channel></rss>\n", encoding="utf-8")
+
+
 def build_sitemap(arts):
-    urls = [(SITE_URL, date.today().isoformat())]
-    urls += [(f"{SITE_URL}category/{k}.html", date.today().isoformat()) for k in CATS]
+    today = date.today().isoformat()
+    urls = [(SITE_URL, today)]
+    urls += [(f"{SITE_URL}category/{k}.html", today) for k in CATS]
     urls += [(f"{SITE_URL}articles/{a['slug']}.html", a.get("updated", a["date"])) for a in arts]
-    urls += [(SITE_URL + "about.html", date.today().isoformat())]
+    urls += [(SITE_URL + "about.html", today)]
     xml = "".join(f"<url><loc>{u}</loc><lastmod>{d}</lastmod></url>\n" for u, d in urls)
     (ROOT / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n'
@@ -298,11 +544,15 @@ def main():
             if t not in by_slug:
                 print(f"注意：{a['slug']} の用語メモ {t} はまだ記事がありません（表示されません）")
     (ROOT / "articles").mkdir(exist_ok=True)
+    make_og_images(arts)
     for a in arts:
         build_article(a, arts, by_slug)
     build_index(arts)
     build_categories(arts)
+    build_search(arts)
+    build_404(arts)
     build_pages()
+    build_feed(arts)
     build_sitemap(arts)
     print(f"完了：記事{len(arts)}本")
 
