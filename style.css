@@ -264,6 +264,14 @@ strong.num { font-weight: 700; background: linear-gradient(transparent 62%, var(
 .life { background: var(--point-soft); border-left: 4px solid var(--point); border-radius: 0 8px 8px 0; padding: 14px 20px; margin: 14px 0; }
 .life b:first-child { color: var(--point); display: block; }
 .life p:last-child { margin-bottom: 0; }
+.bars { margin: 18px 0 22px; padding: 16px 20px; border: 1px solid var(--line); border-radius: 8px; }
+.bars figcaption { font-size: 14px; font-weight: 700; margin-bottom: 10px; }
+.bar-row { display: grid; grid-template-columns: 11em minmax(0, 1fr) 5.5em; align-items: center; gap: 10px; margin: 8px 0; font-size: 14px; }
+.bar-label { color: var(--sub); line-height: 1.4; }
+.bar-track { height: 22px; background: var(--bg); border-radius: 4px; overflow: hidden; }
+.bar-fill { display: block; height: 100%; background: linear-gradient(90deg, #1b4f8c, #2d6bb0); border-radius: 4px; }
+.bar-val { font-weight: 900; text-align: right; font-size: 15px; }
+.bar-note { margin: 8px 0 0 !important; font-size: 11px; color: var(--sub); }
 a.term { color: inherit; text-decoration: underline dotted var(--basics); text-decoration-thickness: 2px; text-underline-offset: 4px; }
 a.term:hover { color: var(--basics); }
 .box { border: 1px solid var(--line); border-radius: 8px; padding: 14px 20px; margin: 20px 0; }
@@ -415,6 +423,8 @@ footer.site li { margin-bottom: 6px; }
   article.post { padding: 22px 16px 28px; margin: 0 -16px; border-radius: 0; font-size: 16px; }
   article.post h1 { font-size: 22px; }
   article.post h2 { font-size: 18px; }
+  .bar-row { grid-template-columns: minmax(0, 1fr) 5em; gap: 4px 8px; }
+  .bar-label { grid-column: 1 / -1; font-size: 13px; }
   .page-head { padding: 18px 18px; }
   .page-head h1 { font-size: 22px; }
   .list a { grid-template-columns: 112px minmax(0, 1fr); gap: 12px; padding: 12px 14px; }

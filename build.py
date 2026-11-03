@@ -21,6 +21,12 @@
 <h2>何が起きた？</h2>
 <p>本文…</p>
 
+棒グラフ：本文の好きな場所に次のように書く（数字は出典で確かめたものだけ）。
+<!--bars グラフの題名（いつの数字か）
+項目名|数字|単位
+項目名|数字|単位
+出典：〇〇-->
+
 数字の帯：src/numbers.json（label・value・note（いつの数字か）・article（根拠の記事スラッグ））。
 記事で確かめた数字だけを入れ、古くなったら更新する。
 
@@ -162,6 +168,27 @@ def link_terms(body, arts, self_slug):
                 linked.append(b["slug"])
         body = "".join(parts)
     return body, linked
+
+
+# ---------- 棒グラフ ----------
+def render_bars(body):
+    def repl(m):
+        lines = [x.strip() for x in m.group(1).strip().splitlines() if x.strip()]
+        title, rows, note = lines[0], [], ""
+        for x in lines[1:]:
+            if x.count("|") == 2:
+                label, val, unit = x.split("|")
+                rows.append((label, float(val), unit))
+            else:
+                note = x
+        mx = max(v for _, v, _ in rows)
+        bars = "".join(
+            f'<div class="bar-row"><span class="bar-label">{e(l)}</span><span class="bar-track">'
+            f'<span class="bar-fill" style="width:{v / mx * 100:.1f}%"></span></span>'
+            f'<span class="bar-val">{v:g}{e(u)}</span></div>' for l, v, u in rows)
+        return (f'<figure class="bars"><figcaption>{e(title)}</figcaption>{bars}'
+                + (f'<p class="bar-note">{e(note)}</p>' if note else "") + '</figure>')
+    return re.sub(r"<!--bars(.*?)-->", repl, body, flags=re.S)
 
 
 # ---------- 数字を太字に ----------
@@ -510,7 +537,7 @@ ARTICLE_JS = """<button class="to-top" type="button" aria-label="ページの先
 # ---------- 記事ページ ----------
 def build_article(a, all_arts, by_slug, backlinks):
     rel = "../"
-    body, heads = add_heading_ids(a["body"])
+    body, heads = add_heading_ids(render_bars(a["body"]))
     body, linked = link_terms(body, all_arts, a["slug"])
     body = bold_numbers(body)
     url = f"{SITE_URL}articles/{a['slug']}.html"
