@@ -35,11 +35,23 @@
   <nav class="cats" aria-label="ジャンル"><div class="wrap"><ul><li><a href="index.html">トップ</a></li><li><a href="category/world.html">世界情勢</a></li><li><a href="category/economy.html">経済</a></li><li><a href="category/life.html">くらし・お金</a></li><li><a href="category/basics.html">基礎解説</a></li><li class="sep" aria-hidden="true"></li><li><a class="tp" href="topic/energy.html">#中東・エネルギー</a></li><li><a class="tp" href="topic/rates.html">#金利・円相場</a></li><li><a class="tp" href="topic/household.html">#税金・家計</a></li><li><a class="tp" href="topic/us.html">#アメリカ政治</a></li><li><a class="tp" href="topic/russia.html">#ロシア・ウクライナ</a></li></ul></div></nav>
 </header>
 <main class="wrap" id="main">
-<section class="hero"><h1>記事を検索</h1></section>
+<section class="page-head"><p class="kicker">検索</p><h1>記事を検索</h1><p>タイトル・説明・本文から記事を探せます。言葉はスペースで区切って複数入れられます。</p></section>
+<div class="layout"><div class="main-col">
 <div class="search-box"><input id="q" type="search" placeholder="例：円安、住宅ローン、ガソリン" aria-label="検索キーワード" autofocus></div>
 <div class="chips"><span>よく読まれる言葉：</span><button type="button">円安</button><button type="button">金利</button><button type="button">ガソリン</button><button type="button">電気代</button><button type="button">日銀</button><button type="button">原油</button><button type="button">年末調整</button><button type="button">選挙</button></div>
 <p id="info" class="meta"></p>
-<ul class="list" id="results"></ul>
+<div class="cards grid-3" id="results"></div>
+</div><aside class="sidebar" aria-label="サイドメニュー">
+  <section class="side-box guide"><h2 class="side-title">このサイトの読み方</h2>
+    <ol class="steps"><li><b>3行まとめ</b>で、何が起きたかを10秒でつかむ</li>
+    <li><b>生活への影響</b>（オレンジの枠）で、自分のお金や仕事との関係を知る</li>
+    <li>点線の言葉をタップすると、<b>基礎解説</b>で用語が分かる</li></ol></section>
+  <section class="side-box"><h2 class="side-title">注目のテーマ</h2><div class="chips-wrap"><a class="chip" href="topic/energy.html">#中東・エネルギー<span>6</span></a><a class="chip" href="topic/rates.html">#金利・円相場<span>7</span></a><a class="chip" href="topic/household.html">#税金・家計<span>4</span></a><a class="chip" href="topic/us.html">#アメリカ政治<span>2</span></a><a class="chip" href="topic/russia.html">#ロシア・ウクライナ<span>1</span></a></div></section>
+  <section class="side-box"><h2 class="side-title">ジャンルから探す</h2><ul class="genre-list"><li><a href="category/world.html"><b>世界情勢</b><span>3本</span></a></li><li><a href="category/economy.html"><b>経済</b><span>3本</span></a></li><li><a href="category/life.html"><b>くらし・お金</b><span>3本</span></a></li><li><a href="category/basics.html"><b>基礎解説</b><span>8本</span></a></li></ul></section>
+  <section class="side-box about-box"><h2 class="side-title">このサイトについて</h2>
+    <p>ニュースを見ても「で、自分の生活にどう関係あるの？」と思う会社員のために、世界と経済のニュースを3分で読めるように解説しています。</p>
+    <a class="more" href="about.html">運営者・記事の作り方 ›</a></section>
+</aside></div>
 </main>
 <footer class="site">
   <div class="wrap foot-grid">
@@ -83,7 +95,10 @@
     }).filter(Boolean).sort(function(x,y){return y.s-x.s||(y.a.date>x.a.date?1:-1)});
     info.textContent='「'+q+'」の検索結果：'+hits.length+'件';
     out.innerHTML=hits.map(function(h){var a=h.a;
-      return '<li><a href="articles/'+a.s+'.html"><span class="tag t-'+a.c+'">'+cats[a.c]+'</span> <span class="meta"><time>'+a.jd+'</time></span><h3>'+esc(a.t)+'</h3><p>'+esc(a.d)+'</p></a></li>'
+      var w=a.e||cats[a.c],sz=w.length<=3?'w1':w.length<=4?'w2':w.length<=5?'w3':'w4';
+      return '<a class="card" href="articles/'+a.s+'.html"><span class="thumb art c-'+a.c+' '+sz+'" role="img" aria-label="'+esc(w)+'"><span class="art-cat">'+cats[a.c]+'</span><span class="art-word">'+esc(w)+'</span><span class="art-logo">3分ニュース解説</span></span>'
+        +'<div class="card-body"><span class="tag t-'+a.c+'">'+cats[a.c]+'</span> <span class="meta"><time datetime="'+a.date+'">'+a.jd+'</time></span><h3>'+esc(a.t)+'</h3>'
+        +(a.i?'<p class="impact"><b>くらしへの影響</b>'+esc(a.i)+'</p>':'<p>'+esc(a.d)+'</p>')+'</div></a>'
     }).join('');
   }
   fetch('search.json').then(function(r){return r.json()}).then(function(j){

@@ -296,7 +296,6 @@ article.post[data-fs="l"] .summary li { font-size: 18px; }
 .list a:hover h3 { color: var(--accent); }
 .list h3 { font-size: 16px; line-height: 1.55; margin: 4px 0 0; }
 .list p { margin: 2px 0 0; font-size: 13px; color: var(--sub); line-height: 1.6; }
-#results a { grid-template-columns: 1fr; }
 .hero { padding: 28px 0 8px; }
 .hero h1 { font-size: 26px; line-height: 1.5; margin: 0 0 6px; }
 .hero p { color: var(--sub); margin: 0; font-size: 14px; }

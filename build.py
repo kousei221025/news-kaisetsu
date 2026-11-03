@@ -719,7 +719,10 @@ SEARCH_JS = """<script>
     }).filter(Boolean).sort(function(x,y){return y.s-x.s||(y.a.date>x.a.date?1:-1)});
     info.textContent='「'+q+'」の検索結果：'+hits.length+'件';
     out.innerHTML=hits.map(function(h){var a=h.a;
-      return '<li><a href="articles/'+a.s+'.html"><span class="tag t-'+a.c+'">'+cats[a.c]+'</span> <span class="meta"><time>'+a.jd+'</time></span><h3>'+esc(a.t)+'</h3><p>'+esc(a.d)+'</p></a></li>'
+      var w=a.e||cats[a.c],sz=w.length<=3?'w1':w.length<=4?'w2':w.length<=5?'w3':'w4';
+      return '<a class="card" href="articles/'+a.s+'.html"><span class="thumb art c-'+a.c+' '+sz+'" role="img" aria-label="'+esc(w)+'"><span class="art-cat">'+cats[a.c]+'</span><span class="art-word">'+esc(w)+'</span><span class="art-logo">3分ニュース解説</span></span>'
+        +'<div class="card-body"><span class="tag t-'+a.c+'">'+cats[a.c]+'</span> <span class="meta"><time datetime="'+a.date+'">'+a.jd+'</time></span><h3>'+esc(a.t)+'</h3>'
+        +(a.i?'<p class="impact"><b>くらしへの影響</b>'+esc(a.i)+'</p>':'<p>'+esc(a.d)+'</p>')+'</div></a>'
     }).join('');
   }
   fetch('search.json').then(function(r){return r.json()}).then(function(j){
@@ -734,14 +737,17 @@ SEARCH_JS = """<script>
 
 def build_search(arts):
     data = [{"s": a["slug"], "t": a["title"], "d": a["description"], "c": a["category"], "date": a["date"],
-             "jd": jp_date(a["date"]), "b": plain(a["body"])[:1500]} for a in arts]
+             "jd": jp_date(a["date"]), "e": a.get("eyecatch", ""), "i": a.get("impact", ""),
+             "b": plain(a["body"])[:1500]} for a in arts]
     (ROOT / "search.json").write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     chips = "".join(f"<button type=\"button\">{w}</button>" for w in ["円安", "金利", "ガソリン", "電気代", "日銀", "原油", "年末調整", "選挙"])
-    body = f"""<section class="hero"><h1>記事を検索</h1></section>
+    body = f"""<section class="page-head"><p class="kicker">検索</p><h1>記事を検索</h1><p>タイトル・説明・本文から記事を探せます。言葉はスペースで区切って複数入れられます。</p></section>
+<div class="layout"><div class="main-col">
 <div class="search-box"><input id="q" type="search" placeholder="例：円安、住宅ローン、ガソリン" aria-label="検索キーワード" autofocus></div>
 <div class="chips"><span>よく読まれる言葉：</span>{chips}</div>
 <p id="info" class="meta"></p>
-<ul class="list" id="results"></ul>"""
+<div class="cards grid-3" id="results"></div>
+</div>{sidebar(arts, "", home=True)}</div>"""
     (ROOT / "search.html").write_text(
         page("", "記事を検索", "3分ニュース解説の記事をキーワードで検索できます。", body, SITE_URL + "search.html",
              extra_body=SEARCH_JS % json.dumps(CATS, ensure_ascii=False)), encoding="utf-8")
