@@ -10,6 +10,7 @@
   "category": "economy",          # world / economy / life / basics
   "description": "検索結果や一覧に出る説明文",
   "summary": ["3行まとめ1", "3行まとめ2", "3行まとめ3"],
+  "rank": 5,                      # 同じ日付の中で大きいほど上に出る（省略可）
   "terms": ["basics-yen"],        # 用語メモに出す基礎解説記事のスラッグ（無ければ省略）
   "sources": [["出典名", "URL"]]
 }
@@ -62,7 +63,7 @@ def load_articles():
         if meta["category"] not in CATS:
             raise SystemExit(f"ジャンルが不正です: {f.name} {meta['category']}")
         items.append(meta)
-    items.sort(key=lambda a: (a["date"], a["slug"]), reverse=True)
+    items.sort(key=lambda a: (a["date"], a.get("rank", 0), a["slug"]), reverse=True)
     return items
 
 
