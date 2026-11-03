@@ -21,6 +21,9 @@
 <h2>何が起きた？</h2>
 <p>本文…</p>
 
+数字の帯：src/numbers.json（label・value・note（いつの数字か）・article（根拠の記事スラッグ））。
+記事で確かめた数字だけを入れ、古くなったら更新する。
+
 作られるもの：articles/*.html、index.html、category/*.html、search.html、search.json、
 404.html、feed.xml、sitemap.xml、robots.txt、固定ページ（src/pages）、og/*.png（SNS用画像）
 """
@@ -573,6 +576,18 @@ document.querySelectorAll('.copy').forEach(function(b){b.addEventListener('click
                         extra_body=ARTICLE_JS + copy_js), encoding="utf-8")
 
 
+# ---------- 数字で見るいま ----------
+def numbers_html(by_slug, rel):
+    f = SRC / "numbers.json"
+    if not f.exists():
+        return ""
+    items = "".join(
+        f'<li><a href="{rel}articles/{n["article"]}.html"><span class="nl">{e(n["label"])}</span>'
+        f'<b class="nv">{e(n["value"])}</b><span class="nn">{e(n["note"])}</span></a></li>'
+        for n in json.loads(f.read_text(encoding="utf-8")) if n["article"] in by_slug)
+    return f'<section class="numbers" aria-label="数字で見るいま"><p class="numbers-h">数字で見るいま</p><ul>{items}</ul></section>'
+
+
 # ---------- トップ ----------
 def build_index(arts):
     news = [a for a in arts if a["category"] != "basics"]
@@ -583,7 +598,16 @@ def build_index(arts):
     side_news = "".join(
         f'<li><a href="articles/{a["slug"]}.html">{thumb(a, "", "mini-thumb")}<div>{tag(a["category"])}'
         f'<h3>{e(a["title"])}</h3>{impact(a)}</div></a></li>' for a in news[1:4])
+    by_slug = {a["slug"]: a for a in arts}
+    also = "".join(f'<li><a href="articles/{s}.html">{e(by_slug[s]["title"])}</a></li>'
+                   for s in lead["terms"][:2] if s in by_slug)
+    also_html = f'<div class="also"><p>あわせて読む</p><ul>{also}</ul></div>' if also else ""
+    tcount = {k: sum(1 for a in news if k in topics_of(a)) for k in TOPICS}
+    top_topic = max(tcount, key=tcount.get)
+    feature = (f'<a class="feature" href="topic/{top_topic}.html"><span class="ft">特集</span>'
+               f'<b>{TOPICS[top_topic][0]}</b><span class="fd">{TOPICS[top_topic][1]}</span><span class="fc">{tcount[top_topic]}本の記事 ›</span></a>')
     body = f"""<section class="strip"><p><b>むずかしいニュースを、会社員目線で3分で。</b><span>世界情勢・経済のニュースが「自分の生活にどう関係するか」まで解説します。</span></p><p class="strip-date">{jp_date(latest)} 更新</p></section>
+{numbers_html(by_slug, "")}
 <div class="layout">
 <div class="main-col">
   <section class="lead" aria-label="今日の注目記事">
@@ -594,6 +618,8 @@ def build_index(arts):
     </a>
     <ul class="lead-side">{side_news}</ul>
   </section>
+  {also_html}
+  {feature}
   <section><h2 class="section-title">新着記事<small>{md_date(latest)}更新</small></h2>{cards(news[4:22], "")}</section>
   <section class="basics-band"><h2 class="section-title">基礎から学ぶ<small>ニュースがもっと分かる</small><a class="more" href="category/basics.html">すべて見る ›</a></h2>
     {cards(basics[:8], "", "grid-4 compact")}</section>
