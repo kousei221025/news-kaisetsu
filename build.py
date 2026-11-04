@@ -768,17 +768,44 @@ def build_index(arts):
 
 
 # ---------- ジャンル別 ----------
-def page_head(kicker, title, intro, count):
-    return (f'<section class="page-head"><p class="kicker">{kicker}</p><h1>{title}</h1><p>{intro}</p>'
+def page_head(kicker, title, intro, count, color=None):
+    style = f' style="--c:{color}"' if color else ""
+    return (f'<section class="page-head"{style}><p class="kicker">{kicker}</p><h1>{title}</h1><p>{intro}</p>'
             f'<p class="count">{count}本の記事</p></section>')
+
+
+def cat_lead(a, rel):
+    """一覧ページの先頭の大きい記事。"""
+    lis = "".join(f"<li>{e(s)}</li>" for s in a.get("summary", []))
+    return (f'<a class="cat-lead" href="{rel}articles/{a["slug"]}.html">{thumb(a, rel, "lead-thumb", lazy=False)}'
+            f'<div>{tag(a["category"])} {meta_line(a)}<h2>{e(a["title"])}</h2><ul>{lis}</ul>{impact(a)}</div></a>')
+
+
+def related_basics(items, all_arts, rel, title):
+    by_slug = {a["slug"]: a for a in all_arts}
+    slugs = list(dict.fromkeys(s for a in items for s in a.get("terms", []) if s in by_slug))
+    if not slugs:
+        return ""
+    return (f'<section class="basics-band"><h2 class="section-title">{title}<small>先に読むとニュースが分かる</small></h2>'
+            f'<div class="brows two">{basics_rows([by_slug[s] for s in slugs][:6], rel)}</div></section>')
 
 
 def build_categories(arts):
     (ROOT / "category").mkdir(exist_ok=True)
     for key, label in CATS.items():
         items = [a for a in arts if a["category"] == key]
-        body = (page_head("ジャンル", label, CAT_INTRO[key], len(items)) +
-                f'<div class="layout"><div class="main-col">{cards(items, "../")}</div>{sidebar(arts, "../")}</div>')
+        news = [a for a in arts if a["category"] != "basics"]
+        if key == "basics" or not items:
+            main = cards(items, "../")
+        else:
+            rest = items[1:]
+            main = (cat_lead(items[0], "../")
+                    + (f'<section><h2 class="section-title">{label}の記事</h2>{cards(rest[:6], "../")}'
+                       + (f'<ul class="rows">{row_list(rest[6:], "../")}</ul>' if len(rest) > 6 else "") + '</section>' if rest else "")
+                    + related_basics(items, arts, "../", f"{label}の基礎解説"))
+        body = (page_head("ジャンル", label, CAT_INTRO[key], len(items), CAT_COLOR[key]) +
+                f'<div class="layout"><div class="main-col">{main}</div>{sidebar(arts, "../")}</div>'
+                f'<section class="full"><h2 class="section-title">ジャンル別の新着<small>ほかの分野も読む</small></h2>{genre_columns(news, "../")}</section>')
         url = f"{SITE_URL}category/{key}.html"
         (ROOT / "category" / f"{key}.html").write_text(
             page("../", label, f"{label}の記事一覧。{CAT_INTRO[key]}", body, url, active=key), encoding="utf-8")
@@ -791,11 +818,12 @@ def build_topics(arts):
         items = [a for a in arts if key in topics_of(a)]
         news = [a for a in items if a["category"] != "basics"]
         basics = [a for a in items if a["category"] == "basics"]
-        basics_html = (f'<section><h2 class="section-title">まず読みたい基礎解説</h2>{cards(basics, "../", "grid-3 compact")}</section>'
-                       if basics else "")
+        basics_html = (f'<section class="basics-band"><h2 class="section-title">まず読みたい基礎解説<small>先に読むとニュースが分かる</small></h2>'
+                       f'<div class="brows two">{basics_rows(basics, "../")}</div></section>' if basics else "")
         body = (page_head("テーマ", f"#{label}", intro, len(items)) +
                 f'<div class="layout"><div class="main-col">{basics_html}'
-                f'<section><h2 class="section-title">ニュース解説</h2>{cards(news, "../")}</section></div>{sidebar(arts, "../")}</div>')
+                f'<section><h2 class="section-title">ニュース解説<small>新しい順</small></h2><ul class="rows">{row_list(news, "../")}</ul></section></div>{sidebar(arts, "../")}</div>'
+                f'<section class="full"><h2 class="section-title">ジャンル別の新着<small>ほかの話題も読む</small></h2>{genre_columns([a for a in arts if a["category"] != "basics"], "../")}</section>')
         url = f"{SITE_URL}topic/{key}.html"
         (ROOT / "topic" / f"{key}.html").write_text(
             page("../", f"#{label}", f"{label}に関する記事の一覧。{intro}", body, url, active="topic-" + key), encoding="utf-8")

@@ -225,6 +225,17 @@ nav.cats .sep { width: 1px; height: 18px; background: rgba(255,255,255,.25); mar
 .gcol ul { list-style: none; margin: 0; padding: 0; }
 .gcol li { border-top: 1px solid var(--line); }
 .gcol li a { display: block; padding: 10px 0; font-size: 14px; line-height: 1.55; font-weight: 700; text-decoration: none; color: var(--text); }
+.cat-lead { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 28px; align-items: start; padding: 22px; background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); text-decoration: none; color: var(--text); }
+.cat-lead h2 { font-size: 23px; line-height: 1.45; margin: 8px 0 10px; }
+.cat-lead:hover h2 { color: var(--accent); }
+.cat-lead ul { margin: 0; padding-left: 1.2em; color: var(--sub); font-size: 14px; line-height: 1.75; }
+.brows.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.main-col > .cat-lead + section .section-title { margin-top: 36px; }
+@media (max-width: 760px) {
+  .cat-lead { grid-template-columns: minmax(0, 1fr); gap: 12px; padding: 0 0 16px; background: none; box-shadow: none; }
+  .cat-lead h2 { font-size: 20px; }
+  .brows.two { grid-template-columns: minmax(0, 1fr); }
+}
 .band { margin: 48px 0 8px; padding: 34px 0 38px; background: #10294a; color: #fff; box-shadow: 0 0 0 100vmax #10294a; clip-path: inset(0 -100vmax); }
 .band h2 { display: flex; align-items: baseline; gap: 12px; font-size: 22px; margin: 0 0 18px; color: #fff; }
 .band h2 small { font-size: 12px; font-weight: 400; color: #b9c8dc; }
@@ -292,8 +303,8 @@ nav.cats .sep { width: 1px; height: 18px; background: rgba(255,255,255,.25); mar
 .toc-list a:hover { color: var(--accent); }
 
 /* ===== ジャンル・テーマのページ見出し ===== */
-.page-head { margin: 28px 0 24px; padding: 24px 28px; background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); border-left: 6px solid var(--accent); }
-.page-head .kicker { margin: 0; font-size: 12px; font-weight: 700; color: var(--accent); letter-spacing: .1em; }
+.page-head { margin: 28px 0 24px; padding: 24px 28px; background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); border-left: 6px solid var(--c, var(--accent)); }
+.page-head .kicker { margin: 0; font-size: 12px; font-weight: 700; color: var(--c, var(--accent)); letter-spacing: .1em; }
 .page-head h1 { margin: 2px 0 6px; font-size: 28px; }
 .page-head p { margin: 0; color: var(--sub); font-size: 14px; }
 .page-head .count { margin-top: 6px; font-size: 12px; }
