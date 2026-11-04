@@ -307,6 +307,7 @@ nav.cats .sep { width: 1px; height: 18px; background: rgba(255,255,255,.25); mar
 .followup-note b { font-size: 12px; color: #fff; background: #c8102e; padding: 1px 8px; border-radius: 3px; margin-right: 6px; }
 .followup-note a { color: #8a3a06; font-weight: 700; }
 .note-upd { font-size: 13px; color: var(--sub); }
+.saved { display: inline-block; font-size: 10px; font-weight: 700; color: var(--accent); border: 1px solid var(--accent); border-radius: 3px; padding: 0 5px; margin-right: 6px; line-height: 1.6; vertical-align: 2px; }
 .rows li + li { border-top: 1px solid var(--line); }
 .promises { list-style: none; counter-reset: pr; padding: 0 !important; margin: 16px 0 28px; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
 .promises li { grid-column: span 2; }
