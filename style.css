@@ -231,6 +231,12 @@ nav.cats .sep { width: 1px; height: 18px; background: rgba(255,255,255,.25); mar
   .grid-4 > .card:last-child:nth-child(4n+1) .thumb { width: calc((100% - 66px) / 4); flex: none; }
   .grid-4 > .card:last-child:nth-child(4n+1) .card-body { align-self: center; padding: 18px 26px; }
   .grid-4 > .card:last-child:nth-child(4n+2), .grid-4 > .card:nth-last-child(2):nth-child(4n+1) { grid-column: span 2; }
+  .grid-4 > .card:last-child:nth-child(4n+2), .grid-4 > .card:nth-last-child(2):nth-child(4n+1), .grid-4 > .card:last-child:nth-child(4n+3) { flex-direction: row; }
+  .grid-4 > .card:last-child:nth-child(4n+2) .thumb, .grid-4 > .card:nth-last-child(2):nth-child(4n+1) .thumb, .grid-4 > .card:last-child:nth-child(4n+3) .thumb { width: calc((100% - 22px) / 2); flex: none; }
+  .grid-4 > .card:last-child:nth-child(4n+2) .card-body, .grid-4 > .card:nth-last-child(2):nth-child(4n+1) .card-body, .grid-4 > .card:last-child:nth-child(4n+3) .card-body { align-self: center; }
+  .grid-4 > .card:last-child:nth-child(4n+3) { align-self: start; }
+  .grid-4 > .card:last-child:nth-child(4n+3) .thumb { align-self: center; }
+  .grid-4 > .card:nth-last-child(2):nth-child(4n+2), .grid-4 > .card:nth-last-child(3):nth-child(4n+1) { align-self: start; }
   .grid-4 > .card:last-child:nth-child(4n+3) { grid-column: span 2; }
   .grid-3 > .card:last-child:nth-child(3n+1) { grid-column: 1 / -1; flex-direction: row; }
   .grid-3 > .card:last-child:nth-child(3n+1) .thumb { width: calc((100% - 44px) / 3); flex: none; }
@@ -315,6 +321,12 @@ nav.cats .sep { width: 1px; height: 18px; background: rgba(255,255,255,.25); mar
 .ask-box a:hover { background: var(--accent); color: #fff; }
 @media (max-width: 760px) { .ask-box { flex-direction: column; align-items: flex-start; } }
 @media print { .ask-box { display: none; } }
+.bjump { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 8px; }
+.bjump a { font-size: 14px; font-weight: 700; padding: 8px 16px; border-radius: 999px; background: var(--basics-soft); color: var(--basics); text-decoration: none; }
+.bjump a span { font-size: 11px; margin-left: 6px; opacity: .8; }
+.bjump a:hover { background: var(--basics); color: #fff; }
+.bgroup { scroll-margin-top: 120px; }
+.bgroup .section-title { border-top-color: var(--basics); }
 .rows li + li { border-top: 1px solid var(--line); }
 .promises { list-style: none; counter-reset: pr; padding: 0 !important; margin: 16px 0 28px; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
 .promises li { grid-column: span 2; }

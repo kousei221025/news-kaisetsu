@@ -75,6 +75,14 @@ CAT_INTRO = {
     "basics": "ニュースを読むための基礎知識。一度読んでおくと、毎日のニュースがぐっと分かりやすくなります。",
 }
 # テーマ：タイトル・説明・3行まとめにキーワードが入っている記事を自動で集める
+BASICS_GROUPS = [  # 基礎解説ページの分野（キーワードはスラッグの一部。どれにも当たらなければ「その他」）
+    ("金利・円相場・物価", ["yen", "interest", "boj", "frb", "kawase", "inflation", "cpi", "jutaku"]),
+    ("給料・税金・制度", ["nenmatsu", "nenshu", "furusato", "ideco", "shunto", "gasoline-tax"]),
+    ("投資・株", ["nisa", "nikkei"]),
+    ("エネルギー", ["crude", "hormuz", "denki"]),
+    ("世界・アメリカ", ["us-", "congress"]),
+]
+
 TOPICS = {
     "energy": ("中東・エネルギー", "原油・ガソリン・電気代など、中東情勢とエネルギー価格の動き。",
                ["原油", "ガソリン", "電気", "ホルムズ", "イラン", "中東"]),
@@ -947,8 +955,20 @@ def build_categories(arts):
                     + related_basics(items, arts, "../", f"{label}の基礎解説"))
         if key == "basics":  # 基礎解説は右列を省き、用語さくいん＋横幅いっぱいの4列
             gl = "".join(f'<a href="../articles/{b["slug"]}.html">{e(w)}</a>' for b in items for w in b.get("keywords", []))
+            groups, used = [], set()
+            for gname, keys in BASICS_GROUPS:
+                g = [a for a in items if a["slug"] not in used and any(k in a["slug"] for k in keys)]
+                used.update(a["slug"] for a in g)
+                if g:
+                    groups.append((gname, g))
+            rest = [a for a in items if a["slug"] not in used]
+            if rest:
+                groups.append(("その他", rest))
+            jump = "".join(f'<a href="#bg{i}">{e(n)}<span>{len(g)}</span></a>' for i, (n, g) in enumerate(groups))
+            secs = "".join(f'<section class="bgroup" id="bg{i}"><h2 class="section-title">{e(n)}<small>{len(g)}本</small></h2>{cards(g, "../", "grid-4")}</section>'
+                           for i, (n, g) in enumerate(groups))
             layout = (f'<div class="gloss-bar"><b>用語さくいん</b><div class="glossary">{gl}</div><a class="gl-all" href="../glossary.html">用語集（意味つき）›</a></div>'
-                      f'{cards(items, "../", "grid-4")}')
+                      f'<nav class="bjump" aria-label="分野で探す">{jump}</nav>{secs}')
         else:
             layout = f'<div class="layout"><div class="main-col">{main}</div>{sidebar(arts, "../")}</div>'
         body = (page_head("ジャンル", label, CAT_INTRO[key], len(items), CAT_COLOR[key]) + layout +
