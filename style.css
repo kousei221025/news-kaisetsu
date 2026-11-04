@@ -94,9 +94,9 @@ nav.cats .sep { width: 1px; height: 18px; background: rgba(255,255,255,.25); mar
 
 /* ===== 共通パーツ ===== */
 .tag { display: inline-block; font-size: 11px; font-weight: 700; line-height: 1.7; padding: 0 9px; border-radius: 4px; text-decoration: none; letter-spacing: .04em; }
-.tag.t-world { background: var(--accent-soft); color: var(--accent); }
-.tag.t-economy { background: var(--economy-soft); color: var(--economy); }
-.tag.t-life { background: var(--point-soft); color: var(--point); }
+.tag.t-world, .tl-cat.t-world { background: var(--accent-soft); color: var(--accent); }
+.tag.t-economy, .tl-cat.t-economy { background: var(--economy-soft); color: var(--economy); }
+.tag.t-life, .tl-cat.t-life { background: var(--point-soft); color: var(--point); }
 .tag.t-basics { background: var(--basics-soft); color: var(--basics); }
 .meta { font-size: 12px; color: var(--sub); }
 .meta > * + *::before { content: "・"; }
@@ -329,6 +329,7 @@ nav.cats .sep { width: 1px; height: 18px; background: rgba(255,255,255,.25); mar
 .bgroup .section-title { border-top-color: var(--basics); }
 .gl-h { font-size: 17px; margin: 28px 0 10px; padding-left: 10px; border-left: 4px solid var(--basics); }
 .main-col > .gl-h:first-child { margin-top: 0; }
+.tl-cat { display: inline-block; font-size: 10px; font-weight: 700; padding: 0 6px; margin-left: 6px; border-radius: 3px; line-height: 1.6; vertical-align: 1px; }
 .rows li + li { border-top: 1px solid var(--line); }
 .promises { list-style: none; counter-reset: pr; padding: 0 !important; margin: 16px 0 28px; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
 .promises li { grid-column: span 2; }
@@ -522,7 +523,9 @@ article.post[data-fs="l"] .summary .impact { font-size: 18px !important; }
 .timeline li { position: relative; padding: 0 0 12px 12px; font-size: 13px; line-height: 1.6; }
 .timeline li::before { content: ""; position: absolute; left: -21px; top: 5px; width: 10px; height: 10px; border-radius: 50%; background: var(--card); border: 2px solid var(--accent); }
 .timeline li.here::before { background: var(--accent); }
-.timeline time { display: block; font-size: 11px; font-weight: 700; color: var(--accent); }
+.timeline time { display: inline-block; font-size: 11px; font-weight: 700; color: var(--accent); }
+.timeline .tl-cat { margin-left: 6px; }
+.timeline .tl-cat + * { display: block; }
 .timeline a { color: var(--text); text-decoration: none; font-weight: 700; }
 .timeline a:hover { color: var(--accent); text-decoration: underline; }
 .timeline .here span { font-weight: 700; color: var(--sub); }

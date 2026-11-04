@@ -602,7 +602,7 @@ def timeline_box(a, arts, rel):
     if len(items) < 2:
         return ""
     lis = "".join(
-        f'<li{" class=\"here\"" if x["slug"] == a["slug"] else ""}><time datetime="{x["date"]}">{md_date(x["date"])}</time>'
+        f'<li{" class=\"here\"" if x["slug"] == a["slug"] else ""}><time datetime="{x["date"]}">{md_date(x["date"])}</time><span class="tl-cat t-{x["category"]}">{CATS[x["category"]]}</span>'
         + (f'<span>{e(x["title"])}（この記事）</span>' if x["slug"] == a["slug"]
            else f'<a href="{rel}articles/{x["slug"]}.html">{e(x["title"])}</a>') + '</li>'
         for x in items[-6:])
