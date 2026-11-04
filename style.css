@@ -515,9 +515,11 @@ strong.num { font-weight: 700; background: linear-gradient(transparent 62%, var(
 .bar-fill { display: block; height: 100%; background: linear-gradient(90deg, #1b4f8c, #2d6bb0); border-radius: 4px; }
 .flow { margin: 18px 0 22px; padding: 16px 20px; border: 1px solid var(--line); border-radius: 8px; }
 .flow figcaption { font-size: 14px; font-weight: 700; margin-bottom: 12px; }
-.flow ol { list-style: none; margin: 0 !important; padding: 0 !important; display: flex; align-items: stretch; gap: 26px; }
-.flow li { position: relative; flex: 1; margin: 0 !important; padding: 12px 14px; background: var(--accent-soft); border-radius: 8px; font-size: 14px; font-weight: 700; line-height: 1.6; display: flex; align-items: center; }
+.flow ol { counter-reset: fl; list-style: none; margin: 0 !important; padding: 0 !important; display: flex; align-items: stretch; gap: 26px; }
+.flow li { counter-increment: fl; position: relative; flex: 1 1 0; min-width: 0; margin: 0 !important; padding: 12px 14px; background: var(--accent-soft); border-radius: 8px; font-size: 14px; font-weight: 700; line-height: 1.6; display: flex; align-items: center; }
 .flow li + li::before { content: "→"; position: absolute; left: -21px; top: 50%; transform: translateY(-50%); color: var(--accent); font-weight: 900; font-size: 18px; }
+.flow li::after { content: counter(fl); position: absolute; top: -9px; left: 10px; font-size: 10px; font-weight: 900; color: #fff; background: var(--accent); border-radius: 999px; padding: 0 7px; line-height: 1.7; }
+.flow li.last::after { background: var(--point); }
 .flow li.last { background: var(--point-soft); color: var(--text); box-shadow: inset 0 0 0 2px var(--point); }
 @media (max-width: 760px) {
   .flow ol { flex-direction: column; gap: 22px; }
