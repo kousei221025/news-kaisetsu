@@ -463,7 +463,7 @@ def list_items(arts, rel):
 def cards(arts, rel, cls="grid-3"):
     """サムネイルが上にあるカードの並び。"""
     items = "".join(
-        f'<a class="card" href="{rel}articles/{a["slug"]}.html">{thumb(a, rel)}'
+        f'<a class="card" data-cat="{a["category"]}" href="{rel}articles/{a["slug"]}.html">{thumb(a, rel)}'
         f'<div class="card-body">{tag(a["category"])} {short_meta(a) if a["category"] != "basics" else ""}<h3>{e(a["title"])}</h3>'
         f'{impact(a) or "<p>" + e(lead_text(a)) + "</p>"}</div></a>'
         for a in arts
@@ -474,7 +474,7 @@ def cards(arts, rel, cls="grid-3"):
 def row_list(arts, rel):
     """新着の2段目以降：見出し＋くらしへの影響の横長一覧。"""
     return "".join(
-        f'<li><a href="{rel}articles/{a["slug"]}.html">{thumb(a, rel, "mini-thumb")}'
+        f'<li data-cat="{a["category"]}"><a href="{rel}articles/{a["slug"]}.html">{thumb(a, rel, "mini-thumb")}'
         f'<div>{tag(a["category"])} {short_meta(a)}<h3>{e(a["title"])}</h3>{impact(a)}</div></a></li>'
         for a in arts)
 
@@ -802,12 +802,18 @@ def build_index(arts):
   </section>
   <a class="digest-cta sp-only" href="daily/{latest}.html"><span>忙しい人へ</span><b>{md_date(latest)}のニュースを3分でまとめ読み</b><small>{sum(1 for a in news if a["date"] == latest)}本の3行まとめを1ページで ›</small></a>
   {feature}
-  <section><h2 class="section-title">新着記事<small>{md_date(latest)}更新</small></h2>{cards(news[4:7], "")}
+  <section class="newest"><h2 class="section-title">新着記事<small>{md_date(latest)}更新</small></h2>
+    <div class="ftabs" role="group" aria-label="ジャンルで絞り込む"><button type="button" aria-pressed="true" data-f="all">すべて</button>{"".join(f'<button type="button" aria-pressed="false" data-f="{k}">{CATS[k]}</button>' for k in ("world", "economy", "life"))}</div>
+    <p class="fempty" hidden>このジャンルの新着は、上の注目記事をご覧ください。</p>
+    {cards(news[4:7], "")}
     {f'<ul class="rows">{row_list(news[7:16], "")}</ul>' if len(news) > 7 else ""}</section>
 </div>
 {sidebar(arts, "", home=True).replace('class="sidebar"', 'class="sidebar home-side"', 1)}
 </div>
 {topic_band(news, "")}
+<script>(function(){{var s=document.querySelector('.newest');if(!s)return;var bs=s.querySelectorAll('.ftabs button'),items=s.querySelectorAll('[data-cat]'),em=s.querySelector('.fempty');
+bs.forEach(function(b){{b.addEventListener('click',function(){{var f=b.dataset.f,n=0;bs.forEach(function(x){{x.setAttribute('aria-pressed',x===b)}});
+items.forEach(function(it){{var on=f==='all'||it.dataset.cat===f;it.hidden=!on;if(on)n++}});em.hidden=n>0}})}})}})();</script>
 <section class="full"><h2 class="section-title">ジャンル別の新着<small>気になる分野から読む</small></h2>{genre_columns(news, "")}</section>
 <section class="full basics-band"><h2 class="section-title">基礎から学ぶ<small>ニュースがもっと分かる</small><a class="more" href="category/basics.html">すべて見る ›</a></h2>
   <div class="brows">{basics_rows(basics[:8], "")}</div></section>"""

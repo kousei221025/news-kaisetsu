@@ -244,6 +244,12 @@ nav.cats .sep { width: 1px; height: 18px; background: rgba(255,255,255,.25); mar
 .basics-band .section-title { border-top-color: var(--basics); }
 .rows { list-style: none; margin: 18px 0 0; padding: 0; background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); }
 .rows li + li { border-top: 1px solid var(--line); }
+.ftabs { display: flex; gap: 6px; margin: -4px 0 16px; flex-wrap: wrap; }
+.ftabs button { font: inherit; font-size: 13px; font-weight: 700; padding: 6px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--text); cursor: pointer; }
+.ftabs button[aria-pressed="true"] { background: #123a69; border-color: #123a69; color: #fff; }
+.fempty { color: var(--sub); font-size: 14px; }
+.newest [hidden] { display: none !important; }
+.newest .rows:not(:has(li:not([hidden]))) { display: none; }
 .rows a { display: grid; grid-template-columns: 168px minmax(0, 1fr); gap: 18px; padding: 16px 18px; text-decoration: none; color: var(--text); align-items: center; }
 .rows h3 { font-size: 17px; line-height: 1.5; margin: 4px 0 0; }
 .rows a:hover h3 { color: var(--accent); }
