@@ -194,7 +194,7 @@ def render_bars(body):
         bars = "".join(
             f'<div class="bar-row{" hot" if h else ""}"><span class="bar-label">{e(l)}</span><span class="bar-track">'
             f'<span class="bar-fill" style="width:{v / mx * 100:.1f}%"></span></span>'
-            f'<span class="bar-val">{v:g}{e(u)}</span></div>' for l, v, u, h in rows)
+            f'<span class="bar-val">{v:,g}{e(u)}</span></div>' for l, v, u, h in rows)
         return (f'<figure class="bars"><figcaption>{e(title)}</figcaption>{bars}'
                 + (f'<p class="bar-note">{e(note)}</p>' if note else "") + '</figure>')
     return re.sub(r"<!--bars(.*?)-->", repl, body, flags=re.S)
