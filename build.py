@@ -1003,6 +1003,14 @@ def build_search(arts):
 
 
 # ---------- まとめ読み（日付ごと） ----------
+def day_impacts(items):
+    """その日のニュースの「くらしへの影響」を、重要な順に最大5つ並べた箱。"""
+    lis = "".join(f'<li><a href="#d{n}">{e(a["impact"])}</a></li>' for n, a in enumerate(items, 1) if a.get("impact"))
+    if not lis:
+        return ""
+    return f'<section class="day-imp"><h2>この日の「くらしへの影響」まとめ</h2><ol>{lis}</ol></section>'
+
+
 def build_daily(arts):
     (ROOT / "daily").mkdir(exist_ok=True)
     news = [a for a in arts if a["category"] != "basics"]
@@ -1013,7 +1021,7 @@ def build_daily(arts):
     for i, d in enumerate(days):
         items = sorted([a for a in news if a["date"] == d], key=lambda a: -a.get("rank", 0))
         lis = "".join(
-            f'<li><div class="dg-head"><span class="dg-no">{n}</span>{tag(a["category"])}</div>'
+            f'<li id="d{n}"><div class="dg-head"><span class="dg-no">{n}</span>{tag(a["category"])}</div>'
             f'<h2><a href="../articles/{a["slug"]}.html">{e(a["title"])}</a></h2>'
             f'<ul>{"".join(f"<li>{e(s)}</li>" for s in a.get("summary", []))}</ul>{impact(a)}'
             f'<a class="dg-more" href="../articles/{a["slug"]}.html">くわしく読む（{reading_minutes(a["body"])}分） ›</a></li>'
@@ -1029,7 +1037,7 @@ def build_daily(arts):
                 f'<div class="post-tools dg-share"><span>このまとめをシェア</span><div class="share-mini">'
                 f'<a class="x" href="https://twitter.com/intent/tweet?url={quote(SITE_URL + "daily/" + d + ".html")}&text={quote(jp_date(d) + "のニュースを3分でまとめ読み｜" + SITE_NAME)}" target="_blank" rel="noopener">Xでポスト</a>'
                 f'<a class="line" href="https://social-plugins.line.me/lineit/share?url={quote(SITE_URL + "daily/" + d + ".html")}" target="_blank" rel="noopener">LINEで送る</a></div></div>' +
-                f'<div class="layout"><div class="main-col"><ol class="digest">{lis}</ol>'
+                f'<div class="layout"><div class="main-col">{day_impacts(items)}<ol class="digest">{lis}</ol>'
                 + (f'<nav class="dg-nav">{nav}</nav>' if nav else "") + f'</div>{sidebar(arts, "../", show_digest=False)}</div>')
         (ROOT / "daily" / f"{d}.html").write_text(
             page("../", f"{jp_date(d)}のニュースまとめ読み", f"{jp_date(d)}の世界情勢・経済ニュース{len(items)}本を、3行まとめで確認できます。",
