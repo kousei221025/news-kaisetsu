@@ -1016,14 +1016,14 @@ SEARCH_JS = """<script>
       var score=0;
       for(var i=0;i<words.length;i++){
         var w=words[i];
-        if(a.t.indexOf(w)>=0)score+=10; else if(a.d.indexOf(w)>=0)score+=4; else if(a.b.indexOf(w)>=0)score+=1; else return null;
+        var lw=w.toLowerCase();if(a.lt.indexOf(lw)>=0)score+=10; else if(a.ld.indexOf(lw)>=0)score+=4; else if(a.lb.indexOf(lw)>=0)score+=1; else return null;
       }
       return {a:a,s:score};
     }).filter(Boolean).sort(function(x,y){return y.s-x.s||(y.a.date>x.a.date?1:-1)});
     info.textContent='「'+q+'」の検索結果：'+hits.length+'件';
-    function hl(s){s=esc(s);words.forEach(function(w){if(w){var x=esc(w);s=s.split(x).join('<mark>'+x+'</mark>')}});return s}
-    function snip(a){var txt=a.t+a.d+(a.i||'');if(words.some(function(w){return txt.indexOf(w)>=0}))return '';
-      var w=words.find(function(w){return a.b.indexOf(w)>=0});if(!w)return '';var i=a.b.indexOf(w);
+    function hl(s){s=esc(s);words.forEach(function(w){if(!w)return;var lw=esc(w).toLowerCase(),ls=s.toLowerCase(),out='',i=0,j;while((j=ls.indexOf(lw,i))>=0){out+=s.slice(i,j)+'<mark>'+s.slice(j,j+lw.length)+'</mark>';i=j+lw.length}s=out+s.slice(i)});return s}
+    function snip(a){var txt=a.lt+a.ld;if(words.some(function(w){return txt.indexOf(w.toLowerCase())>=0}))return '';
+      var w=words.find(function(w){return a.lb.indexOf(w.toLowerCase())>=0});if(!w)return '';var i=a.lb.indexOf(w.toLowerCase());
       return '<p class="snip">…'+hl(a.b.slice(Math.max(0,i-30),i+50))+'…</p>'}
     out.innerHTML=hits.map(function(h){var a=h.a;
       var w=a.e||cats[a.c],sz=w.length<=3?'w1':w.length<=4?'w2':w.length<=5?'w3':'w4';
@@ -1033,7 +1033,7 @@ SEARCH_JS = """<script>
     }).join('');
   }
   fetch('search.json').then(function(r){return r.json()}).then(function(j){
-    data=j;var p=new URLSearchParams(location.search).get('q');if(p){input.value=p}run();
+    j.forEach(function(a){a.lt=a.t.toLowerCase();a.ld=(a.d+(a.i||'')).toLowerCase();a.lb=a.b.toLowerCase()});data=j;var p=new URLSearchParams(location.search).get('q');if(p){input.value=p}run();
   });
   input.addEventListener('input',run);
   document.querySelectorAll('.chips button').forEach(function(b){b.addEventListener('click',function(){input.value=b.textContent;run();input.focus()})});
@@ -1047,7 +1047,7 @@ def build_search(arts):
              "jd": jp_date(a["date"]), "e": a.get("eyecatch", ""), "i": a.get("impact", ""), "ic": icon_class(a),
              "b": plain(a["body"])[:1500]} for a in arts]
     (ROOT / "search.json").write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
-    chips = "".join(f"<button type=\"button\">{w}</button>" for w in ["円安", "金利", "ガソリン", "電気代", "日銀", "原油", "年末調整", "選挙"])
+    chips = "".join(f"<button type=\"button\">{w}</button>" for w in ["円安", "金利", "ガソリン", "電気代", "日銀", "年末調整", "中間選挙", "新NISA", "iDeCo", "ふるさと納税", "年収の壁", "住宅ローン"])
     body = f"""<section class="page-head"><p class="kicker">検索</p><h1>記事を検索</h1><p>タイトル・説明・本文から記事を探せます。言葉はスペースで区切って複数入れられます。</p></section>
 <div class="layout"><div class="main-col">
 <div class="search-box"><input id="q" type="search" placeholder="例：円安、住宅ローン、ガソリン" aria-label="検索キーワード" autofocus></div>
