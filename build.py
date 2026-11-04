@@ -77,7 +77,7 @@ CAT_INTRO = {
 # テーマ：タイトル・説明・3行まとめにキーワードが入っている記事を自動で集める
 BASICS_GROUPS = [  # 基礎解説ページの分野（キーワードはスラッグの一部。どれにも当たらなければ「その他」）
     ("金利・円相場・物価", ["yen", "interest", "boj", "frb", "kawase", "inflation", "cpi", "jutaku"]),
-    ("給料・税金・制度", ["nenmatsu", "nenshu", "furusato", "ideco", "shunto", "gasoline-tax", "saitei"]),
+    ("給料・税金・制度", ["nenmatsu", "nenshu", "furusato", "ideco", "shunto", "gasoline-tax", "saitei", "kakutei"]),
     ("投資・株", ["nisa", "nikkei"]),
     ("エネルギー", ["crude", "hormuz", "denki"]),
     ("世界・アメリカ", ["us-", "congress"]),
