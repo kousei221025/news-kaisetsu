@@ -872,6 +872,9 @@ def related_basics(items, all_arts, rel, title):
 
 def build_categories(arts):
     (ROOT / "category").mkdir(exist_ok=True)
+    make_og_images([{"slug": "cat-" + k, "category": k, "title": "ニュースが分かる基礎知識を、やさしく解説" if k == "basics" else f"{v}のニュースを、会社員目線で3分で",
+                     "eyecatch": v.split("・")[0], "body": "", "description": "", "og_cat": "ジャンル", "og_note": CAT_INTRO[k]}
+                    for k, v in CATS.items()])
     for key, label in CATS.items():
         items = [a for a in arts if a["category"] == key]
         news = [a for a in arts if a["category"] != "basics"]
@@ -893,12 +896,16 @@ def build_categories(arts):
                 f'<section class="full"><h2 class="section-title">ジャンル別の新着<small>ほかの分野も読む</small></h2>{genre_columns(news, "../")}</section>')
         url = f"{SITE_URL}category/{key}.html"
         (ROOT / "category" / f"{key}.html").write_text(
-            page("../", label, f"{label}の記事一覧。{CAT_INTRO[key]}", body, url, active=key), encoding="utf-8")
+            page("../", label, f"{label}の記事一覧。{CAT_INTRO[key]}", body, url, active=key, og_image=og_url("cat-" + key)),
+            encoding="utf-8")
 
 
 # ---------- テーマ別 ----------
 def build_topics(arts):
     (ROOT / "topic").mkdir(exist_ok=True)
+    make_og_images([{"slug": "topic-" + k, "category": "economy" if k == "rates" else "life" if k == "household" else "world",
+                     "title": f"#{v[0]} これまでの流れと解説", "eyecatch": v[0].split("・")[0], "body": "", "description": "",
+                     "og_cat": "テーマ", "og_note": v[1]} for k, v in TOPICS.items()])
     for key, (label, intro, _) in TOPICS.items():
         items = [a for a in arts if key in topics_of(a)]
         news = [a for a in items if a["category"] != "basics"]
@@ -911,7 +918,8 @@ def build_topics(arts):
                 f'<section class="full"><h2 class="section-title">ジャンル別の新着<small>ほかの話題も読む</small></h2>{genre_columns([a for a in arts if a["category"] != "basics"], "../")}</section>')
         url = f"{SITE_URL}topic/{key}.html"
         (ROOT / "topic" / f"{key}.html").write_text(
-            page("../", f"#{label}", f"{label}に関する記事の一覧。{intro}", body, url, active="topic-" + key), encoding="utf-8")
+            page("../", f"#{label}", f"{label}に関する記事の一覧。{intro}", body, url, active="topic-" + key,
+                 og_image=og_url("topic-" + key)), encoding="utf-8")
 
 
 # ---------- アイコン ----------
