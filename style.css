@@ -513,7 +513,7 @@ footer.site li { margin-bottom: 6px; }
   .wrap { padding: 0 16px; }
   .strip { display: none; }
   .numbers { margin-top: 14px; }
-  .numbers { margin: 0 0 14px; }
+  .numbers { margin: 12px 0 14px; }
   .numbers-h { padding: 6px 10px; font-size: 11px; flex-direction: column; justify-content: center; line-height: 1.35; }
   .numbers ul { display: flex; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x mandatory; }
   .numbers ul::-webkit-scrollbar { display: none; }
