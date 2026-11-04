@@ -34,6 +34,8 @@
     --economy-soft: #2c2236;
     --shadow: none;
   }
+  .g-world { --c: #7fb2ec !important; } .g-economy { --c: #c99be6 !important; } .g-life { --c: #f0a560 !important; }
+  .page-head .kicker { color: var(--sub) !important; }
 }
 
 * { box-sizing: border-box; }
