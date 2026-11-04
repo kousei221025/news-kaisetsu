@@ -878,7 +878,7 @@ SEARCH_JS = """<script>
     info.textContent='「'+q+'」の検索結果：'+hits.length+'件';
     out.innerHTML=hits.map(function(h){var a=h.a;
       var w=a.e||cats[a.c],sz=w.length<=3?'w1':w.length<=4?'w2':w.length<=5?'w3':'w4';
-      return '<a class="card" href="articles/'+a.s+'.html"><span class="thumb art c-'+a.c+' '+sz+'" role="img" aria-label="'+esc(w)+'"><span class="art-cat">'+cats[a.c]+'</span><span class="art-word">'+esc(w)+'</span><span class="art-logo">3分ニュース解説</span></span>'
+      return '<a class="card" href="articles/'+a.s+'.html"><span class="thumb art c-'+a.c+' '+sz+(a.ic||'')+'" role="img" aria-label="'+esc(w)+'"><span class="art-cat">'+cats[a.c]+'</span><span class="art-word">'+esc(w)+'</span><span class="art-logo">3分ニュース解説</span></span>'
         +'<div class="card-body"><span class="tag t-'+a.c+'">'+cats[a.c]+'</span> <span class="meta"><time datetime="'+a.date+'">'+a.jd+'</time></span><h3>'+esc(a.t)+'</h3>'
         +(a.i?'<p class="impact"><b>くらしへの影響</b>'+esc(a.i)+'</p>':'<p>'+esc(a.d)+'</p>')+'</div></a>'
     }).join('');
@@ -895,7 +895,7 @@ SEARCH_JS = """<script>
 
 def build_search(arts):
     data = [{"s": a["slug"], "t": a["title"], "d": a["description"], "c": a["category"], "date": a["date"],
-             "jd": jp_date(a["date"]), "e": a.get("eyecatch", ""), "i": a.get("impact", ""),
+             "jd": jp_date(a["date"]), "e": a.get("eyecatch", ""), "i": a.get("impact", ""), "ic": icon_class(a),
              "b": plain(a["body"])[:1500]} for a in arts]
     (ROOT / "search.json").write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     chips = "".join(f"<button type=\"button\">{w}</button>" for w in ["円安", "金利", "ガソリン", "電気代", "日銀", "原油", "年末調整", "選挙"])
