@@ -546,7 +546,7 @@ def timeline_box(a, arts, rel):
         + (f'<span>{e(x["title"])}（この記事）</span>' if x["slug"] == a["slug"]
            else f'<a href="{rel}articles/{x["slug"]}.html">{e(x["title"])}</a>') + '</li>'
         for x in items[-6:])
-    return (f'<section class="side-box"><h2 class="side-title">#{TOPICS[key][0]} これまでの流れ</h2>'
+    return (f'<section class="side-box keep"><h2 class="side-title">#{TOPICS[key][0]} これまでの流れ</h2>'
             f'<ol class="timeline">{lis}</ol><a class="more" href="{rel}topic/{key}.html">このテーマの記事をすべて見る ›</a></section>')
 
 
@@ -721,7 +721,7 @@ def build_article(a, all_arts, by_slug, backlinks):
     <p>ニュースを「自分の生活にどう関係するか」の目線で解説しています。記事はAIの補助を受けて作成し、出典で内容を確かめています。<a href="{rel}about.html">記事の作り方 ›</a></p></div></div>
 </article>
 </div>
-{sidebar(all_arts, rel, toc_side, exclude=(a["slug"],), extra=timeline_box(a, all_arts, rel))}
+{sidebar(all_arts, rel, toc_side, exclude=(a["slug"],), extra=timeline_box(a, all_arts, rel)).replace('class="sidebar"', 'class="sidebar art-side"', 1)}
 </div>
 <div class="after-post">{related_html}
 <section><h2 class="section-title">ジャンル別の新着<small>次に読む記事を探す</small></h2>{genre_columns([x for x in all_arts if x["category"] != "basics" and x["slug"] != a["slug"]], rel)}</section></div>"""
