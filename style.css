@@ -537,9 +537,13 @@ a.term { position: relative; }
 .box.terms { border-color: var(--basics); background: var(--basics-soft); }
 .box.terms b { color: var(--basics); font-size: 14px; }
 .box.terms ul { margin: 6px 0 0; font-size: 15px; }
-.sources { font-size: 13px; color: var(--sub); border-top: 1px solid var(--line); margin-top: 36px; padding-top: 14px; line-height: 1.7; }
-.sources ul { padding-left: 1.2em; margin: 6px 0; }
-.sources a { color: var(--sub); }
+.sources { font-size: 13px; color: var(--sub); margin-top: 36px; padding: 16px 20px; background: var(--bg); border-radius: 8px; line-height: 1.7; }
+.sources > b { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: var(--text); }
+.sources > b::before { content: "✓"; display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: #1a7f4b; color: #fff; font-size: 12px; }
+.sources ul { padding-left: 1.2em; margin: 8px 0; }
+.sources li { margin: 3px 0; }
+.sources a { color: var(--accent); font-size: 14px; }
+.sources .note-ai { margin: 10px 0 0 !important; padding-top: 10px; border-top: 1px dashed var(--line); font-size: 12px; }
 .note-ai { font-size: 12px; color: var(--sub); }
 .share { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 22px; align-items: center; }
 .share span { font-size: 13px; color: var(--sub); margin-right: 4px; }

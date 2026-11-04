@@ -766,7 +766,7 @@ def build_article(a, all_arts, by_slug, backlinks):
   {body}
   {terms_box}
   <div class="sources">
-    <b>出典</b><ul>{srcs}</ul>
+    <b>この記事の出典（確認した情報）</b><ul>{srcs}</ul>
     <p class="note-ai">この記事はAIの補助を受けて作成し、上記の出典で内容を確認しています。{caution}誤りに気づいた方は<a href="{rel}about.html#contact">お問い合わせ</a>からお知らせください。</p>
   </div>
   {share}
