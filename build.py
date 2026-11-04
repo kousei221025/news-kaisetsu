@@ -619,7 +619,7 @@ def sidebar(arts, rel, toc_html="", exclude=(), home=False, extra="", show_diges
     <li>矢印の<b>流れ図</b>で、ニュースが生活に届くまでのつながりが分かる</li></ol></section>
   <section class="side-box sp-hide"><h2 class="side-title">注目のテーマ</h2><div class="chips-wrap">{topics}</div></section>
   <section class="side-box sp-hide"><h2 class="side-title">ジャンルから探す</h2><ul class="genre-list">{genres}</ul></section>
-  <section class="side-box"><h2 class="side-title">用語さくいん<small>タップで基礎解説へ</small></h2><div class="glossary">{glossary}</div></section>
+  <section class="side-box"><h2 class="side-title">用語さくいん<small>タップで基礎解説へ</small></h2><div class="glossary">{glossary}</div><a class="more" href="{rel}glossary.html">意味つきの用語集を見る ›</a></section>
   <section class="side-box about-box"><h2 class="side-title">このサイトについて</h2>
     <p>ニュースを見ても「で、自分の生活にどう関係あるの？」と思う会社員のために、世界と経済のニュースを3分で読めるように解説しています。</p>
     <a class="more" href="{rel}about.html">運営者・記事の作り方 ›</a></section>
@@ -875,10 +875,10 @@ items.forEach(function(it){{var on=f==='all'||it.dataset.cat===f;it.hidden=!on;i
 
 
 # ---------- ジャンル別 ----------
-def page_head(kicker, title, intro, count, color=None):
+def page_head(kicker, title, intro, count, color=None, unit="本の記事"):
     style = f' style="--c:{color}"' if color else ""
     return (f'<section class="page-head"{style}><div><p class="kicker">{kicker}</p><h1>{title}</h1><p>{intro}</p></div>'
-            f'<p class="count"><b>{count}</b>本の記事</p></section>')
+            f'<p class="count"><b>{count}</b>{unit}</p></section>')
 
 
 def cat_lead(a, rel):
@@ -915,7 +915,7 @@ def build_categories(arts):
                     + related_basics(items, arts, "../", f"{label}の基礎解説"))
         if key == "basics":  # 基礎解説は右列を省き、用語さくいん＋横幅いっぱいの4列
             gl = "".join(f'<a href="../articles/{b["slug"]}.html">{e(w)}</a>' for b in items for w in b.get("keywords", []))
-            layout = (f'<div class="gloss-bar"><b>用語さくいん</b><div class="glossary">{gl}</div></div>'
+            layout = (f'<div class="gloss-bar"><b>用語さくいん</b><div class="glossary">{gl}</div><a class="gl-all" href="../glossary.html">用語集（意味つき）›</a></div>'
                       f'{cards(items, "../", "grid-4")}')
         else:
             layout = f'<div class="layout"><div class="main-col">{main}</div>{sidebar(arts, "../")}</div>'
@@ -1072,6 +1072,22 @@ def build_daily(arts):
     return days
 
 
+# ---------- 用語集 ----------
+def build_glossary(arts):
+    basics = [a for a in arts if a["category"] == "basics"]
+    rows = "".join(
+        f'<div class="gl-row" id="g-{a["slug"]}"><dt>{"".join(f"<span>{e(w)}</span>" for w in a.get("keywords", []))}</dt>'
+        f'<dd><p>{e(a["summary"][0] if a.get("summary") else a["description"])}</p>'
+        f'<a href="articles/{a["slug"]}.html">{e(a["title"])} ›</a></dd></div>'
+        for a in basics)
+    n = sum(len(a.get("keywords", [])) for a in basics)
+    body = (page_head("基礎解説", "ニュースの用語集", "ニュースによく出てくる言葉を、ひと言で説明しています。くわしくは各基礎解説へ。", n, unit="の言葉") +
+            f'<div class="layout"><div class="main-col"><dl class="glossary-list">{rows}</dl></div>{sidebar(arts, "", home=True)}</div>')
+    (ROOT / "glossary.html").write_text(
+        page("", "ニュースの用語集", "円安、金利、インフレ、年収の壁など、ニュースによく出てくる言葉をひと言で説明した用語集。", body,
+             SITE_URL + "glossary.html", active="basics"), encoding="utf-8")
+
+
 # ---------- 404 ----------
 def build_404(arts):
     news = [a for a in arts if a["category"] != "basics"][:5]
@@ -1125,7 +1141,7 @@ def build_sitemap(arts):
     urls += [(f"{SITE_URL}topic/{k}.html", today) for k in TOPICS]
     urls += [(f"{SITE_URL}articles/{a['slug']}.html", a.get("updated", a["date"])) for a in arts]
     urls += [(f"{SITE_URL}daily/{d}.html", d) for d in sorted({a["date"] for a in arts if a["category"] != "basics"})]
-    urls += [(SITE_URL + "about.html", today)]
+    urls += [(SITE_URL + "about.html", today), (SITE_URL + "glossary.html", today)]
     xml = "".join(f"<url><loc>{u}</loc><lastmod>{d}</lastmod></url>\n" for u, d in urls)
     (ROOT / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n'
@@ -1163,6 +1179,7 @@ def main():
     build_topics(arts)
     build_search(arts)
     build_daily(arts)
+    build_glossary(arts)
     build_404(arts)
     build_pages(arts)
     build_feed(arts)
