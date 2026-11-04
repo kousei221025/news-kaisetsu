@@ -1,6 +1,8 @@
 [
+  {"date": "2026-11-06", "time": "", "label": "消費税減税法案、衆院委員会で採決の提案日", "note": "与党が提案、野党は回答保留（11月4日時点）", "article": "2026-11-04-shohizei-genzei", "source": "時事通信・共同通信"},
   {"date": "2026-11-06", "time": "22:30", "label": "アメリカの雇用統計（10月分）", "note": "ドル円が動きやすい", "article": "basics-us-jobs", "source": "OANDA証券の解説"},
   {"date": "2026-12-09", "time": "", "label": "FOMC（アメリカの金利を決める会議）の結果発表", "note": "会議は12月8〜9日。日本では10日の未明", "article": "basics-frb", "source": "FRB公式カレンダー"},
+  {"date": "2026-12-12", "time": "", "label": "臨時国会の会期末", "note": "消費税減税法案の成立を目指す", "article": "2026-11-04-shohizei-genzei", "source": "日本経済新聞"},
   {"date": "2026-12-18", "time": "", "label": "日銀の金融政策決定会合の結果", "note": "会合は12月17〜18日", "article": "basics-boj", "source": "OANDA証券・投資情報サイトの日程表"},
   {"date": "2027-01-10", "time": "", "label": "ふるさと納税「ワンストップ特例」の申請期限", "note": "2026年に寄附した分。寄附先の自治体へ", "article": "basics-furusato", "source": "総務省・江戸川区"}
 ]
