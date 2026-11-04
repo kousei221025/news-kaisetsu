@@ -838,7 +838,7 @@ def build_index(arts):
     <a class="lead-main" href="articles/{lead["slug"]}.html">
       {thumb(lead, "", "lead-thumb", lazy=False)}
       <div class="lead-body"><span class="label">今日の1本目</span>{tag(lead["category"])} {meta_line(lead)}
-        <h2>{e(lead["title"])}</h2><ul>{lead_sum}</ul>{impact(lead)}</div>
+        <h2>{e(lead["title"])}</h2><ul>{lead_sum}</ul>{impact(lead)}<span class="lead-go">この記事を読む（{reading_minutes(lead["body"])}分） ›</span></div>
     </a>
     <div class="lead-right"><ul class="lead-side">{side_news}</ul>{also_html}</div>
   </section>
