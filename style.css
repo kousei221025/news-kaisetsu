@@ -471,6 +471,7 @@ article.post[data-fs="l"] .summary .impact { font-size: 18px !important; }
   .rows .mini-thumb { order: 2; }
   .rows h3 { font-size: 15px; }
   .brows { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .full .brows:not(.two) .brow:nth-child(n+5) { display: none; }
 }
 
 /* ===== サイドバー ===== */
