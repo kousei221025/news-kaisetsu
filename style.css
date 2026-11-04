@@ -220,6 +220,16 @@ nav.cats .sep { width: 1px; height: 18px; background: rgba(255,255,255,.25); mar
 .cards { display: grid; gap: 22px; }
 .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (min-width: 1081px) {
+  .grid-4 > .card:last-child:nth-child(4n+1) { grid-column: 1 / -1; flex-direction: row; }
+  .grid-4 > .card:last-child:nth-child(4n+1) .thumb { width: calc((100% - 66px) / 4); flex: none; }
+  .grid-4 > .card:last-child:nth-child(4n+1) .card-body { align-self: center; padding: 18px 26px; }
+  .grid-4 > .card:last-child:nth-child(4n+2), .grid-4 > .card:nth-last-child(2):nth-child(4n+1) { grid-column: span 2; }
+  .grid-4 > .card:last-child:nth-child(4n+3) { grid-column: span 2; }
+  .grid-3 > .card:last-child:nth-child(3n+1) { grid-column: 1 / -1; flex-direction: row; }
+  .grid-3 > .card:last-child:nth-child(3n+1) .thumb { width: calc((100% - 44px) / 3); flex: none; }
+  .grid-3 > .card:last-child:nth-child(3n+1) .card-body { align-self: center; padding: 18px 26px; }
+}
 .card { display: flex; flex-direction: column; background: var(--card); border-radius: var(--radius); overflow: hidden; text-decoration: none; color: var(--text); box-shadow: var(--shadow); transition: transform .15s, box-shadow .15s; }
 .card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(20, 30, 50, .12); }
 .card:hover h3 { color: var(--accent); }
