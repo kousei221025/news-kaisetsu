@@ -829,7 +829,8 @@ def build_index(arts):
     tcount = {k: sum(1 for a in news if k in topics_of(a)) for k in TOPICS}
     top_topic = max(tcount, key=tcount.get)
     feature = (f'<a class="feature" href="topic/{top_topic}.html"><span class="ft">特集</span>'
-               f'<b>{TOPICS[top_topic][0]}</b><span class="fd">{TOPICS[top_topic][1]}</span><span class="fc">{tcount[top_topic]}本の記事 ›</span></a>')
+               f'<b>{TOPICS[top_topic][0]}</b><span class="fd">{TOPICS[top_topic][1]}</span><span class="fc">{tcount[top_topic]}本の記事 ›</span>'
+               f'<span class="fl">{"".join("<span>" + e(a["title"]) + "</span>" for a in [x for x in news if top_topic in topics_of(x)][:3])}</span></a>')
     body = f"""{numbers_html(by_slug, "")}
 <div class="layout">
 <div class="main-col">
