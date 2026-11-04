@@ -410,6 +410,10 @@ strong.num { font-weight: 700; background: linear-gradient(transparent 62%, var(
 .bar-note { margin: 8px 0 0 !important; font-size: 11px; color: var(--sub); }
 a.term { color: inherit; text-decoration: underline dotted var(--basics); text-decoration-thickness: 2px; text-underline-offset: 4px; }
 a.term:hover { color: var(--basics); }
+a.term { position: relative; }
+@media (hover: hover) {
+  a.term:hover::after, a.term:focus-visible::after { content: attr(data-tip) "\A クリックで基礎解説へ ›"; white-space: pre-line; position: absolute; left: 0; bottom: calc(100% + 10px); width: 300px; padding: 10px 14px; background: #10294a; color: #fff; font-size: 13px; font-weight: 400; line-height: 1.65; border-radius: 6px; box-shadow: 0 6px 18px rgba(0,0,0,.2); z-index: 20; pointer-events: none; text-decoration: none; }
+}
 .box { border: 1px solid var(--line); border-radius: 8px; padding: 14px 20px; margin: 20px 0; }
 .box.terms { border-color: var(--basics); background: var(--basics-soft); }
 .box.terms b { color: var(--basics); font-size: 14px; }

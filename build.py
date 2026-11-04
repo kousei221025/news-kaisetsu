@@ -162,7 +162,7 @@ def link_terms(body, arts, self_slug):
                 continue
             m = pattern.search(p)
             if m:
-                parts[i] = (p[:m.start()] + f'<a class="term" href="{b["slug"]}.html" title="基礎解説：{e(b["title"])}">'
+                parts[i] = (p[:m.start()] + f'<a class="term" href="{b["slug"]}.html" data-tip="{e((b.get("summary") or [b["description"]])[0])}">'
                             + m.group(0) + "</a>" + p[m.end():])
                 done = True
                 linked.append(b["slug"])
