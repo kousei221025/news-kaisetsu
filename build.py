@@ -242,9 +242,10 @@ def make_og_images(arts):
         for a in jobs:
             title = a["title"]
             size = 54 if len(title) <= 30 else 48 if len(title) <= 40 else 44
-            imp = f'<p class="imp"><b>くらしへの影響</b>{e(a["impact"])}</p>' if a.get("impact") else ""
+            imp = (f'<p class="imp">{e(a["og_note"])}</p>' if a.get("og_note") else
+                   f'<p class="imp"><b>くらしへの影響</b>{e(a["impact"])}</p>' if a.get("impact") else "")
             src = Path(tmp) / f"{a['slug']}.html"
-            cat = "ニュース解説" if a["slug"] == "default" else CATS[a["category"]]
+            cat = a.get("og_cat") or ("ニュース解説" if a["slug"] == "default" else CATS[a["category"]])
             color = "#1b4f8c" if a["slug"] == "default" else CAT_COLOR[a["category"]]
             src.write_text(OG_TEMPLATE.format(css=(ROOT / "style.css").as_uri(), art=thumb(a, "", "og-art", lazy=False),
                                               cat=e(cat), title=e(title), color=color, size=size, impact=imp),
@@ -998,6 +999,9 @@ def build_daily(arts):
     (ROOT / "daily").mkdir(exist_ok=True)
     news = [a for a in arts if a["category"] != "basics"]
     days = sorted({a["date"] for a in news}, reverse=True)
+    make_og_images([{"slug": "daily-" + d, "category": "world", "title": f"{jp_date(d)}のニュースを3分でまとめ読み",
+                     "eyecatch": "まとめ読み", "body": "", "description": "", "og_cat": "まとめ読み",
+                     "og_note": f"この日のニュース{sum(1 for a in news if a['date'] == d)}本を、3行まとめで一気に確認"} for d in days])
     for i, d in enumerate(days):
         items = sorted([a for a in news if a["date"] == d], key=lambda a: -a.get("rank", 0))
         lis = "".join(
@@ -1021,7 +1025,7 @@ def build_daily(arts):
                 + (f'<nav class="dg-nav">{nav}</nav>' if nav else "") + f'</div>{sidebar(arts, "../", show_digest=False)}</div>')
         (ROOT / "daily" / f"{d}.html").write_text(
             page("../", f"{jp_date(d)}のニュースまとめ読み", f"{jp_date(d)}の世界情勢・経済ニュース{len(items)}本を、3行まとめで確認できます。",
-                 body, f"{SITE_URL}daily/{d}.html", active="daily"), encoding="utf-8")
+                 body, f"{SITE_URL}daily/{d}.html", active="daily", og_image=og_url("daily-" + d)), encoding="utf-8")
     return days
 
 
