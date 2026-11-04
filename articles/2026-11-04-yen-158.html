@@ -53,6 +53,7 @@
   
   <div class="post-tools">
     <div class="share-mini"><a class="x" href="https://twitter.com/intent/tweet?url=https%3A//kousei221025.github.io/news-kaisetsu/articles/2026-11-04-yen-158.html&text=%E5%86%86%E5%AE%89%E3%81%8C%E5%86%8D%E3%81%B3%E9%80%B2%E3%81%BF1%E3%83%89%E3%83%AB158%E5%86%86%E5%8F%B0%E3%81%AB%E3%80%82%E3%81%AA%E3%81%9C%EF%BC%9F%E7%A7%81%E3%81%9F%E3%81%A1%E3%81%B8%E3%81%AE%E5%BD%B1%E9%9F%BF%E3%81%AF%EF%BC%9F%EF%BD%9C3%E5%88%86%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E8%A7%A3%E8%AA%AC" target="_blank" rel="noopener" aria-label="Xでポスト">X</a><a class="line" href="https://social-plugins.line.me/lineit/share?url=https%3A//kousei221025.github.io/news-kaisetsu/articles/2026-11-04-yen-158.html" target="_blank" rel="noopener" aria-label="LINEで送る">LINE</a><button class="copy" type="button" data-url="https://kousei221025.github.io/news-kaisetsu/articles/2026-11-04-yen-158.html">URLをコピー</button></div>
+    <button class="later" type="button" data-slug="2026-11-04-yen-158" data-title="円安が再び進み1ドル158円台に。なぜ？私たちへの影響は？" aria-pressed="false">＋ あとで読む</button>
     <div class="font-size" role="group" aria-label="文字の大きさ"><span>文字</span><button type="button" data-fs="s">小</button><button type="button" data-fs="m">中</button><button type="button" data-fs="l">大</button></div>
   </div>
   <span class="post-thumb art c-economy w1 i-yen" role="img" aria-label="円安"><span class="art-cat">経済</span><span class="art-word">円安</span><span class="art-logo">3分ニュース解説</span></span>
@@ -130,6 +131,12 @@
   <a href="../category/basics.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5c3-1 5.5-1 8 1 2.5-2 5-2 8-1v13c-3-1-5.5-1-8 1-2.5-2-5-2-8-1z"/><path d="M12 6.5v13"/></svg>基礎</a>
   <a href="../search.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>検索</a>
 </nav>
+<script>(function(){var K='later',L=[];try{L=JSON.parse(localStorage.getItem(K)||'[]')}catch(e){}
+function save(){try{localStorage.setItem(K,JSON.stringify(L))}catch(e){}}
+var b=document.querySelector('.later');if(b){var s=b.dataset.slug,f=function(){var on=L.some(function(x){return x.s===s});b.setAttribute('aria-pressed',on);b.textContent=on?'✓ 保存済み':'＋ あとで読む'};f();
+b.addEventListener('click',function(){var i=L.findIndex(function(x){return x.s===s});if(i>=0)L.splice(i,1);else L.unshift({s:s,t:b.dataset.title});L=L.slice(0,10);save();f()})}
+var box=document.querySelector('.later-box');if(box&&L.length){box.hidden=false;var ol=box.querySelector('.later-list'),r=box.closest('[data-rel]');L.forEach(function(x){var li=document.createElement('li'),a=document.createElement('a');a.href='../articles/'+x.s+'.html';a.textContent=x.t;var d=document.createElement('button');d.type='button';d.textContent='×';d.setAttribute('aria-label','リストから外す');d.onclick=function(){L=L.filter(function(y){return y.s!==x.s});save();li.remove();if(!L.length)box.hidden=true};li.appendChild(a);li.appendChild(d);ol.appendChild(li)})}
+})();</script>
 <script>(function(){var n=Date.now();document.querySelectorAll('time[datetime]').forEach(function(t){var d=new Date(t.getAttribute('datetime')+'T00:00:00+09:00');if(n-d<36*3600*1000&&!t.closest('.post-meta,.timeline,.tl-date')){var s=document.createElement('span');s.className='new';s.textContent='NEW';t.parentNode.insertBefore(s,t)}});})();</script>
 <script>(function(){var a=document.querySelectorAll('.latest-items a'),i=0;if(a.length<2||matchMedia('(prefers-reduced-motion: reduce)').matches)return;setInterval(function(){a[i].classList.remove('on');i=(i+1)%a.length;a[i].classList.add('on')},4500);})();</script>
 <script>(function(){var d=new Date(),w="日月火水木金土"[d.getDay()],el=document.querySelector('[data-today]');if(el)el.textContent=(d.getMonth()+1)+"月"+d.getDate()+"日（"+w+"）";})();</script>

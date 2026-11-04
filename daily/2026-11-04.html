@@ -71,6 +71,12 @@
   <a href="../category/basics.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5c3-1 5.5-1 8 1 2.5-2 5-2 8-1v13c-3-1-5.5-1-8 1-2.5-2-5-2-8-1z"/><path d="M12 6.5v13"/></svg>基礎</a>
   <a href="../search.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>検索</a>
 </nav>
+<script>(function(){var K='later',L=[];try{L=JSON.parse(localStorage.getItem(K)||'[]')}catch(e){}
+function save(){try{localStorage.setItem(K,JSON.stringify(L))}catch(e){}}
+var b=document.querySelector('.later');if(b){var s=b.dataset.slug,f=function(){var on=L.some(function(x){return x.s===s});b.setAttribute('aria-pressed',on);b.textContent=on?'✓ 保存済み':'＋ あとで読む'};f();
+b.addEventListener('click',function(){var i=L.findIndex(function(x){return x.s===s});if(i>=0)L.splice(i,1);else L.unshift({s:s,t:b.dataset.title});L=L.slice(0,10);save();f()})}
+var box=document.querySelector('.later-box');if(box&&L.length){box.hidden=false;var ol=box.querySelector('.later-list'),r=box.closest('[data-rel]');L.forEach(function(x){var li=document.createElement('li'),a=document.createElement('a');a.href='../articles/'+x.s+'.html';a.textContent=x.t;var d=document.createElement('button');d.type='button';d.textContent='×';d.setAttribute('aria-label','リストから外す');d.onclick=function(){L=L.filter(function(y){return y.s!==x.s});save();li.remove();if(!L.length)box.hidden=true};li.appendChild(a);li.appendChild(d);ol.appendChild(li)})}
+})();</script>
 <script>(function(){var n=Date.now();document.querySelectorAll('time[datetime]').forEach(function(t){var d=new Date(t.getAttribute('datetime')+'T00:00:00+09:00');if(n-d<36*3600*1000&&!t.closest('.post-meta,.timeline,.tl-date')){var s=document.createElement('span');s.className='new';s.textContent='NEW';t.parentNode.insertBefore(s,t)}});})();</script>
 <script>(function(){var a=document.querySelectorAll('.latest-items a'),i=0;if(a.length<2||matchMedia('(prefers-reduced-motion: reduce)').matches)return;setInterval(function(){a[i].classList.remove('on');i=(i+1)%a.length;a[i].classList.add('on')},4500);})();</script>
 <script>(function(){var d=new Date(),w="日月火水木金土"[d.getDay()],el=document.querySelector('[data-today]');if(el)el.textContent=(d.getMonth()+1)+"月"+d.getDate()+"日（"+w+"）";})();</script>

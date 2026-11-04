@@ -53,6 +53,7 @@
   
   <div class="post-tools">
     <div class="share-mini"><a class="x" href="https://twitter.com/intent/tweet?url=https%3A//kousei221025.github.io/news-kaisetsu/articles/2026-11-04-nenmatsu-178.html&text=%E4%BB%8A%E5%B9%B4%E3%81%AE%E5%B9%B4%E6%9C%AB%E8%AA%BF%E6%95%B4%E3%81%AF%E3%80%8C178%E4%B8%87%E5%86%86%E3%81%AE%E5%A3%81%E3%80%8D%E3%80%8212%E6%9C%88%E3%81%AB%E7%A8%8E%E9%87%91%E3%81%8C%E6%88%BB%E3%81%A3%E3%81%A6%E3%81%8F%E3%82%8B%E4%BA%BA%E3%82%82%EF%BC%9F%EF%BD%9C3%E5%88%86%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E8%A7%A3%E8%AA%AC" target="_blank" rel="noopener" aria-label="Xでポスト">X</a><a class="line" href="https://social-plugins.line.me/lineit/share?url=https%3A//kousei221025.github.io/news-kaisetsu/articles/2026-11-04-nenmatsu-178.html" target="_blank" rel="noopener" aria-label="LINEで送る">LINE</a><button class="copy" type="button" data-url="https://kousei221025.github.io/news-kaisetsu/articles/2026-11-04-nenmatsu-178.html">URLをコピー</button></div>
+    <button class="later" type="button" data-slug="2026-11-04-nenmatsu-178" data-title="今年の年末調整は「178万円の壁」。12月に税金が戻ってくる人も？" aria-pressed="false">＋ あとで読む</button>
     <div class="font-size" role="group" aria-label="文字の大きさ"><span>文字</span><button type="button" data-fs="s">小</button><button type="button" data-fs="m">中</button><button type="button" data-fs="l">大</button></div>
   </div>
   <span class="post-thumb art c-life w3 i-receipt" role="img" aria-label="178万円"><span class="art-cat">くらし・お金</span><span class="art-word">178万円</span><span class="art-logo">3分ニュース解説</span></span>
@@ -130,6 +131,12 @@
   <a href="../category/basics.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5c3-1 5.5-1 8 1 2.5-2 5-2 8-1v13c-3-1-5.5-1-8 1-2.5-2-5-2-8-1z"/><path d="M12 6.5v13"/></svg>基礎</a>
   <a href="../search.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>検索</a>
 </nav>
+<script>(function(){var K='later',L=[];try{L=JSON.parse(localStorage.getItem(K)||'[]')}catch(e){}
+function save(){try{localStorage.setItem(K,JSON.stringify(L))}catch(e){}}
+var b=document.querySelector('.later');if(b){var s=b.dataset.slug,f=function(){var on=L.some(function(x){return x.s===s});b.setAttribute('aria-pressed',on);b.textContent=on?'✓ 保存済み':'＋ あとで読む'};f();
+b.addEventListener('click',function(){var i=L.findIndex(function(x){return x.s===s});if(i>=0)L.splice(i,1);else L.unshift({s:s,t:b.dataset.title});L=L.slice(0,10);save();f()})}
+var box=document.querySelector('.later-box');if(box&&L.length){box.hidden=false;var ol=box.querySelector('.later-list'),r=box.closest('[data-rel]');L.forEach(function(x){var li=document.createElement('li'),a=document.createElement('a');a.href='../articles/'+x.s+'.html';a.textContent=x.t;var d=document.createElement('button');d.type='button';d.textContent='×';d.setAttribute('aria-label','リストから外す');d.onclick=function(){L=L.filter(function(y){return y.s!==x.s});save();li.remove();if(!L.length)box.hidden=true};li.appendChild(a);li.appendChild(d);ol.appendChild(li)})}
+})();</script>
 <script>(function(){var n=Date.now();document.querySelectorAll('time[datetime]').forEach(function(t){var d=new Date(t.getAttribute('datetime')+'T00:00:00+09:00');if(n-d<36*3600*1000&&!t.closest('.post-meta,.timeline,.tl-date')){var s=document.createElement('span');s.className='new';s.textContent='NEW';t.parentNode.insertBefore(s,t)}});})();</script>
 <script>(function(){var a=document.querySelectorAll('.latest-items a'),i=0;if(a.length<2||matchMedia('(prefers-reduced-motion: reduce)').matches)return;setInterval(function(){a[i].classList.remove('on');i=(i+1)%a.length;a[i].classList.add('on')},4500);})();</script>
 <script>(function(){var d=new Date(),w="日月火水木金土"[d.getDay()],el=document.querySelector('[data-today]');if(el)el.textContent=(d.getMonth()+1)+"月"+d.getDate()+"日（"+w+"）";})();</script>
