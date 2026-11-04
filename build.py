@@ -595,7 +595,7 @@ def sidebar(arts, rel, toc_html="", exclude=(), home=False, extra="", show_diges
     topics = "".join(
         f'<a class="chip" href="{rel}topic/{k}.html">#{v[0]}<span>{sum(1 for a in arts if k in topics_of(a))}</span></a>'
         for k, v in TOPICS.items() if any(k in topics_of(a) for a in arts))
-    basics_li = "".join(f'<li><a href="{rel}articles/{b["slug"]}.html">{e(b["title"])}</a></li>' for b in basics[:6])
+    basics_li = "".join(f'<li><a href="{rel}articles/{b["slug"]}.html">{thumb(b, rel, "side-thumb")}<span>{e(b["title"])}</span></a></li>' for b in basics[:5])
     toc_box = f'<section class="side-box side-toc">{toc_html}</section>' if toc_html else ""
     latest = next((a["date"] for a in arts if a["category"] != "basics"), None)
     n_day = sum(1 for a in arts if a["category"] != "basics" and a["date"] == latest)
