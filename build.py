@@ -731,7 +731,7 @@ def build_article(a, all_arts, by_slug, backlinks):
   {('<div class="topics"><span>この記事のテーマ</span>' + topic_chips(topics_of(a), rel) + '</div>') if topics_of(a) else ''}
   <div class="author"><svg class="mark" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="9" fill="#1b4f8c"/><path d="M8 31h24" stroke="#f0a560" stroke-width="3" stroke-linecap="round"/><text x="20" y="26" text-anchor="middle" font-size="22" font-weight="900" fill="#fff" font-family="sans-serif">3</text></svg>
     <div><p class="author-name">この記事を書いた人：{AUTHOR}（会社員）</p>
-    <p>ニュースを「自分の生活にどう関係するか」の目線で解説しています。記事はAIの補助を受けて作成し、出典で内容を確かめています。<a href="{rel}about.html">記事の作り方 ›</a></p></div></div>
+    <p>ニュースを「自分の生活にどう関係するか」の目線で解説しています。記事はAIの補助を受けて作成し、出典で内容を確かめています。<a href="{rel}about.html#policy">このサイトの5つの約束 ›</a></p></div></div>
 {next_card}
 </article>
 </div>
