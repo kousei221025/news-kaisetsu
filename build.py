@@ -212,17 +212,19 @@ def bold_numbers(body):
 
 
 # ---------- SNS用画像 ----------
-OG_TEMPLATE = """<!doctype html><html><head><meta charset="utf-8"><style>
-html,body{{margin:0;width:1200px;height:630px;overflow:hidden}}
-body{{background:#f6f5f1;font-family:"Noto Sans JP","Yu Gothic",sans-serif;color:#1c2024;
- display:flex;flex-direction:column;justify-content:space-between;padding:64px 72px;box-sizing:border-box;
- border-top:18px solid {color}}}
-.cat{{display:inline-block;background:{color};color:#fff;font-weight:700;font-size:30px;padding:6px 26px;border-radius:999px}}
-h1{{font-size:{size}px;line-height:1.45;font-weight:900;margin:28px 0 0;letter-spacing:.01em}}
-.foot{{display:flex;justify-content:space-between;align-items:center;font-size:30px;color:#5b636c}}
-.logo{{font-weight:900;font-size:40px;color:#1c2024}} .logo b{{color:#1b4f8c}}
-</style></head><body><div><span class="cat">{cat}</span><h1>{title}</h1></div>
-<div class="foot"><span class="logo">3分<b>ニュース解説</b></span><span>{tagline}</span></div></body></html>"""
+OG_TEMPLATE = """<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="{css}"><style>
+html,body{{margin:0;width:1200px;height:630px;overflow:hidden;background:#fff}}
+body{{display:flex;font-family:"Noto Sans JP","Yu Gothic",sans-serif;color:#1c2024}}
+.left{{width:470px;flex:none}} .left .art{{width:470px;height:630px;aspect-ratio:auto}}
+.left .art-cat,.left .art-logo{{display:none}}
+.right{{flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:56px 60px 48px;border-top:14px solid {color}}}
+.cat{{display:inline-block;background:{color};color:#fff;font-weight:700;font-size:26px;padding:4px 22px;border-radius:999px}}
+h1{{font-size:{size}px;line-height:1.45;font-weight:900;margin:22px 0 0}}
+.imp{{margin-top:22px;font-size:25px;line-height:1.55;color:#3a3f45}} .imp b{{background:#a8500e;color:#fff;font-size:20px;padding:2px 10px;border-radius:4px;margin-right:10px}}
+.logo{{display:flex;align-items:center;gap:12px;font-weight:900;font-size:34px}} .logo b{{color:#1b4f8c}}
+.logo i{{display:inline-grid;place-items:center;width:46px;height:46px;border-radius:10px;background:#1b4f8c;color:#fff;font-style:normal;font-size:28px}}
+</style></head><body><div class="left">{art}</div><div class="right"><div><span class="cat">{cat}</span><h1>{title}</h1>{impact}</div>
+<div class="logo"><i>3</i><span>3分<b>ニュース解説</b></span></div></div></body></html>"""
 
 
 def make_og_images(arts):
@@ -232,21 +234,26 @@ def make_og_images(arts):
     if not EDGE.exists():
         print("注意：Edge が見つからないため、SNS用画像は作りません")
         return
-    jobs = [(a["slug"], CATS[a["category"]], a["title"], CAT_COLOR[a["category"]]) for a in arts
-            if not (out_dir / f"{a['slug']}.png").exists()]
+    jobs = [a for a in arts if not (out_dir / f"{a['slug']}.png").exists()]
     if not (out_dir / "default.png").exists():
-        jobs.append(("default", "ニュース解説", "むずかしいニュースを、会社員目線で3分で。", "#1b4f8c"))
+        jobs.append({"slug": "default", "category": "world", "title": "むずかしいニュースを、会社員目線で3分で。",
+                     "eyecatch": "3分解説", "body": "", "description": ""})
     with tempfile.TemporaryDirectory() as tmp:
-        for slug, cat, title, color in jobs:
-            size = 64 if len(title) <= 30 else 56 if len(title) <= 40 else 50
-            src = Path(tmp) / f"{slug}.html"
-            src.write_text(OG_TEMPLATE.format(cat=e(cat), title=e(title), color=color, size=size,
-                                              tagline=TAGLINE), encoding="utf-8")
+        for a in jobs:
+            title = a["title"]
+            size = 54 if len(title) <= 30 else 48 if len(title) <= 40 else 44
+            imp = f'<p class="imp"><b>くらしへの影響</b>{e(a["impact"])}</p>' if a.get("impact") else ""
+            src = Path(tmp) / f"{a['slug']}.html"
+            cat = "ニュース解説" if a["slug"] == "default" else CATS[a["category"]]
+            color = "#1b4f8c" if a["slug"] == "default" else CAT_COLOR[a["category"]]
+            src.write_text(OG_TEMPLATE.format(css=(ROOT / "style.css").as_uri(), art=thumb(a, "", "og-art", lazy=False),
+                                              cat=e(cat), title=e(title), color=color, size=size, impact=imp),
+                           encoding="utf-8")
             subprocess.run([str(EDGE), "--headless=new", "--disable-gpu", "--hide-scrollbars", "--no-first-run",
                             f"--user-data-dir={Path(tmp) / 'profile'}", "--window-size=1200,630",
-                            f"--screenshot={out_dir / (slug + '.png')}", src.as_uri()],
+                            f"--screenshot={out_dir / (a['slug'] + '.png')}", src.as_uri()],
                            capture_output=True, timeout=60)
-            print(f"SNS用画像を作成：{slug}")
+            print(f"SNS用画像を作成：{a['slug']}")
 
 
 THUMB_TEMPLATE = """<!doctype html><html><head><meta charset="utf-8"><style>
