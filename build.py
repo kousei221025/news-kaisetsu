@@ -943,9 +943,12 @@ def build_daily(arts):
 # ---------- 404 ----------
 def build_404(arts):
     news = [a for a in arts if a["category"] != "basics"][:5]
-    body = f"""<section class="hero"><h1>ページが見つかりませんでした</h1>
-<p>URLが間違っているか、ページが移動した可能性があります。<a href="{SITE_PATH}search.html">記事を検索</a>するか、新しい記事からお探しください。</p></section>
-<ul class="list">{list_items(news, SITE_PATH)}</ul>"""
+    body = f"""<section class="page-head"><p class="kicker">404</p><h1>ページが見つかりませんでした</h1>
+<p>URLが間違っているか、ページが移動した可能性があります。言葉で探すか、新しい記事からお探しください。</p></section>
+<div class="layout"><div class="main-col">
+<form class="search-box" action="{SITE_PATH}search.html"><input name="q" type="search" placeholder="例：円安、住宅ローン、ガソリン" aria-label="検索キーワード"></form>
+<section><h2 class="section-title">新しい記事</h2><ul class="rows">{row_list(news, SITE_PATH)}</ul></section>
+</div>{sidebar(arts, SITE_PATH, home=True)}</div>"""
     (ROOT / "404.html").write_text(
         page(SITE_PATH, "ページが見つかりません", "お探しのページは見つかりませんでした。", body, SITE_URL)
         .replace('<meta name="description"', '<meta name="robots" content="noindex">\n<meta name="description"'),
