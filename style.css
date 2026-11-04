@@ -330,6 +330,8 @@ nav.cats .sep { width: 1px; height: 18px; background: rgba(255,255,255,.25); mar
 .gl-h { font-size: 17px; margin: 28px 0 10px; padding-left: 10px; border-left: 4px solid var(--basics); }
 .main-col > .gl-h:first-child { margin-top: 0; }
 .tl-cat { display: inline-block; font-size: 10px; font-weight: 700; padding: 0 6px; margin-left: 6px; border-radius: 3px; line-height: 1.6; vertical-align: 1px; }
+.dg3 { margin: 4px 0 10px; padding: 10px 12px 10px 30px; background: rgba(255,255,255,.14); border-radius: 6px; font-size: 13px; line-height: 1.55; font-weight: 700; }
+.dg3 li + li { margin-top: 6px; }
 .rows li + li { border-top: 1px solid var(--line); }
 .promises { list-style: none; counter-reset: pr; padding: 0 !important; margin: 16px 0 28px; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
 .promises li { grid-column: span 2; }

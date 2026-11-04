@@ -639,6 +639,9 @@ def sidebar(arts, rel, toc_html="", exclude=(), home=False, extra="", show_diges
     n_day = sum(1 for a in arts if a["category"] != "basics" and a["date"] == latest)
     digest = (f'<a class="digest-cta" href="{rel}daily/{latest}.html"><span>忙しい人へ</span><b>{md_date(latest)}のニュースを<br>3分でまとめ読み</b>'
           f'<small>{n_day}本の3行まとめを1ページで ›</small></a>') if latest and show_digest else ""
+    top3 = sorted([x for x in arts if x["category"] != "basics" and x["date"] == latest], key=lambda x: -x.get("rank", 0))[:3]
+    if digest and top3:
+        digest = digest.replace('<small>', '<ol class="dg3">' + "".join(f"<li>{e(x['title'])}</li>" for x in top3) + '</ol><small>', 1)
     if home:
         glossary = "".join(f'<a href="{rel}articles/{b["slug"]}.html">{e(b["keywords"][0])}</a>'
                            for b in [x for x in basics if x.get("keywords")][:14])
