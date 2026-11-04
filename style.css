@@ -278,6 +278,19 @@ article.post[data-fs="l"] .summary .impact { font-size: 18px !important; }
 .tl-date::before { content: ""; position: absolute; left: -26px; top: 5px; width: 16px; height: 16px; border-radius: 50%; background: var(--card); border: 3px solid var(--accent); box-sizing: border-box; }
 .tl-date span { font-size: 12px; font-weight: 400; color: var(--sub); }
 .tl-day .rows { margin-top: 0; }
+.points3 { margin: 0 0 22px; }
+.points3 > b { display: block; font-size: 13px; color: var(--basics); letter-spacing: .08em; margin-bottom: 8px; }
+.points3 ol { list-style: none; margin: 0 !important; padding: 0 !important; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.points3 li { position: relative; margin: 0 !important; padding: 16px 16px 16px; background: var(--basics-soft); border-radius: 8px; border-top: 4px solid var(--basics); }
+.points3 .pn { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--basics); color: #fff; font-weight: 900; font-size: 15px; }
+.points3 p { margin: 8px 0 0 !important; font-size: 15px; font-weight: 700; line-height: 1.7; }
+.points3 li + li::before { content: "›"; position: absolute; left: -11px; top: 50%; transform: translateY(-50%); font-size: 22px; font-weight: 900; color: var(--basics); }
+@media (max-width: 760px) {
+  .points3 ol { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .points3 li { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 12px; align-items: start; border-top: 0; border-left: 4px solid var(--basics); }
+  .points3 p { margin: 2px 0 0 !important; }
+  .points3 li + li::before { content: none; }
+}
 .digest-cta { display: block; padding: 18px 20px; border-radius: var(--radius); background: linear-gradient(135deg, #a8500e, #d06a1e); color: #fff; text-decoration: none; box-shadow: var(--shadow); }
 .digest-cta span { font-size: 11px; font-weight: 700; background: rgba(255,255,255,.2); padding: 1px 8px; border-radius: 3px; }
 .digest-cta b { display: block; font-size: 19px; line-height: 1.45; margin: 8px 0 6px; }

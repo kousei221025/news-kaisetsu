@@ -621,6 +621,11 @@ def build_article(a, all_arts, by_slug, backlinks):
     url = f"{SITE_URL}articles/{a['slug']}.html"
 
     summary = "".join(f"<li>{e(s)}</li>" for s in a.get("summary", []))
+    if a["category"] == "basics":  # 基礎解説は「3つのポイント」の図にする
+        pts = "".join(f'<li><span class="pn">{i}</span><p>{e(s)}</p></li>' for i, s in enumerate(a.get("summary", []), 1))
+        summary_box = f'<div class="points3"><b>3つのポイント</b><ol>{pts}</ol></div>'
+    else:
+        summary_box = f'<div class="summary"><b>3行まとめ</b><ul>{summary}</ul>{impact(a)}</div>'
     toc = "".join(f'<li><a href="#s{i}">{e(h)}</a></li>' for i, h in enumerate(heads, 1))
 
     term_slugs = [t for t in a["terms"] if t in by_slug and t != a["slug"]]
@@ -701,7 +706,7 @@ def build_article(a, all_arts, by_slug, backlinks):
     <div class="font-size" role="group" aria-label="文字の大きさ"><span>文字</span><button type="button" data-fs="s">小</button><button type="button" data-fs="m">中</button><button type="button" data-fs="l">大</button></div>
   </div>
   {thumb(a, rel, "post-thumb", lazy=False)}
-  <div class="summary"><b>3行まとめ</b><ul>{summary}</ul>{impact(a)}</div>
+  {summary_box}
   <details class="toc"><summary>この記事の目次</summary><ol>{toc}</ol></details>
   {body}
   {terms_box}
