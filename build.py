@@ -24,7 +24,7 @@
 棒グラフ：本文の好きな場所に次のように書く（数字は出典で確かめたものだけ）。
 <!--bars グラフの題名（いつの数字か）
 項目名|数字|単位
-項目名|数字|単位
+*項目名|数字|単位　← 先頭に * を付けると、その棒がオレンジで強調される（今の値など、一番見てほしい1本に）
 出典：〇〇-->
 
 数字の帯：src/numbers.json（"trend": "up"/"down"/"flat" と "trend_note" は、記事で上がった・下がったを確かめたときだけ入れる）（label・value・note（いつの数字か）・article（根拠の記事スラッグ））。
@@ -178,14 +178,15 @@ def render_bars(body):
         for x in lines[1:]:
             if x.count("|") == 2:
                 label, val, unit = x.split("|")
-                rows.append((label, float(val), unit))
+                hot = label.startswith("*")  # 先頭に * を付けた行は強調（オレンジ）
+                rows.append((label.lstrip("*"), float(val), unit, hot))
             else:
                 note = x
-        mx = max(v for _, v, _ in rows)
+        mx = max(r[1] for r in rows)
         bars = "".join(
-            f'<div class="bar-row"><span class="bar-label">{e(l)}</span><span class="bar-track">'
+            f'<div class="bar-row{" hot" if h else ""}"><span class="bar-label">{e(l)}</span><span class="bar-track">'
             f'<span class="bar-fill" style="width:{v / mx * 100:.1f}%"></span></span>'
-            f'<span class="bar-val">{v:g}{e(u)}</span></div>' for l, v, u in rows)
+            f'<span class="bar-val">{v:g}{e(u)}</span></div>' for l, v, u, h in rows)
         return (f'<figure class="bars"><figcaption>{e(title)}</figcaption>{bars}'
                 + (f'<p class="bar-note">{e(note)}</p>' if note else "") + '</figure>')
     return re.sub(r"<!--bars(.*?)-->", repl, body, flags=re.S)
