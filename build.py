@@ -368,6 +368,7 @@ def page(rel, title, description, body, canonical, active=None, og_type="website
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#1b4f8c">
 <meta name="google-site-verification" content="{GOOGLE_VERIFICATION}">
+<meta name="robots" content="max-image-preview:large">
 <link rel="icon" href="{FAVICON}">
 <link rel="apple-touch-icon" href="{rel}apple-touch-icon.png">
 <link rel="alternate" type="application/rss+xml" title="{SITE_NAME}" href="{SITE_URL}feed.xml">
@@ -691,6 +692,9 @@ def build_article(a, all_arts, by_slug, backlinks):
         ],
     }]
     extra = "".join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>\n' for x in ld)
+    extra += (f'<meta property="article:published_time" content="{a["date"]}">\n'
+              f'<meta property="article:modified_time" content="{a.get("updated", a["date"])}">\n'
+              f'<meta property="article:section" content="{CATS[a["category"]]}">\n')
 
     updated = f'<p class="updated">{jp_date(a["updated"])} 更新</p>' if a.get("updated") else ""
     if a["category"] != "basics" and topics_of(a):  # 同じテーマで後の日付の記事があれば「続報」を案内
