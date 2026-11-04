@@ -461,6 +461,35 @@ def cards(arts, rel, cls="grid-3"):
     return f'<div class="cards {cls}">{items}</div>'
 
 
+def row_list(arts, rel):
+    """新着の2段目以降：見出し＋くらしへの影響の横長一覧。"""
+    return "".join(
+        f'<li><a href="{rel}articles/{a["slug"]}.html">{thumb(a, rel, "mini-thumb")}'
+        f'<div>{tag(a["category"])} {short_meta(a)}<h3>{e(a["title"])}</h3>{impact(a)}</div></a></li>'
+        for a in arts)
+
+
+def genre_columns(news, rel):
+    """トップ下部：世界情勢・経済・くらしの3列。"""
+    cols = ""
+    for k in ("world", "economy", "life"):
+        items = [a for a in news if a["category"] == k][:5]
+        if not items:
+            continue
+        first, rest = items[0], items[1:]
+        more = "".join(f'<li><a href="{rel}articles/{a["slug"]}.html">{e(a["title"])}</a></li>' for a in rest)
+        cols += (f'<section class="gcol g-{k}"><h2><a href="{rel}category/{k}.html">{CATS[k]}<span>すべて見る ›</span></a></h2>'
+                 f'<a class="gfirst" href="{rel}articles/{first["slug"]}.html">{thumb(first, rel, "mini-thumb")}'
+                 f'<h3>{e(first["title"])}</h3></a>' + (f'<ul>{more}</ul>' if more else "") + '</section>')
+    return f'<div class="genre-cols">{cols}</div>'
+
+
+def basics_rows(basics, rel):
+    return "".join(
+        f'<a class="brow" href="{rel}articles/{a["slug"]}.html">{thumb(a, rel, "mini-thumb")}<span>{e(a["title"])}</span></a>'
+        for a in basics)
+
+
 def rank_list(arts, rel):
     return "".join(
         f'<li><a href="{rel}articles/{a["slug"]}.html"><span class="no">{i}</span>'
@@ -701,12 +730,14 @@ def build_index(arts):
   </section>
   {also_html}
   {feature}
-  <section><h2 class="section-title">新着記事<small>{md_date(latest)}更新</small></h2>{cards(news[4:22], "")}</section>
-  <section class="basics-band"><h2 class="section-title">基礎から学ぶ<small>ニュースがもっと分かる</small><a class="more" href="category/basics.html">すべて見る ›</a></h2>
-    {cards(basics[:8], "", "grid-4 compact")}</section>
+  <section><h2 class="section-title">新着記事<small>{md_date(latest)}更新</small></h2>{cards(news[4:7], "")}
+    {f'<ul class="rows">{row_list(news[7:16], "")}</ul>' if len(news) > 7 else ""}</section>
 </div>
 {sidebar(arts, "", home=True)}
-</div>"""
+</div>
+<section class="full"><h2 class="section-title">ジャンル別の新着<small>気になる分野から読む</small></h2>{genre_columns(news, "")}</section>
+<section class="full basics-band"><h2 class="section-title">基礎から学ぶ<small>ニュースがもっと分かる</small><a class="more" href="category/basics.html">すべて見る ›</a></h2>
+  <div class="brows">{basics_rows(basics[:8], "")}</div></section>"""
     ld = {"@context": "https://schema.org", "@type": "WebSite", "name": SITE_NAME, "url": SITE_URL,
           "potentialAction": {"@type": "SearchAction", "target": SITE_URL + "search.html?q={q}",
                               "query-input": "required name=q"}}
