@@ -439,7 +439,7 @@ def page(rel, title, description, body, canonical, active=None, og_type="website
     </div>
     <nav aria-label="ジャンル"><p class="foot-h">ジャンル</p><ul>{foot_cats_li}</ul></nav>
     <nav aria-label="テーマ"><p class="foot-h">テーマ</p><ul>{foot_topics_li}</ul></nav>
-    <nav aria-label="サイト情報"><p class="foot-h">サイト情報</p><ul>{f'<li><a href="{rel}daily/{DAILY_LATEST}.html">まとめ読み</a></li>' if DAILY_LATEST else ""}<li><a href="{rel}search.html">記事を検索</a></li><li><a href="{rel}about.html">このサイトについて</a></li><li><a href="{rel}about.html#policy">編集方針（5つの約束）</a></li><li><a href="{rel}about.html#contact">お問い合わせ</a></li><li><a href="{rel}about.html">プライバシーポリシー</a></li><li><a href="{SITE_URL}feed.xml">RSS</a></li></ul></nav>
+    <nav aria-label="サイト情報"><p class="foot-h">サイト情報</p><ul>{f'<li><a href="{rel}daily/{DAILY_LATEST}.html">まとめ読み</a></li>' if DAILY_LATEST else ""}<li><a href="{rel}glossary.html">ニュースの用語集</a></li><li><a href="{rel}search.html">記事を検索</a></li><li><a href="{rel}about.html">このサイトについて</a></li><li><a href="{rel}about.html#policy">編集方針（5つの約束）</a></li><li><a href="{rel}about.html#contact">お問い合わせ</a></li><li><a href="{rel}about.html">プライバシーポリシー</a></li><li><a href="{SITE_URL}feed.xml">RSS</a></li></ul></nav>
   </div>
   <div class="wrap foot-copy"><small>© 2026 {SITE_NAME}</small><span class="foot-promise">出典で確かめた事実だけ・結果は予想しない・中立に <a href="{rel}about.html#policy">5つの約束 ›</a></span><a class="foot-top" href="#">ページの上へ ↑</a></div>
 </footer>
