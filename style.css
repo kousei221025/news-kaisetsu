@@ -348,6 +348,7 @@ article.post[data-fs="l"] .summary .impact { font-size: 18px !important; }
 }
 @media (max-width: 760px) {
   .sp-hide { display: none !important; }
+  .main-col:has(.basics-band) ~ .sidebar .side-basics { display: none; }
 }
 .next-card { position: relative; display: grid; grid-template-columns: 180px minmax(0, 1fr) 24px; gap: 18px; align-items: center; margin: 28px 0 0; padding: 30px 18px 18px; border: 2px solid var(--accent); border-radius: 10px; text-decoration: none; color: var(--text); }
 .next-card:hover { background: var(--accent-soft); }

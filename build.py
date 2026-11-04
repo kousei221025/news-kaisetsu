@@ -626,7 +626,7 @@ def sidebar(arts, rel, toc_html="", exclude=(), home=False, extra="", show_diges
   {digest}
   <section class="side-box"><h2 class="side-title">今日のポイント</h2><ol class="rank">{rank_list(news[:5], rel)}</ol></section>
   <section class="side-box"><h2 class="side-title">注目のテーマ</h2><div class="chips-wrap">{topics}</div></section>
-  <section class="side-box"><h2 class="side-title">基礎から学ぶ</h2><ul class="side-list">{basics_li}</ul>
+  <section class="side-box side-basics"><h2 class="side-title">基礎から学ぶ</h2><ul class="side-list">{basics_li}</ul>
     <a class="more" href="{rel}category/basics.html">基礎解説をすべて見る ›</a></section>
   <section class="side-box about-box"><h2 class="side-title">このサイトについて</h2>
     <p>ニュースを見ても「で、自分の生活にどう関係あるの？」と思う会社員のために、世界と経済のニュースを3分で読めるように解説しています。</p>
