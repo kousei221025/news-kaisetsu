@@ -518,7 +518,8 @@ def timeline_box(a, arts, rel):
     tps = topics_of(a)
     if not tps:
         return ""
-    key = tps[0]
+    # タイトルに言葉が出てくるテーマを優先（例：円安の記事は「金利・円相場」）
+    key = max(tps, key=lambda k: sum(a["title"].count(w) for w in TOPICS[k][2]))
     items = sorted([x for x in arts if key in topics_of(x) and x["category"] != "basics"],
                    key=lambda x: (x["date"], x.get("rank", 0)))
     if len(items) < 2:
@@ -532,7 +533,7 @@ def timeline_box(a, arts, rel):
             f'<ol class="timeline">{lis}</ol><a class="more" href="{rel}topic/{key}.html">このテーマの記事をすべて見る ›</a></section>')
 
 
-def sidebar(arts, rel, toc_html="", exclude=(), home=False, extra=""):
+def sidebar(arts, rel, toc_html="", exclude=(), home=False, extra="", show_digest=True):
     news = [a for a in arts if a["category"] != "basics" and a["slug"] not in exclude]
     basics = [a for a in arts if a["category"] == "basics" and a["slug"] not in exclude]
     topics = "".join(
@@ -540,16 +541,16 @@ def sidebar(arts, rel, toc_html="", exclude=(), home=False, extra=""):
         for k, v in TOPICS.items() if any(k in topics_of(a) for a in arts))
     basics_li = "".join(f'<li><a href="{rel}articles/{b["slug"]}.html">{e(b["title"])}</a></li>' for b in basics[:6])
     toc_box = f'<section class="side-box side-toc">{toc_html}</section>' if toc_html else ""
+    latest = next((a["date"] for a in arts if a["category"] != "basics"), None)
+    n_day = sum(1 for a in arts if a["category"] != "basics" and a["date"] == latest)
+    digest = (f'<a class="digest-cta" href="{rel}daily/{latest}.html"><span>忙しい人へ</span><b>{md_date(latest)}のニュースを<br>3分でまとめ読み</b>'
+          f'<small>{n_day}本の3行まとめを1ページで ›</small></a>') if latest and show_digest else ""
     if home:
         glossary = "".join(f'<a href="{rel}articles/{b["slug"]}.html">{e(w)}</a>'
                            for b in basics for w in b.get("keywords", []))
         genres = "".join(
             f'<li><a href="{rel}category/{k}.html"><b>{v}</b><span>{sum(1 for a in arts if a["category"] == k)}本</span></a></li>'
             for k, v in CATS.items())
-        latest = next((a["date"] for a in arts if a["category"] != "basics"), None)
-        n_day = sum(1 for a in arts if a["category"] != "basics" and a["date"] == latest)
-        digest = (f'<a class="digest-cta" href="{rel}daily/{latest}.html"><span>忙しい人へ</span><b>{md_date(latest)}のニュースを<br>3分でまとめ読み</b>'
-                  f'<small>{n_day}本の3行まとめを1ページで ›</small></a>') if latest else ""
         return f"""<aside class="sidebar" aria-label="サイドメニュー">
   {digest}
   <section class="side-box guide"><h2 class="side-title">このサイトの読み方</h2>
@@ -565,6 +566,7 @@ def sidebar(arts, rel, toc_html="", exclude=(), home=False, extra=""):
 </aside>"""
     return f"""<aside class="sidebar" aria-label="サイドメニュー">
   {extra}
+  {digest}
   <section class="side-box"><h2 class="side-title">今日のポイント</h2><ol class="rank">{rank_list(news[:5], rel)}</ol></section>
   <section class="side-box"><h2 class="side-title">注目のテーマ</h2><div class="chips-wrap">{topics}</div></section>
   <section class="side-box"><h2 class="side-title">基礎から学ぶ</h2><ul class="side-list">{basics_li}</ul>
@@ -941,7 +943,7 @@ def build_daily(arts):
                           "この日のニュースを3行まとめで一気に確認できます。気になった記事だけ開いてください。", len(items)) +
                 (numbers_html({a["slug"]: a for a in arts}, "../") if i == 0 else "") +
                 f'<div class="layout"><div class="main-col"><ol class="digest">{lis}</ol>'
-                + (f'<nav class="dg-nav">{nav}</nav>' if nav else "") + f'</div>{sidebar(arts, "../")}</div>')
+                + (f'<nav class="dg-nav">{nav}</nav>' if nav else "") + f'</div>{sidebar(arts, "../", show_digest=False)}</div>')
         (ROOT / "daily" / f"{d}.html").write_text(
             page("../", f"{jp_date(d)}のニュースまとめ読み", f"{jp_date(d)}の世界情勢・経済ニュース{len(items)}本を、3行まとめで確認できます。",
                  body, f"{SITE_URL}daily/{d}.html", active="daily"), encoding="utf-8")
