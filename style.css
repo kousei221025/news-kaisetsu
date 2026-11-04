@@ -240,6 +240,26 @@ nav.cats .sep { width: 1px; height: 18px; background: rgba(255,255,255,.25); mar
 .gcol ul { list-style: none; margin: 0; padding: 0; }
 .gcol li { border-top: 1px solid var(--line); }
 .gcol li a { display: block; padding: 10px 0; font-size: 14px; line-height: 1.55; font-weight: 700; text-decoration: none; color: var(--text); }
+.digest-cta { display: block; padding: 18px 20px; border-radius: var(--radius); background: linear-gradient(135deg, #a8500e, #d06a1e); color: #fff; text-decoration: none; box-shadow: var(--shadow); }
+.digest-cta span { font-size: 11px; font-weight: 700; background: rgba(255,255,255,.2); padding: 1px 8px; border-radius: 3px; }
+.digest-cta b { display: block; font-size: 19px; line-height: 1.45; margin: 8px 0 6px; }
+.digest-cta small { font-size: 12px; opacity: .9; }
+.digest-cta:hover b { text-decoration: underline; }
+.digest { list-style: none; margin: 0; padding: 0; }
+.digest > li { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px 24px; margin-bottom: 16px; }
+.dg-head { display: flex; align-items: center; gap: 10px; }
+.dg-no { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: #123a69; color: #fff; font-weight: 900; font-size: 14px; }
+.digest h2 { font-size: 20px; line-height: 1.5; margin: 10px 0 8px; }
+.digest h2 a { color: var(--text); text-decoration: none; }
+.digest h2 a:hover { color: var(--accent); }
+.digest > li > ul { margin: 0; padding-left: 1.2em; font-size: 15px; line-height: 1.8; }
+.dg-more { display: inline-block; margin-top: 10px; font-size: 13px; font-weight: 700; color: var(--accent); text-decoration: none; }
+.dg-nav { display: flex; justify-content: space-between; margin-top: 8px; font-weight: 700; font-size: 14px; }
+.dg-nav .next { margin-left: auto; }
+@media (max-width: 760px) {
+  .digest > li { padding: 16px; }
+  .digest h2 { font-size: 18px; }
+}
 .cat-lead { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 28px; align-items: start; padding: 22px; background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); text-decoration: none; color: var(--text); }
 .cat-lead h2 { font-size: 23px; line-height: 1.45; margin: 8px 0 10px; }
 .cat-lead:hover h2 { color: var(--accent); }

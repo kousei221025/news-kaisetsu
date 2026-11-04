@@ -544,7 +544,12 @@ def sidebar(arts, rel, toc_html="", exclude=(), home=False, extra=""):
         genres = "".join(
             f'<li><a href="{rel}category/{k}.html"><b>{v}</b><span>{sum(1 for a in arts if a["category"] == k)}本</span></a></li>'
             for k, v in CATS.items())
+        latest = next((a["date"] for a in arts if a["category"] != "basics"), None)
+        n_day = sum(1 for a in arts if a["category"] != "basics" and a["date"] == latest)
+        digest = (f'<a class="digest-cta" href="{rel}daily/{latest}.html"><span>忙しい人へ</span><b>{md_date(latest)}のニュースを<br>3分でまとめ読み</b>'
+                  f'<small>{n_day}本の3行まとめを1ページで ›</small></a>') if latest else ""
         return f"""<aside class="sidebar" aria-label="サイドメニュー">
+  {digest}
   <section class="side-box guide"><h2 class="side-title">このサイトの読み方</h2>
     <ol class="steps"><li><b>3行まとめ</b>で、何が起きたかを10秒でつかむ</li>
     <li><b>生活への影響</b>（オレンジの枠）で、自分のお金や仕事との関係を知る</li>
@@ -904,6 +909,34 @@ def build_search(arts):
              extra_body=SEARCH_JS % json.dumps(CATS, ensure_ascii=False)), encoding="utf-8")
 
 
+# ---------- まとめ読み（日付ごと） ----------
+def build_daily(arts):
+    (ROOT / "daily").mkdir(exist_ok=True)
+    news = [a for a in arts if a["category"] != "basics"]
+    days = sorted({a["date"] for a in news}, reverse=True)
+    for i, d in enumerate(days):
+        items = sorted([a for a in news if a["date"] == d], key=lambda a: -a.get("rank", 0))
+        lis = "".join(
+            f'<li><div class="dg-head"><span class="dg-no">{n}</span>{tag(a["category"])}</div>'
+            f'<h2><a href="../articles/{a["slug"]}.html">{e(a["title"])}</a></h2>'
+            f'<ul>{"".join(f"<li>{e(s)}</li>" for s in a.get("summary", []))}</ul>{impact(a)}'
+            f'<a class="dg-more" href="../articles/{a["slug"]}.html">くわしく読む（{reading_minutes(a["body"])}分） ›</a></li>'
+            for n, a in enumerate(items, 1))
+        nav = ""
+        if i + 1 < len(days):
+            nav += f'<a href="{days[i + 1]}.html">‹ {md_date(days[i + 1])}のまとめ</a>'
+        if i > 0:
+            nav += f'<a class="next" href="{days[i - 1]}.html">{md_date(days[i - 1])}のまとめ ›</a>'
+        body = (page_head("まとめ読み", f"{jp_date(d)}のニュース",
+                          "この日のニュースを3行まとめで一気に確認できます。気になった記事だけ開いてください。", len(items)) +
+                f'<div class="layout"><div class="main-col"><ol class="digest">{lis}</ol>'
+                + (f'<nav class="dg-nav">{nav}</nav>' if nav else "") + f'</div>{sidebar(arts, "../")}</div>')
+        (ROOT / "daily" / f"{d}.html").write_text(
+            page("../", f"{jp_date(d)}のニュースまとめ読み", f"{jp_date(d)}の世界情勢・経済ニュース{len(items)}本を、3行まとめで確認できます。",
+                 body, f"{SITE_URL}daily/{d}.html"), encoding="utf-8")
+    return days
+
+
 # ---------- 404 ----------
 def build_404(arts):
     news = [a for a in arts if a["category"] != "basics"][:5]
@@ -953,6 +986,7 @@ def build_sitemap(arts):
     urls += [(f"{SITE_URL}category/{k}.html", today) for k in CATS]
     urls += [(f"{SITE_URL}topic/{k}.html", today) for k in TOPICS]
     urls += [(f"{SITE_URL}articles/{a['slug']}.html", a.get("updated", a["date"])) for a in arts]
+    urls += [(f"{SITE_URL}daily/{d}.html", d) for d in sorted({a["date"] for a in arts if a["category"] != "basics"})]
     urls += [(SITE_URL + "about.html", today)]
     xml = "".join(f"<url><loc>{u}</loc><lastmod>{d}</lastmod></url>\n" for u, d in urls)
     (ROOT / "sitemap.xml").write_text(
@@ -989,6 +1023,7 @@ def main():
     build_categories(arts)
     build_topics(arts)
     build_search(arts)
+    build_daily(arts)
     build_404(arts)
     build_pages(arts)
     build_feed(arts)
