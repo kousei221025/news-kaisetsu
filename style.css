@@ -766,6 +766,9 @@ footer.site li { margin-bottom: 6px; }
   .bar-label { grid-column: 1 / -1; font-size: 13px; }
   .page-head { padding: 18px 18px; }
   .page-head h1 { font-size: 22px; }
+  .page-head:has(> .count) { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .page-head .count { border-left: 0; padding-left: 0; text-align: left; }
+  .page-head .count b { display: inline; font-size: 22px; margin-right: 2px; }
   .list a { grid-template-columns: 112px minmax(0, 1fr); gap: 12px; padding: 12px 14px; }
   .list h3 { font-size: 14px; }
 }

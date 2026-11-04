@@ -447,11 +447,11 @@ def page(rel, title, description, body, canonical, active=None, og_type="website
 </footer>
 <nav class="tabbar" aria-label="スマホ用メニュー">
   <a href="{rel}index.html"{' class="on"' if active == "home" else ''}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg>トップ</a>
+  <a href="{rel}daily/{DAILY_LATEST}.html"{' class="on"' if active == "daily" else ''}><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>まとめ</a>
   <a href="{rel}category/world.html"{' class="on"' if active == "world" else ''}><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c3 3 3 14 0 17M12 3.5c-3 3-3 14 0 17"/></svg>世界</a>
   <a href="{rel}category/economy.html"{' class="on"' if active == "economy" else ''}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16M6 16v-5M11 16V7M16 16v-7"/></svg>経済</a>
   <a href="{rel}category/life.html"{' class="on"' if active == "life" else ''}><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="6.5" width="17" height="12" rx="2"/><path d="M3.5 10.5h17"/></svg>くらし</a>
   <a href="{rel}category/basics.html"{' class="on"' if active == "basics" else ''}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5c3-1 5.5-1 8 1 2.5-2 5-2 8-1v13c-3-1-5.5-1-8 1-2.5-2-5-2-8-1z"/><path d="M12 6.5v13"/></svg>基礎</a>
-  <a href="{rel}search.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>検索</a>
 </nav>
 <script>(function(){{var K='later',L=[];try{{L=JSON.parse(localStorage.getItem(K)||'[]')}}catch(e){{}}
 function save(){{try{{localStorage.setItem(K,JSON.stringify(L))}}catch(e){{}}}}
