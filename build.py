@@ -632,7 +632,7 @@ def build_article(a, all_arts, by_slug, backlinks):
                         if others else "")
         if users:
             related_html = (f'<section><h2 class="section-title">この用語が出てくるニュース</h2>'
-                            f'{cards(users[:8], rel, "grid-4")}</section>') + related_html
+                            f'<ul class="rows">{row_list(users[:8], rel)}</ul></section>') + related_html
 
     ld = [{
         "@context": "https://schema.org",
