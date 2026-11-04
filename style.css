@@ -223,6 +223,11 @@ nav.cats .sep { width: 1px; height: 18px; background: rgba(255,255,255,.25); mar
 .card { display: flex; flex-direction: column; background: var(--card); border-radius: var(--radius); overflow: hidden; text-decoration: none; color: var(--text); box-shadow: var(--shadow); transition: transform .15s, box-shadow .15s; }
 .card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(20, 30, 50, .12); }
 .card:hover h3 { color: var(--accent); }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .art .art-word, .art::before { transition: transform .35s ease; }
+  .card:hover .art::before, .lead-main:hover .art::before, .rows a:hover .art::before, .gfirst:hover .art::before { transform: translateY(-50%) scale(1.08) rotate(-4deg); }
+  .card:hover .art .art-word, .lead-main:hover .art .art-word { transform: translateY(-46%) translateX(1.5cqi); }
+}
 .card .thumb { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
 .card-body { padding: 14px 16px 18px; }
 .card h3 { font-size: 16px; line-height: 1.55; margin: 6px 0 6px; }
