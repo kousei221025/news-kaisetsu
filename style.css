@@ -271,6 +271,13 @@ article.post[data-fs="l"] .summary .impact { font-size: 18px !important; }
 .followup:hover span { text-decoration: underline; }
 .lead-right { display: flex; flex-direction: column; gap: 16px; }
 .lead-right .also { margin: 0; }
+.tl-days { position: relative; padding-left: 26px; }
+.tl-days::before { content: ""; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: var(--line); }
+.tl-day + .tl-day { margin-top: 26px; }
+.tl-date { position: relative; display: flex; align-items: baseline; gap: 10px; margin: 0 0 10px; font-weight: 900; font-size: 16px; }
+.tl-date::before { content: ""; position: absolute; left: -26px; top: 5px; width: 16px; height: 16px; border-radius: 50%; background: var(--card); border: 3px solid var(--accent); box-sizing: border-box; }
+.tl-date span { font-size: 12px; font-weight: 400; color: var(--sub); }
+.tl-day .rows { margin-top: 0; }
 .digest-cta { display: block; padding: 18px 20px; border-radius: var(--radius); background: linear-gradient(135deg, #a8500e, #d06a1e); color: #fff; text-decoration: none; box-shadow: var(--shadow); }
 .digest-cta span { font-size: 11px; font-weight: 700; background: rgba(255,255,255,.2); padding: 1px 8px; border-radius: 3px; }
 .digest-cta b { display: block; font-size: 19px; line-height: 1.45; margin: 8px 0 6px; }

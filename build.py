@@ -410,7 +410,7 @@ def page(rel, title, description, body, canonical, active=None, og_type="website
   <a href="{rel}category/basics.html"{' class="on"' if active == "basics" else ''}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5c3-1 5.5-1 8 1 2.5-2 5-2 8-1v13c-3-1-5.5-1-8 1-2.5-2-5-2-8-1z"/><path d="M12 6.5v13"/></svg>基礎</a>
   <a href="{rel}search.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>検索</a>
 </nav>
-<script>(function(){{var n=Date.now();document.querySelectorAll('time[datetime]').forEach(function(t){{var d=new Date(t.getAttribute('datetime')+'T00:00:00+09:00');if(n-d<36*3600*1000&&!t.closest('.post-meta,.timeline')){{var s=document.createElement('span');s.className='new';s.textContent='NEW';t.parentNode.insertBefore(s,t)}}}});}})();</script>
+<script>(function(){{var n=Date.now();document.querySelectorAll('time[datetime]').forEach(function(t){{var d=new Date(t.getAttribute('datetime')+'T00:00:00+09:00');if(n-d<36*3600*1000&&!t.closest('.post-meta,.timeline,.tl-date')){{var s=document.createElement('span');s.className='new';s.textContent='NEW';t.parentNode.insertBefore(s,t)}}}});}})();</script>
 <script>(function(){{var a=document.querySelectorAll('.latest-items a'),i=0;if(a.length<2||matchMedia('(prefers-reduced-motion: reduce)').matches)return;setInterval(function(){{a[i].classList.remove('on');i=(i+1)%a.length;a[i].classList.add('on')}},4500);}})();</script>
 <script>(function(){{var d=new Date(),w="日月火水木金土"[d.getDay()],el=document.querySelector('[data-today]');if(el)el.textContent=(d.getMonth()+1)+"月"+d.getDate()+"日（"+w+"）";}})();</script>
 {extra_body}</body>
@@ -476,6 +476,16 @@ def row_list(arts, rel):
         f'<li><a href="{rel}articles/{a["slug"]}.html">{thumb(a, rel, "mini-thumb")}'
         f'<div>{tag(a["category"])} {short_meta(a)}<h3>{e(a["title"])}</h3>{impact(a)}</div></a></li>'
         for a in arts)
+
+
+def dated_rows(arts, rel):
+    """日付ごとに見出しを付けた一覧（テーマ別ページの時系列）。"""
+    out = ""
+    for d in sorted({a["date"] for a in arts}, reverse=True):
+        day = [a for a in arts if a["date"] == d]
+        out += (f'<div class="tl-day"><p class="tl-date"><time datetime="{d}">{jp_date(d)}</time><span>{len(day)}本</span></p>'
+                f'<ul class="rows">{row_list(day, rel)}</ul></div>')
+    return f'<div class="tl-days">{out}</div>'
 
 
 def genre_columns(news, rel):
@@ -844,7 +854,7 @@ def build_topics(arts):
                        f'<div class="brows two">{basics_rows(basics, "../")}</div></section>' if basics else "")
         body = (page_head("テーマ", f"#{label}", intro, len(items)) +
                 f'<div class="layout"><div class="main-col">{basics_html}'
-                f'<section><h2 class="section-title">ニュース解説<small>新しい順</small></h2><ul class="rows">{row_list(news, "../")}</ul></section></div>{sidebar(arts, "../")}</div>'
+                f'<section><h2 class="section-title">ニュース解説<small>日付ごと・新しい順</small></h2>{dated_rows(news, "../")}</section></div>{sidebar(arts, "../")}</div>'
                 f'<section class="full"><h2 class="section-title">ジャンル別の新着<small>ほかの話題も読む</small></h2>{genre_columns([a for a in arts if a["category"] != "basics"], "../")}</section>')
         url = f"{SITE_URL}topic/{key}.html"
         (ROOT / "topic" / f"{key}.html").write_text(
