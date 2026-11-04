@@ -674,7 +674,7 @@ def build_article(a, all_arts, by_slug, backlinks):
     <div class="font-size" role="group" aria-label="文字の大きさ"><span>文字</span><button type="button" data-fs="s">小</button><button type="button" data-fs="m">中</button><button type="button" data-fs="l">大</button></div>
   </div>
   {thumb(a, rel, "post-thumb", lazy=False)}
-  <div class="summary"><b>3行まとめ</b><ul>{summary}</ul></div>
+  <div class="summary"><b>3行まとめ</b><ul>{summary}</ul>{impact(a)}</div>
   <details class="toc"><summary>この記事の目次</summary><ol>{toc}</ol></details>
   {body}
   {terms_box}
