@@ -641,7 +641,7 @@ def sidebar(arts, rel, toc_html="", exclude=(), home=False, extra="", show_diges
           f'<small>{n_day}本の3行まとめを1ページで ›</small></a>') if latest and show_digest else ""
     if home:
         glossary = "".join(f'<a href="{rel}articles/{b["slug"]}.html">{e(b["keywords"][0])}</a>'
-                           for b in basics if b.get("keywords"))
+                           for b in [x for x in basics if x.get("keywords")][:14])
         genres = "".join(
             f'<li><a href="{rel}category/{k}.html"><b>{v}</b><span>{sum(1 for a in arts if a["category"] == k)}本</span></a></li>'
             for k, v in CATS.items())
