@@ -502,7 +502,7 @@ def topic_band(news, rel):
 
 def basics_rows(basics, rel):
     return "".join(
-        f'<a class="brow" href="{rel}articles/{a["slug"]}.html">{thumb(a, rel, "mini-thumb")}<span>{e(a["title"])}</span></a>'
+        f'<a class="brow" href="{rel}articles/{a["slug"]}.html">{thumb(a, rel, "mini-thumb")}<span class="bt">{e(a["title"])}</span></a>'
         for a in basics)
 
 

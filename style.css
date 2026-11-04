@@ -236,6 +236,16 @@ nav.cats .sep { width: 1px; height: 18px; background: rgba(255,255,255,.25); mar
 .rows h3 { font-size: 17px; line-height: 1.5; margin: 4px 0 0; }
 .rows a:hover h3 { color: var(--accent); }
 .full { margin-top: 8px; }
+@media (min-width: 1200px) {
+  .full { display: grid; grid-template-columns: 200px minmax(0, 1fr); column-gap: 32px; margin-top: 48px; padding-top: 16px; border-top: 3px solid var(--text); }
+  .full.basics-band { border-top-color: var(--basics); }
+  .full > .section-title { flex-direction: column; align-items: flex-start; gap: 8px; margin: 0; padding: 0; border: 0; font-size: 24px; line-height: 1.35; }
+  .full > .section-title .more { margin: 8px 0 0; }
+  .band + .full { border-top: 0; padding-top: 0; }
+  .full .brow { grid-template-columns: minmax(0, 1fr); align-items: start; gap: 10px; padding: 0 0 14px; overflow: hidden; }
+  .full .brow .mini-thumb { border-radius: 0; aspect-ratio: 16 / 6; }
+  .full .brow .bt { padding: 0 14px; }
+}
 .genre-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
 .gcol { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 0 20px 14px; border-top: 4px solid var(--c, var(--accent)); }
 .g-world { --c: #1b4f8c; } .g-economy { --c: #7a3e9d; } .g-life { --c: #a8500e; }
@@ -302,7 +312,7 @@ article.post[data-fs="l"] .summary .impact { font-size: 18px !important; }
 }
 .brows { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
 .brow { display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 12px; align-items: center; background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 10px; text-decoration: none; color: var(--text); font-size: 14px; font-weight: 700; line-height: 1.5; }
-.brow:hover span { color: var(--accent); }
+.brow:hover .bt { color: var(--accent); }
 @media (max-width: 1080px) {
   .genre-cols { grid-template-columns: minmax(0, 1fr); gap: 16px; }
   .gfirst { display: grid; grid-template-columns: minmax(0, 1fr) 120px; gap: 12px; align-items: center; padding-bottom: 6px; }
