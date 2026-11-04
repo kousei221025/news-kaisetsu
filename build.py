@@ -776,8 +776,8 @@ def build_index(arts):
 # ---------- ジャンル別 ----------
 def page_head(kicker, title, intro, count, color=None):
     style = f' style="--c:{color}"' if color else ""
-    return (f'<section class="page-head"{style}><p class="kicker">{kicker}</p><h1>{title}</h1><p>{intro}</p>'
-            f'<p class="count">{count}本の記事</p></section>')
+    return (f'<section class="page-head"{style}><div><p class="kicker">{kicker}</p><h1>{title}</h1><p>{intro}</p></div>'
+            f'<p class="count"><b>{count}</b>本の記事</p></section>')
 
 
 def cat_lead(a, rel):
@@ -931,6 +931,7 @@ def build_daily(arts):
             nav += f'<a class="next" href="{days[i - 1]}.html">{md_date(days[i - 1])}のまとめ ›</a>'
         body = (page_head("まとめ読み", f"{jp_date(d)}のニュース",
                           "この日のニュースを3行まとめで一気に確認できます。気になった記事だけ開いてください。", len(items)) +
+                (numbers_html({a["slug"]: a for a in arts}, "../") if i == 0 else "") +
                 f'<div class="layout"><div class="main-col"><ol class="digest">{lis}</ol>'
                 + (f'<nav class="dg-nav">{nav}</nav>' if nav else "") + f'</div>{sidebar(arts, "../")}</div>')
         (ROOT / "daily" / f"{d}.html").write_text(

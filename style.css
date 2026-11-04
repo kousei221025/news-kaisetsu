@@ -36,6 +36,7 @@
   }
   .g-world { --c: #7fb2ec !important; } .g-economy { --c: #c99be6 !important; } .g-life { --c: #f0a560 !important; }
   .page-head .kicker { color: var(--sub) !important; }
+  .page-head .count b { color: var(--text) !important; }
 }
 
 * { box-sizing: border-box; }
@@ -353,7 +354,9 @@ article.post[data-fs="l"] .summary .impact { font-size: 18px !important; }
 .page-head .kicker { margin: 0; font-size: 12px; font-weight: 700; color: var(--c, var(--accent)); letter-spacing: .1em; }
 .page-head h1 { margin: 2px 0 6px; font-size: 28px; }
 .page-head p { margin: 0; color: var(--sub); font-size: 14px; }
-.page-head .count { margin-top: 6px; font-size: 12px; }
+.page-head { display: flex; justify-content: space-between; align-items: center; gap: 24px; }
+.page-head .count { margin: 0; font-size: 13px; white-space: nowrap; text-align: center; padding-left: 24px; border-left: 1px solid var(--line); }
+.page-head .count b { display: block; font-size: 40px; line-height: 1.1; color: var(--c, var(--accent)); }
 .main-col > section:first-child .section-title { margin-top: 0; }
 
 /* ===== 記事 ===== */
