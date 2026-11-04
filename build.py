@@ -631,8 +631,8 @@ def sidebar(arts, rel, toc_html="", exclude=(), home=False, extra="", show_diges
     digest = (f'<a class="digest-cta" href="{rel}daily/{latest}.html"><span>忙しい人へ</span><b>{md_date(latest)}のニュースを<br>3分でまとめ読み</b>'
           f'<small>{n_day}本の3行まとめを1ページで ›</small></a>') if latest and show_digest else ""
     if home:
-        glossary = "".join(f'<a href="{rel}articles/{b["slug"]}.html">{e(w)}</a>'
-                           for b in basics for w in b.get("keywords", []))
+        glossary = "".join(f'<a href="{rel}articles/{b["slug"]}.html">{e(b["keywords"][0])}</a>'
+                           for b in basics if b.get("keywords"))
         genres = "".join(
             f'<li><a href="{rel}category/{k}.html"><b>{v}</b><span>{sum(1 for a in arts if a["category"] == k)}本</span></a></li>'
             for k, v in CATS.items())
@@ -892,8 +892,8 @@ def build_index(arts):
 bs.forEach(function(b){{b.addEventListener('click',function(){{var f=b.dataset.f,n=0;bs.forEach(function(x){{x.setAttribute('aria-pressed',x===b)}});
 items.forEach(function(it){{var on=f==='all'||it.dataset.cat===f;it.hidden=!on;if(on)n++}});em.hidden=n>0}})}})}})();</script>
 <section class="full"><h2 class="section-title">ジャンル別の新着<small>気になる分野から読む</small></h2>{genre_columns(news, "")}</section>
-<section class="full basics-band"><h2 class="section-title">基礎から学ぶ<small>ニュースがもっと分かる</small><a class="more" href="category/basics.html">すべて見る ›</a></h2>
-  <div class="brows">{basics_rows(basics[:8], "")}</div></section>"""
+<section class="full basics-band"><h2 class="section-title">基礎から学ぶ<small>新しく追加した解説から</small><a class="more" href="glossary.html">用語集 ›</a><a class="more" href="category/basics.html">すべて見る ›</a></h2>
+  <div class="brows">{basics_rows(sorted(basics, key=lambda a: (a["date"], -a.get("rank", 0)), reverse=True)[:8], "")}</div></section>"""
     ld = {"@context": "https://schema.org", "@type": "WebSite", "name": SITE_NAME, "url": SITE_URL,
           "potentialAction": {"@type": "SearchAction", "target": SITE_URL + "search.html?q={q}",
                               "query-input": "required name=q"}}
