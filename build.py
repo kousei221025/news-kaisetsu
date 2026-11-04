@@ -595,7 +595,8 @@ ARTICLE_JS = """<button class="to-top" type="button" aria-label="ページの先
 # ---------- 記事ページ ----------
 def build_article(a, all_arts, by_slug, backlinks):
     rel = "../"
-    body, heads = add_heading_ids(render_bars(a["body"]))
+    body = re.sub(r"(<h2>これからの注目点</h2>\s*)<ul>", r'\1<ul class="watch">', a["body"], count=1)
+    body, heads = add_heading_ids(render_bars(body))
     body, linked = link_terms(body, all_arts, a["slug"])
     body = bold_numbers(body)
     url = f"{SITE_URL}articles/{a['slug']}.html"
