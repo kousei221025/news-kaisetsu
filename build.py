@@ -472,7 +472,8 @@ def tag(cat):
 
 def short_meta(a):
     return (f'<span class="meta"><time datetime="{a["date"]}">{md_date(a["date"])}</time>'
-            f'<span>{reading_minutes(a["body"])}分</span></span>')
+            f'<span>{reading_minutes(a["body"])}分</span>'
+            + (f'<span class="upd">{md_date(a["updated"])}更新</span>' if a.get("updated") else "") + '</span>')
 
 
 def meta_line(a):
