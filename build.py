@@ -599,16 +599,16 @@ def build_article(a, all_arts, by_slug, backlinks):
 
     related = [r for r in all_arts if r["slug"] != a["slug"] and r not in terms and
                (r["category"] == a["category"] or set(r["terms"]) & set(a["terms"]) or a["slug"] in r["terms"])][:4]
-    related_html = (f'<section><h2 class="section-title">関連記事</h2>{cards(related[:3], rel)}</section>'
+    related_html = (f'<section><h2 class="section-title">関連記事</h2>{cards(related[:4], rel, "grid-4")}</section>'
                     if related else "")
     if a["category"] == "basics":
         users = [by_slug[s] for s in backlinks.get(a["slug"], []) if by_slug[s]["category"] != "basics"]
         others = [r for r in all_arts if r["category"] == "basics" and r["slug"] != a["slug"]][:4]
-        related_html = (f'<section><h2 class="section-title">ほかの基礎解説</h2>{cards(others[:3], rel)}</section>'
+        related_html = (f'<section><h2 class="section-title">ほかの基礎解説</h2>{cards(others[:4], rel, "grid-4")}</section>'
                         if others else "")
         if users:
             related_html = (f'<section><h2 class="section-title">この用語が出てくるニュース</h2>'
-                            f'{cards(users[:6], rel)}</section>') + related_html
+                            f'{cards(users[:8], rel, "grid-4")}</section>') + related_html
 
     ld = [{
         "@context": "https://schema.org",
@@ -664,10 +664,11 @@ def build_article(a, all_arts, by_slug, backlinks):
     <div><p class="author-name">この記事を書いた人：{AUTHOR}（会社員）</p>
     <p>ニュースを「自分の生活にどう関係するか」の目線で解説しています。記事はAIの補助を受けて作成し、出典で内容を確かめています。<a href="{rel}about.html">記事の作り方 ›</a></p></div></div>
 </article>
-{related_html}
 </div>
 {sidebar(all_arts, rel, toc_side, exclude=(a["slug"],), extra=timeline_box(a, all_arts, rel))}
-</div>"""
+</div>
+<div class="after-post">{related_html}
+<section><h2 class="section-title">ジャンル別の新着<small>次に読む記事を探す</small></h2>{genre_columns([x for x in all_arts if x["category"] != "basics" and x["slug"] != a["slug"]], rel)}</section></div>"""
     copy_js = """<script>
 document.querySelectorAll('.copy').forEach(function(b){b.addEventListener('click',function(){
   navigator.clipboard&&navigator.clipboard.writeText(b.dataset.url).then(function(){b.textContent='コピーしました';setTimeout(function(){b.textContent='URLをコピー'},2000)});
