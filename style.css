@@ -424,7 +424,9 @@ article.post[data-fs="l"] .summary .impact { font-size: 18px !important; }
 .rank li + li { border-top: 1px solid var(--line); }
 .rank a { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; padding: 10px 0; text-decoration: none; color: var(--text); font-size: 14px; line-height: 1.55; font-weight: 700; }
 .rank a:hover .rt { color: var(--accent); }
-.rank .no { font-size: 22px; font-weight: 900; color: var(--accent); line-height: 1.1; font-family: Georgia, "Times New Roman", serif; }
+.rank .no { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 6px; background: var(--accent-soft); color: var(--accent); font-size: 15px; font-weight: 900; line-height: 1; margin-top: 1px; }
+.rank li:nth-child(-n+3) .no { background: #123a69; color: #fff; }
+.rank li:first-child .no { background: #c8102e; }
 .timeline { list-style: none; margin: 0 0 10px; padding: 0 0 0 14px; border-left: 2px solid var(--line); }
 .timeline li { position: relative; padding: 0 0 12px 12px; font-size: 13px; line-height: 1.6; }
 .timeline li::before { content: ""; position: absolute; left: -21px; top: 5px; width: 10px; height: 10px; border-radius: 50%; background: var(--card); border: 2px solid var(--accent); }
