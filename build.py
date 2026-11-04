@@ -77,7 +77,7 @@ CAT_INTRO = {
 # テーマ：タイトル・説明・3行まとめにキーワードが入っている記事を自動で集める
 BASICS_GROUPS = [  # 基礎解説ページの分野（キーワードはスラッグの一部。どれにも当たらなければ「その他」）
     ("金利・円相場・物価", ["yen", "interest", "boj", "frb", "kawase", "inflation", "cpi", "jutaku"]),
-    ("給料・税金・制度", ["nenmatsu", "nenshu", "furusato", "ideco", "shunto", "gasoline-tax"]),
+    ("給料・税金・制度", ["nenmatsu", "nenshu", "furusato", "ideco", "shunto", "gasoline-tax", "saitei"]),
     ("投資・株", ["nisa", "nikkei"]),
     ("エネルギー", ["crude", "hormuz", "denki"]),
     ("世界・アメリカ", ["us-", "congress"]),
@@ -330,7 +330,7 @@ def make_thumbs(arts):
 
 ICON_RULES = [  # 言葉 → サムネイルのアイコン（上から順に判定。どれにも当たらなければジャンルのアイコン）
     ("chart", ["NISA", "株", "iDeCo", "日経平均"]),
-    ("person", ["雇用", "年収の壁", "春闘", "賃上げ"]),
+    ("person", ["雇用", "年収の壁", "春闘", "賃上げ", "最低賃金"]),
     ("bank", ["FRB", "住宅ローン"]),
     ("fuel", ["原油", "ガソリン", "ホルムズ", "中東"]),
     ("bolt", ["電気"]),
