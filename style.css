@@ -73,6 +73,15 @@ header.site .bar { display: flex; align-items: center; gap: 20px; height: 64px; 
 @media (max-width: 1080px) { .latest { display: none; } }
 .search-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: var(--text); text-decoration: none; padding: 8px 16px; border: 1px solid var(--line); border-radius: 999px; background: var(--bg); }
 .search-btn:hover { color: var(--accent); border-color: var(--accent); }
+.head-search { display: none; }
+@media (min-width: 1081px) {
+  .head-search { display: flex; align-items: center; width: 240px; border: 1px solid var(--line); border-radius: 999px; background: var(--bg); padding: 0 6px 0 16px; }
+  .head-search:focus-within { border-color: var(--accent); }
+  .head-search input { flex: 1; min-width: 0; border: 0; background: none; font: inherit; font-size: 13px; color: var(--text); padding: 9px 0; outline: none; }
+  .head-search button { display: grid; place-items: center; width: 30px; height: 30px; border: 0; border-radius: 50%; background: none; color: var(--sub); cursor: pointer; }
+  .head-search button:hover { color: var(--accent); }
+  .head-search + .search-btn { display: none; }
+}
 
 nav.cats { background: var(--accent-dark); overflow-x: auto; scrollbar-width: none; }
 nav.cats::-webkit-scrollbar { display: none; }

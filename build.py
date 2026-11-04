@@ -383,6 +383,7 @@ def page(rel, title, description, body, canonical, active=None, og_type="website
     <a class="logo" href="{rel}index.html"><svg class="mark" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="9" fill="#1b4f8c"/><path d="M8 31h24" stroke="#f0a560" stroke-width="3" stroke-linecap="round"/><text x="20" y="26" text-anchor="middle" font-size="22" font-weight="900" fill="#fff" font-family="sans-serif">3</text></svg><span class="logo-text">3分<b>ニュース解説</b><small>{TAGLINE}</small></span></a>
     {LATEST_HTML.replace("{rel}", rel)}
     <p class="today" data-today></p>
+    <form class="head-search" action="{rel}search.html" role="search"><input name="q" type="search" placeholder="記事を検索（例：円安）" aria-label="記事を検索"><button type="submit" aria-label="検索する"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button></form>
     <a class="search-btn" href="{rel}search.html" aria-label="記事を検索"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><span>記事を検索</span></a>
   </div>
   <nav class="cats" aria-label="ジャンル"><div class="wrap"><ul>{nav}<li class="sep" aria-hidden="true"></li>{topic_nav}</ul></div></nav>
