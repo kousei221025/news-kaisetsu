@@ -326,6 +326,7 @@ def og_url(slug):
 
 # ---------- 共通の枠 ----------
 LATEST_HTML = ""  # ヘッダーに出す最新ニュース（main() で設定）
+DAILY_LATEST = ""  # 最新の「まとめ読み」の日付（main() で設定）
 
 
 def page(rel, title, description, body, canonical, active=None, og_type="website", extra_head="",
@@ -334,6 +335,7 @@ def page(rel, title, description, body, canonical, active=None, og_type="website
     nav = "".join(
         f'<li><a href="{rel}{href}"{" class=\"on\" aria-current=\"page\"" if key == active else ""}>{label}</a></li>'
         for key, href, label in [("home", "index.html", "トップ")]
+        + ([("daily", f"daily/{DAILY_LATEST}.html", '<span class="nav-dot"></span>まとめ読み')] if DAILY_LATEST else [])
         + [(k, f"category/{k}.html", v) for k, v in CATS.items()]
     )
     foot_cats_li = "".join(f'<li><a href="{rel}category/{k}.html">{v}</a></li>' for k, v in CATS.items())
@@ -933,7 +935,7 @@ def build_daily(arts):
                 + (f'<nav class="dg-nav">{nav}</nav>' if nav else "") + f'</div>{sidebar(arts, "../")}</div>')
         (ROOT / "daily" / f"{d}.html").write_text(
             page("../", f"{jp_date(d)}のニュースまとめ読み", f"{jp_date(d)}の世界情勢・経済ニュース{len(items)}本を、3行まとめで確認できます。",
-                 body, f"{SITE_URL}daily/{d}.html"), encoding="utf-8")
+                 body, f"{SITE_URL}daily/{d}.html", active="daily"), encoding="utf-8")
     return days
 
 
@@ -1006,7 +1008,8 @@ def main():
     (ROOT / "articles").mkdir(exist_ok=True)
     make_og_images(arts)
     make_icons()
-    global LATEST_HTML
+    global LATEST_HTML, DAILY_LATEST
+    DAILY_LATEST = next((a["date"] for a in arts if a["category"] != "basics"), "")
     ON_CLASS = ' class="on"'
     latest_news = [a for a in arts if a["category"] != "basics"][:3]
     LATEST_HTML = ('<div class="latest"><span class="latest-label">最新</span><div class="latest-items">' + "".join(
