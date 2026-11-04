@@ -699,7 +699,8 @@ footer.site li { margin-bottom: 6px; }
   .grid-4 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 @media (max-width: 760px) {
-  body { padding-bottom: 64px; }
+  body { padding-bottom: 0; }
+  footer.site { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
   .tabbar { display: grid; grid-template-columns: repeat(6, 1fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 15; background: var(--card); border-top: 1px solid var(--line); padding: 4px 0 calc(4px + env(safe-area-inset-bottom)); }
   .tabbar a { display: flex; flex-direction: column; align-items: center; gap: 1px; font-size: 10px; font-weight: 700; color: var(--sub); text-decoration: none; padding: 4px 0; }
   .tabbar svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
