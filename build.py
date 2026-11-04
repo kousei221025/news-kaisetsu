@@ -1127,14 +1127,24 @@ def build_daily(arts):
 # ---------- 用語集 ----------
 def build_glossary(arts):
     basics = [a for a in arts if a["category"] == "basics"]
-    rows = "".join(
+    def glrow(a):
+        return (f'<div class="gl-row" id="g-{a["slug"]}"><dt>{"".join(f"<span>{e(w)}</span>" for w in a.get("keywords", []))}</dt>'
+                f'<dd><p>{e(a["summary"][0] if a.get("summary") else a["description"])}</p>'
+                f'<a href="articles/{a["slug"]}.html">{e(a["title"])} ›</a></dd></div>')
+    used, parts = set(), ""
+    for gname, keys in BASICS_GROUPS + [("その他", [""])]:
+        g = [a for a in basics if a["slug"] not in used and any(k in a["slug"] for k in keys)]
+        used.update(a["slug"] for a in g)
+        if g:
+            parts += f'<h2 class="gl-h">{e(gname)}</h2><dl class="glossary-list">{"".join(glrow(a) for a in g)}</dl>'
+    rows_unused = "".join(
         f'<div class="gl-row" id="g-{a["slug"]}"><dt>{"".join(f"<span>{e(w)}</span>" for w in a.get("keywords", []))}</dt>'
         f'<dd><p>{e(a["summary"][0] if a.get("summary") else a["description"])}</p>'
         f'<a href="articles/{a["slug"]}.html">{e(a["title"])} ›</a></dd></div>'
         for a in basics)
     n = sum(len(a.get("keywords", [])) for a in basics)
     body = (page_head("基礎解説", "ニュースの用語集", "ニュースによく出てくる言葉を、ひと言で説明しています。くわしくは各基礎解説へ。", n, unit="の言葉") +
-            f'<div class="layout"><div class="main-col"><dl class="glossary-list">{rows}</dl></div>{sidebar(arts, "", home=True)}</div>')
+            f'<div class="layout"><div class="main-col">{parts}</div>{sidebar(arts, "", home=True)}</div>')
     (ROOT / "glossary.html").write_text(
         page("", "ニュースの用語集", "円安、金利、インフレ、年収の壁など、ニュースによく出てくる言葉をひと言で説明した用語集。", body,
              SITE_URL + "glossary.html", active="basics"), encoding="utf-8")
