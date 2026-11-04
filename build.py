@@ -1014,6 +1014,9 @@ def build_daily(arts):
         body = (page_head("まとめ読み", f"{jp_date(d)}のニュース",
                           "この日のニュースを3行まとめで一気に確認できます。気になった記事だけ開いてください。", len(items)) +
                 (numbers_html({a["slug"]: a for a in arts}, "../") if i == 0 else "") +
+                f'<div class="post-tools dg-share"><span>このまとめをシェア</span><div class="share-mini">'
+                f'<a class="x" href="https://twitter.com/intent/tweet?url={quote(SITE_URL + "daily/" + d + ".html")}&text={quote(jp_date(d) + "のニュースを3分でまとめ読み｜" + SITE_NAME)}" target="_blank" rel="noopener">Xでポスト</a>'
+                f'<a class="line" href="https://social-plugins.line.me/lineit/share?url={quote(SITE_URL + "daily/" + d + ".html")}" target="_blank" rel="noopener">LINEで送る</a></div></div>' +
                 f'<div class="layout"><div class="main-col"><ol class="digest">{lis}</ol>'
                 + (f'<nav class="dg-nav">{nav}</nav>' if nav else "") + f'</div>{sidebar(arts, "../", show_digest=False)}</div>')
         (ROOT / "daily" / f"{d}.html").write_text(

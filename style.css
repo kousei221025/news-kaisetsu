@@ -359,6 +359,7 @@ article.post[data-fs="l"] .summary .impact { font-size: 18px !important; }
 .dg-more { display: inline-block; margin-top: 10px; font-size: 13px; font-weight: 700; color: var(--accent); text-decoration: none; }
 .dg-nav { display: flex; justify-content: space-between; margin-top: 8px; font-weight: 700; font-size: 14px; }
 .dg-nav .next { margin-left: auto; }
+.post-tools.dg-share { justify-content: flex-start; gap: 12px; margin: -6px 0 18px; padding: 10px 18px; background: var(--card); border: 0; border-radius: var(--radius); box-shadow: var(--shadow); font-size: 13px; color: var(--sub); }
 @media (max-width: 760px) {
   .digest > li { padding: 16px; }
   .digest h2 { font-size: 18px; }
