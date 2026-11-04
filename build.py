@@ -27,6 +27,12 @@
 *項目名|数字|単位　← 先頭に * を付けると、その棒がオレンジで強調される（今の値など、一番見てほしい1本に）
 出典：〇〇-->
 
+流れ図：「なぜ生活に関係するか」のつながりを、本文に次のように書く（3〜5段。最後が生活への影響。出典で確かめたつながりだけ）。
+<!--flow 題名
+原因
+起きること
+生活への影響-->
+
 数字の帯：src/numbers.json（"trend": "up"/"down"/"flat" と "trend_note" は、記事で上がった・下がったを確かめたときだけ入れる）（label・value・note（いつの数字か）・article（根拠の記事スラッグ））。
 記事で確かめた数字だけを入れ、古くなったら更新する。
 
@@ -190,6 +196,20 @@ def render_bars(body):
         return (f'<figure class="bars"><figcaption>{e(title)}</figcaption>{bars}'
                 + (f'<p class="bar-note">{e(note)}</p>' if note else "") + '</figure>')
     return re.sub(r"<!--bars(.*?)-->", repl, body, flags=re.S)
+
+
+# ---------- 流れ図 ----------
+def render_flow(body):
+    """<!--flow 題名
+    ステップ1
+    ステップ2
+    ...-->  を矢印でつないだ図にする。最後のステップは「生活への影響」としてオレンジ。"""
+    def repl(m):
+        lines = [x.strip() for x in m.group(1).strip().splitlines() if x.strip()]
+        title, steps = lines[0], lines[1:]
+        lis = "".join(f'<li{" class=\"last\"" if i == len(steps) - 1 else ""}>{e(s)}</li>' for i, s in enumerate(steps))
+        return f'<figure class="flow"><figcaption>{e(title)}</figcaption><ol>{lis}</ol></figure>'
+    return re.sub(r"<!--flow(.*?)-->", repl, body, flags=re.S)
 
 
 # ---------- 数字を太字に ----------
@@ -641,7 +661,7 @@ def build_article(a, all_arts, by_slug, backlinks):
     rel = "../"
     body = re.sub(r"(<h2>これからの注目点</h2>\s*)<ul>", r'\1<ul class="watch">', a["body"], count=1)
     body = re.sub(r'<div class="life"><b>(.*?)</b>', lambda m: f'<div class="life"><b>{life_icon(m.group(1))}{m.group(1)}</b>', body)
-    body, heads = add_heading_ids(render_bars(body))
+    body, heads = add_heading_ids(render_flow(render_bars(body)))
     body, linked = link_terms(body, all_arts, a["slug"])
     body = bold_numbers(body)
     url = f"{SITE_URL}articles/{a['slug']}.html"
