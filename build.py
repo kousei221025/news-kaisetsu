@@ -574,8 +574,8 @@ def sidebar(arts, rel, toc_html="", exclude=(), home=False, extra="", show_diges
     <ol class="steps"><li><b>3行まとめ</b>で、何が起きたかを10秒でつかむ</li>
     <li><b>生活への影響</b>（オレンジの枠）で、自分のお金や仕事との関係を知る</li>
     <li>点線の言葉をタップすると、<b>基礎解説</b>で用語が分かる</li></ol></section>
-  <section class="side-box"><h2 class="side-title">注目のテーマ</h2><div class="chips-wrap">{topics}</div></section>
-  <section class="side-box"><h2 class="side-title">ジャンルから探す</h2><ul class="genre-list">{genres}</ul></section>
+  <section class="side-box sp-hide"><h2 class="side-title">注目のテーマ</h2><div class="chips-wrap">{topics}</div></section>
+  <section class="side-box sp-hide"><h2 class="side-title">ジャンルから探す</h2><ul class="genre-list">{genres}</ul></section>
   <section class="side-box"><h2 class="side-title">用語さくいん<small>タップで基礎解説へ</small></h2><div class="glossary">{glossary}</div></section>
   <section class="side-box about-box"><h2 class="side-title">このサイトについて</h2>
     <p>ニュースを見ても「で、自分の生活にどう関係あるの？」と思う会社員のために、世界と経済のニュースを3分で読めるように解説しています。</p>
@@ -791,11 +791,12 @@ def build_index(arts):
     </a>
     <div class="lead-right"><ul class="lead-side">{side_news}</ul>{also_html}</div>
   </section>
+  <a class="digest-cta sp-only" href="daily/{latest}.html"><span>忙しい人へ</span><b>{md_date(latest)}のニュースを3分でまとめ読み</b><small>{sum(1 for a in news if a["date"] == latest)}本の3行まとめを1ページで ›</small></a>
   {feature}
   <section><h2 class="section-title">新着記事<small>{md_date(latest)}更新</small></h2>{cards(news[4:7], "")}
     {f'<ul class="rows">{row_list(news[7:16], "")}</ul>' if len(news) > 7 else ""}</section>
 </div>
-{sidebar(arts, "", home=True)}
+{sidebar(arts, "", home=True).replace('class="sidebar"', 'class="sidebar home-side"', 1)}
 </div>
 {topic_band(news, "")}
 <section class="full"><h2 class="section-title">ジャンル別の新着<small>気になる分野から読む</small></h2>{genre_columns(news, "")}</section>
