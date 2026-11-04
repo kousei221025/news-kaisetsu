@@ -596,6 +596,13 @@ def sidebar(arts, rel, toc_html="", exclude=(), home=False, extra="", show_diges
 
 
 ARTICLE_JS = """<button class="to-top" type="button" aria-label="ページの先頭へ戻る">↑</button>
+<script>(function(){
+  var links=[].slice.call(document.querySelectorAll('.toc-list a'));if(!links.length)return;
+  var hs=links.map(function(a){return document.getElementById(a.getAttribute('href').slice(1))});
+  function upd(){var y=innerHeight*0.3,cur=-1;hs.forEach(function(h,i){if(h&&h.getBoundingClientRect().top<y)cur=i});
+    links.forEach(function(a,i){a.classList.toggle('now',i===cur)})}
+  addEventListener('scroll',upd,{passive:true});upd();
+})();</script>
 <script>
 (function(){
   var bar=document.querySelector('.progress'),top=document.querySelector('.to-top'),post=document.querySelector('article.post');

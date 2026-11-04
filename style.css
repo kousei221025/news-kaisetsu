@@ -394,6 +394,10 @@ article.post[data-fs="l"] .summary .impact { font-size: 18px !important; }
 .toc-list li { margin-bottom: 6px; }
 .toc-list a { color: var(--text); text-decoration: none; }
 .toc-list a:hover { color: var(--accent); }
+.toc-list a.now { color: var(--accent); font-weight: 700; }
+.toc-list li:has(a.now)::marker { color: var(--accent); }
+.toc-list li { position: relative; }
+.toc-list li:has(a.now)::before { content: ""; position: absolute; left: -1.9em; top: .2em; bottom: .2em; width: 3px; border-radius: 2px; background: var(--accent); }
 
 /* ===== ジャンル・テーマのページ見出し ===== */
 .page-head { margin: 28px 0 24px; padding: 24px 28px; background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); border-left: 6px solid var(--c, var(--accent)); }
