@@ -1,0 +1,5 @@
+[
+  {"date": "2026-11-06", "time": "22:30", "label": "アメリカの雇用統計（10月分）", "note": "ドル円が動きやすい", "article": "basics-us-jobs", "source": "OANDA証券の解説"},
+  {"date": "2026-12-09", "time": "", "label": "FOMC（アメリカの金利を決める会議）の結果発表", "note": "会議は12月8〜9日。日本では10日の未明", "article": "basics-frb", "source": "FRB公式カレンダー"},
+  {"date": "2026-12-18", "time": "", "label": "日銀の金融政策決定会合の結果", "note": "会合は12月17〜18日", "article": "basics-boj", "source": "OANDA証券・投資情報サイトの日程表"}
+]

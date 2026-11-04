@@ -33,6 +33,8 @@
 起きること
 生活への影響-->
 
+これからの予定：src/schedule.json（date・time・label・note・article（関係する基礎解説のスラッグ）・source。日付は出典で確かめたものだけ。過ぎた予定は自動で表示されない）
+
 数字の帯：src/numbers.json（"trend": "up"/"down"/"flat" と "trend_note" は、記事で上がった・下がったを確かめたときだけ入れる）（label・value・note（いつの数字か）・article（根拠の記事スラッグ））。
 記事で確かめた数字だけを入れ、古くなったら更新する。
 
@@ -598,6 +600,23 @@ def timeline_box(a, arts, rel):
             f'<ol class="timeline">{lis}</ol><a class="more" href="{rel}topic/{key}.html">このテーマの記事をすべて見る ›</a></section>')
 
 
+def schedule_box(rel):
+    """これからの予定（src/schedule.json。過ぎた予定は表示しない）。"""
+    f = SRC / "schedule.json"
+    if not f.exists():
+        return ""
+    today = date.today().isoformat()
+    items = [x for x in json.loads(f.read_text(encoding="utf-8")) if x["date"] >= today][:4]
+    if not items:
+        return ""
+    wd = "月火水木金土日"
+    lis = "".join(
+        f'<li data-date="{x["date"]}"><span class="sc-d"><b>{md_date(x["date"])}</b>（{wd[date.fromisoformat(x["date"]).weekday()]}）{(" " + x["time"]) if x.get("time") else ""}</span>'
+        f'<a href="{rel}articles/{x["article"]}.html">{e(x["label"])}</a><small>{e(x["note"])}</small></li>' for x in items)
+    return (f'<section class="side-box sched"><h2 class="side-title">これからの予定<small>ニュースが動きやすい日</small></h2>'
+            f'<ol class="sc-list">{lis}</ol></section>')
+
+
 def sidebar(arts, rel, toc_html="", exclude=(), home=False, extra="", show_digest=True):
     news = [a for a in arts if a["category"] != "basics" and a["slug"] not in exclude]
     basics = [a for a in arts if a["category"] == "basics" and a["slug"] not in exclude]
@@ -619,6 +638,7 @@ def sidebar(arts, rel, toc_html="", exclude=(), home=False, extra="", show_diges
         return f"""<aside class="sidebar" aria-label="サイドメニュー">
   {digest}
   <section class="side-box later-box" hidden><h2 class="side-title">あとで読む<small>この端末に保存</small></h2><ol class="later-list"></ol></section>
+  {schedule_box(rel)}
   <section class="side-box guide"><h2 class="side-title">このサイトの読み方</h2>
     <ol class="steps"><li><b>3行まとめ</b>で、何が起きたかを10秒でつかむ</li>
     <li><b>生活への影響</b>（オレンジの枠）で、自分のお金や仕事との関係を知る</li>
@@ -634,6 +654,7 @@ def sidebar(arts, rel, toc_html="", exclude=(), home=False, extra="", show_diges
     return f"""<aside class="sidebar" aria-label="サイドメニュー">
   {extra}
   {digest}
+  {schedule_box(rel)}
   <section class="side-box"><h2 class="side-title">今日のポイント</h2><ol class="rank">{rank_list(news[:5], rel)}</ol></section>
   <section class="side-box"><h2 class="side-title">注目のテーマ</h2><div class="chips-wrap">{topics}</div></section>
   <section class="side-box side-basics"><h2 class="side-title">基礎から学ぶ</h2><ul class="side-list">{basics_li}</ul>
