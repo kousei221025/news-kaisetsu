@@ -150,6 +150,14 @@ nav.cats .sep { width: 1px; height: 18px; background: rgba(255,255,255,.25); mar
 .numbers ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); flex: 1; }
 .numbers li + li { border-left: 1px solid var(--line); }
 .numbers a { display: flex; flex-direction: column; padding: 8px 16px; text-decoration: none; color: var(--text); line-height: 1.4; }
+@media (min-width: 761px) {
+  .numbers { margin: 16px 0 22px; }
+  .numbers-h { padding: 0 16px; font-size: 12px; }
+  .numbers a { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; column-gap: 8px; padding: 7px 16px; }
+  .numbers .nl { font-size: 12px; color: var(--sub); }
+  .numbers .nv { font-size: 17px; }
+  .numbers .nn { grid-column: 1 / -1; font-size: 11px; color: var(--sub); line-height: 1.3; }
+}
 .numbers a:hover .nv { color: var(--accent); }
 .nl { font-size: 11px; color: var(--sub); font-weight: 700; }
 .nv { font-size: 20px; font-weight: 900; letter-spacing: 0; }

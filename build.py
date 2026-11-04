@@ -734,8 +734,7 @@ def build_index(arts):
     top_topic = max(tcount, key=tcount.get)
     feature = (f'<a class="feature" href="topic/{top_topic}.html"><span class="ft">特集</span>'
                f'<b>{TOPICS[top_topic][0]}</b><span class="fd">{TOPICS[top_topic][1]}</span><span class="fc">{tcount[top_topic]}本の記事 ›</span></a>')
-    body = f"""<section class="strip"><p><b>むずかしいニュースを、会社員目線で3分で。</b><span>世界情勢・経済のニュースが「自分の生活にどう関係するか」まで解説します。</span></p><p class="strip-date">{jp_date(latest)} 更新</p></section>
-{numbers_html(by_slug, "")}
+    body = f"""{numbers_html(by_slug, "")}
 <div class="layout">
 <div class="main-col">
   <section class="lead" aria-label="今日の注目記事">
