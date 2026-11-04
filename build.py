@@ -207,7 +207,7 @@ def render_flow(body):
     def repl(m):
         lines = [x.strip() for x in m.group(1).strip().splitlines() if x.strip()]
         title, steps = lines[0], lines[1:]
-        lis = "".join(f'<li{" class=\"last\"" if i == len(steps) - 1 else ""}>{e(s)}</li>' for i, s in enumerate(steps))
+        lis = "".join(f'<li{" class=\"last\"" if i == len(steps) - 1 else ""}><span>{e(s)}</span></li>' for i, s in enumerate(steps))
         return f'<figure class="flow"><figcaption>{e(title)}</figcaption><ol>{lis}</ol></figure>'
     return re.sub(r"<!--flow(.*?)-->", repl, body, flags=re.S)
 
