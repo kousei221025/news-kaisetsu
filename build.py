@@ -318,6 +318,20 @@ def icon_class(a):
     return ""
 
 
+LIFE_ICONS = [  # 「生活への影響」の見出しの言葉 → アイコン（上から順に判定）
+    ("person", ["会社員", "パート", "給料", "働く"]), ("fuel", ["ガソリン", "車"]), ("bolt", ["電気", "ガス", "エネルギー"]),
+    ("chart", ["株", "NISA"]), ("plane", ["旅行", "通販"]), ("yen", ["円", "外貨", "ドル"]),
+    ("bank", ["ローン", "預金", "貯金", "金利"]), ("percent", ["物価", "値段"]), ("receipt", ["税", "年末"]), ("eye", ["見方", "できること"]),
+]
+
+
+def life_icon(label):
+    for name, words in LIFE_ICONS:
+        if any(w in label for w in words):
+            return f'<span class="lic i-{name}" aria-hidden="true"></span>'
+    return ""
+
+
 def thumb(a, rel, cls="thumb", lazy=True):
     """サムネイル。画像ファイルを使わず CSS で描く（表示が速い）。"""
     word = a.get("eyecatch") or CATS[a["category"]]
@@ -624,6 +638,7 @@ ARTICLE_JS = """<button class="to-top" type="button" aria-label="ページの先
 def build_article(a, all_arts, by_slug, backlinks):
     rel = "../"
     body = re.sub(r"(<h2>これからの注目点</h2>\s*)<ul>", r'\1<ul class="watch">', a["body"], count=1)
+    body = re.sub(r'<div class="life"><b>(.*?)</b>', lambda m: f'<div class="life"><b>{life_icon(m.group(1))}{m.group(1)}</b>', body)
     body, heads = add_heading_ids(render_bars(body))
     body, linked = link_terms(body, all_arts, a["slug"])
     body = bold_numbers(body)
