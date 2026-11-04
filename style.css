@@ -347,6 +347,7 @@ article.post[data-fs="l"] .summary .impact { font-size: 18px !important; }
 .digest-cta b { display: block; font-size: 19px; line-height: 1.45; margin: 8px 0 6px; }
 .digest-cta small { font-size: 12px; opacity: .9; }
 .digest-cta:hover b { text-decoration: underline; }
+.sidebar > .digest-cta { align-self: start; }
 .digest { list-style: none; margin: 0; padding: 0; }
 .digest > li { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px 24px; margin-bottom: 16px; }
 .dg-head { display: flex; align-items: center; gap: 10px; }
