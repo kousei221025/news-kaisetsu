@@ -535,6 +535,9 @@ article.post[data-fs="l"] .summary li { font-size: 18px; }
 
 /* ===== 検索 ===== */
 .search-box input { width: 100%; font: inherit; font-size: 18px; padding: 14px 18px; border: 2px solid var(--line); border-radius: var(--radius); background: var(--card); color: var(--text); }
+#results mark { background: #ffe58a; color: inherit; padding: 0 1px; border-radius: 2px; }
+.card .snip { margin: 8px 0 0; font-size: 12px; color: var(--sub); -webkit-line-clamp: 3; }
+@media (prefers-color-scheme: dark) { #results mark { background: #6b5410; } }
 .search-box input:focus { border-color: var(--accent); outline: none; }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 14px 0; font-size: 13px; color: var(--sub); }
 .chips button { font: inherit; font-size: 13px; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--text); cursor: pointer; }

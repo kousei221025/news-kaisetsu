@@ -927,11 +927,15 @@ SEARCH_JS = """<script>
       return {a:a,s:score};
     }).filter(Boolean).sort(function(x,y){return y.s-x.s||(y.a.date>x.a.date?1:-1)});
     info.textContent='「'+q+'」の検索結果：'+hits.length+'件';
+    function hl(s){s=esc(s);words.forEach(function(w){if(w){var x=esc(w);s=s.split(x).join('<mark>'+x+'</mark>')}});return s}
+    function snip(a){var txt=a.t+a.d+(a.i||'');if(words.some(function(w){return txt.indexOf(w)>=0}))return '';
+      var w=words.find(function(w){return a.b.indexOf(w)>=0});if(!w)return '';var i=a.b.indexOf(w);
+      return '<p class="snip">…'+hl(a.b.slice(Math.max(0,i-30),i+50))+'…</p>'}
     out.innerHTML=hits.map(function(h){var a=h.a;
       var w=a.e||cats[a.c],sz=w.length<=3?'w1':w.length<=4?'w2':w.length<=5?'w3':'w4';
       return '<a class="card" href="articles/'+a.s+'.html"><span class="thumb art c-'+a.c+' '+sz+(a.ic||'')+'" role="img" aria-label="'+esc(w)+'"><span class="art-cat">'+cats[a.c]+'</span><span class="art-word">'+esc(w)+'</span><span class="art-logo">3分ニュース解説</span></span>'
-        +'<div class="card-body"><span class="tag t-'+a.c+'">'+cats[a.c]+'</span> <span class="meta"><time datetime="'+a.date+'">'+a.jd+'</time></span><h3>'+esc(a.t)+'</h3>'
-        +(a.i?'<p class="impact"><b>くらしへの影響</b>'+esc(a.i)+'</p>':'<p>'+esc(a.d)+'</p>')+'</div></a>'
+        +'<div class="card-body"><span class="tag t-'+a.c+'">'+cats[a.c]+'</span> <span class="meta"><time datetime="'+a.date+'">'+a.jd+'</time></span><h3>'+hl(a.t)+'</h3>'
+        +(a.i?'<p class="impact"><b>くらしへの影響</b>'+hl(a.i)+'</p>':'<p>'+hl(a.d)+'</p>')+snip(a)+'</div></a>'
     }).join('');
   }
   fetch('search.json').then(function(r){return r.json()}).then(function(j){
