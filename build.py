@@ -840,8 +840,13 @@ def build_categories(arts):
                     + (f'<section><h2 class="section-title">{label}の記事</h2>{cards(rest[:6], "../")}'
                        + (f'<ul class="rows">{row_list(rest[6:], "../")}</ul>' if len(rest) > 6 else "") + '</section>' if rest else "")
                     + related_basics(items, arts, "../", f"{label}の基礎解説"))
-        body = (page_head("ジャンル", label, CAT_INTRO[key], len(items), CAT_COLOR[key]) +
-                f'<div class="layout"><div class="main-col">{main}</div>{sidebar(arts, "../")}</div>'
+        if key == "basics":  # 基礎解説は右列を省き、用語さくいん＋横幅いっぱいの4列
+            gl = "".join(f'<a href="../articles/{b["slug"]}.html">{e(w)}</a>' for b in items for w in b.get("keywords", []))
+            layout = (f'<div class="gloss-bar"><b>用語さくいん</b><div class="glossary">{gl}</div></div>'
+                      f'{cards(items, "../", "grid-4")}')
+        else:
+            layout = f'<div class="layout"><div class="main-col">{main}</div>{sidebar(arts, "../")}</div>'
+        body = (page_head("ジャンル", label, CAT_INTRO[key], len(items), CAT_COLOR[key]) + layout +
                 f'<section class="full"><h2 class="section-title">ジャンル別の新着<small>ほかの分野も読む</small></h2>{genre_columns(news, "../")}</section>')
         url = f"{SITE_URL}category/{key}.html"
         (ROOT / "category" / f"{key}.html").write_text(

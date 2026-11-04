@@ -295,6 +295,9 @@ article.post[data-fs="l"] .summary .impact { font-size: 18px !important; }
   .art-side > .side-box:not(.keep) { display: none; }
   .art-side { display: flex !important; flex-direction: column; gap: 16px; }
 }
+.gloss-bar { display: flex; gap: 16px; align-items: center; margin: 0 0 22px; padding: 14px 18px; background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); }
+.gloss-bar > b { flex: none; font-size: 14px; color: var(--basics); }
+@media (max-width: 760px) { .gloss-bar { flex-direction: column; align-items: flex-start; gap: 8px; } }
 .digest-cta { display: block; padding: 18px 20px; border-radius: var(--radius); background: linear-gradient(135deg, #a8500e, #d06a1e); color: #fff; text-decoration: none; box-shadow: var(--shadow); }
 .digest-cta span { font-size: 11px; font-weight: 700; background: rgba(255,255,255,.2); padding: 1px 8px; border-radius: 3px; }
 .digest-cta b { display: block; font-size: 19px; line-height: 1.45; margin: 8px 0 6px; }
