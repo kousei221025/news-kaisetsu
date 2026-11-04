@@ -438,7 +438,7 @@ def page(rel, title, description, body, canonical, active=None, og_type="website
     <nav aria-label="テーマ"><p class="foot-h">テーマ</p><ul>{foot_topics_li}</ul></nav>
     <nav aria-label="サイト情報"><p class="foot-h">サイト情報</p><ul>{f'<li><a href="{rel}daily/{DAILY_LATEST}.html">まとめ読み</a></li>' if DAILY_LATEST else ""}<li><a href="{rel}search.html">記事を検索</a></li><li><a href="{rel}about.html">このサイトについて</a></li><li><a href="{rel}about.html#policy">編集方針（5つの約束）</a></li><li><a href="{rel}about.html#contact">お問い合わせ</a></li><li><a href="{rel}about.html">プライバシーポリシー</a></li><li><a href="{SITE_URL}feed.xml">RSS</a></li></ul></nav>
   </div>
-  <div class="wrap foot-copy"><small>© 2026 {SITE_NAME}</small></div>
+  <div class="wrap foot-copy"><small>© 2026 {SITE_NAME}</small><span class="foot-promise">出典で確かめた事実だけ・結果は予想しない・中立に <a href="{rel}about.html#policy">5つの約束 ›</a></span><a class="foot-top" href="#">ページの上へ ↑</a></div>
 </footer>
 <nav class="tabbar" aria-label="スマホ用メニュー">
   <a href="{rel}index.html"{' class="on"' if active == "home" else ''}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg>トップ</a>
