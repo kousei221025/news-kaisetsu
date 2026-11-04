@@ -221,6 +221,23 @@ nav.cats .sep { width: 1px; height: 18px; background: rgba(255,255,255,.25); mar
 .gcol ul { list-style: none; margin: 0; padding: 0; }
 .gcol li { border-top: 1px solid var(--line); }
 .gcol li a { display: block; padding: 10px 0; font-size: 14px; line-height: 1.55; font-weight: 700; text-decoration: none; color: var(--text); }
+.band { margin: 48px 0 8px; padding: 34px 0 38px; background: #10294a; color: #fff; box-shadow: 0 0 0 100vmax #10294a; clip-path: inset(0 -100vmax); }
+.band h2 { display: flex; align-items: baseline; gap: 12px; font-size: 22px; margin: 0 0 18px; color: #fff; }
+.band h2 small { font-size: 12px; font-weight: 400; color: #b9c8dc; }
+.tcards { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
+.tcard { position: relative; display: flex; flex-direction: column; gap: 8px; padding: 18px 18px 16px; border-radius: var(--radius); background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.14); text-decoration: none; color: #fff; transition: background .15s; }
+.tcard:hover { background: rgba(255,255,255,.14); }
+.tcard b { font-size: 17px; line-height: 1.4; padding-right: 30px; }
+.tc-n { position: absolute; top: 14px; right: 14px; font-size: 11px; font-weight: 700; color: #f0a560; }
+.tc-i { font-size: 12px; line-height: 1.6; color: #b9c8dc; }
+.tc-l { margin-top: auto; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.14); font-size: 13px; font-weight: 700; line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.band + .full .section-title { border-top: 0; }
+@media (max-width: 1080px) { .tcards { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 760px) {
+  .band { padding: 24px 0 26px; }
+  .tcards { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 10px; padding-bottom: 6px; }
+  .tcard { flex: 0 0 72%; scroll-snap-align: start; }
+}
 .brows { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
 .brow { display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 12px; align-items: center; background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 10px; text-decoration: none; color: var(--text); font-size: 14px; font-weight: 700; line-height: 1.5; }
 .brow:hover span { color: var(--accent); }

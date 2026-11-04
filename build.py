@@ -484,6 +484,20 @@ def genre_columns(news, rel):
     return f'<div class="genre-cols">{cols}</div>'
 
 
+def topic_band(news, rel):
+    """横幅いっぱいの帯：テーマごとに記事数と最新の見出し。"""
+    items = ""
+    for k, (label, intro, _) in TOPICS.items():
+        arts = [a for a in news if k in topics_of(a)]
+        if not arts:
+            continue
+        items += (f'<a class="tcard" href="{rel}topic/{k}.html"><span class="tc-n">{len(arts)}本</span>'
+                  f'<b>#{label}</b><span class="tc-i">{intro}</span>'
+                  f'<span class="tc-l">最新：{e(arts[0]["title"])}</span></a>')
+    return (f'<section class="band"><div class="band-in"><h2>テーマで追う<small>続報をまとめて読める</small></h2>'
+            f'<div class="tcards">{items}</div></div></section>')
+
+
 def basics_rows(basics, rel):
     return "".join(
         f'<a class="brow" href="{rel}articles/{a["slug"]}.html">{thumb(a, rel, "mini-thumb")}<span>{e(a["title"])}</span></a>'
@@ -736,6 +750,7 @@ def build_index(arts):
 </div>
 {sidebar(arts, "", home=True)}
 </div>
+{topic_band(news, "")}
 <section class="full"><h2 class="section-title">ジャンル別の新着<small>気になる分野から読む</small></h2>{genre_columns(news, "")}</section>
 <section class="full basics-band"><h2 class="section-title">基礎から学ぶ<small>ニュースがもっと分かる</small><a class="more" href="category/basics.html">すべて見る ›</a></h2>
   <div class="brows">{basics_rows(basics[:8], "")}</div></section>"""
