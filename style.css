@@ -99,7 +99,12 @@ nav.cats .sep { width: 1px; height: 18px; background: rgba(255,255,255,.25); mar
 :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
 
 /* ===== CSSで描くサムネイル ===== */
-.art { position: relative; display: block; overflow: hidden; aspect-ratio: 16 / 9; container-type: inline-size; color: #fff; background: linear-gradient(135deg, var(--c1), var(--c2)); }
+.art { position: relative; display: block; overflow: hidden; aspect-ratio: 16 / 9; container-type: inline-size; color: #fff; background:
+  radial-gradient(circle at 1px 1px, rgba(255,255,255,.13) 1px, transparent 1.4px) 0 0 / 2.6cqi 2.6cqi,
+  linear-gradient(115deg, rgba(255,255,255,.10) 0 38%, transparent 38.2%),
+  linear-gradient(135deg, var(--c1), var(--c2)); }
+.art-word::after { content: ""; display: block; width: 1.6em; height: max(2px, .09em); margin-top: .12em; background: #f0a560; border-radius: 2px; }
+.art.c-life .art-word::after { background: rgba(255,255,255,.85); }
 .art::before, .art::after { content: ""; position: absolute; border-radius: 50%; background: rgba(255,255,255,.09); }
 .art::before { width: 46cqi; height: 46cqi; right: 5cqi; top: 50%; transform: translateY(-50%); border-radius: 0; background: var(--icon) center / contain no-repeat; opacity: .22; }
 .art::after { width: 47cqi; height: 47cqi; right: 15cqi; bottom: -27cqi; background: rgba(255,255,255,.06); }
