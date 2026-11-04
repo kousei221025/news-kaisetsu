@@ -753,7 +753,7 @@ def build_index(arts):
     by_slug = {a["slug"]: a for a in arts}
     also = "".join(f'<li><a href="articles/{s}.html">{e(by_slug[s]["title"])}</a></li>'
                    for s in lead["terms"][:2] if s in by_slug)
-    also_html = f'<div class="also"><p>あわせて読む</p><ul>{also}</ul></div>' if also else ""
+    also_html = f'<div class="also"><p>今日の1本目とあわせて読む</p><ul>{also}</ul></div>' if also else ""
     tcount = {k: sum(1 for a in news if k in topics_of(a)) for k in TOPICS}
     top_topic = max(tcount, key=tcount.get)
     feature = (f'<a class="feature" href="topic/{top_topic}.html"><span class="ft">特集</span>'
@@ -767,9 +767,8 @@ def build_index(arts):
       <div class="lead-body"><span class="label">今日の1本目</span>{tag(lead["category"])} {meta_line(lead)}
         <h2>{e(lead["title"])}</h2><ul>{lead_sum}</ul>{impact(lead)}</div>
     </a>
-    <ul class="lead-side">{side_news}</ul>
+    <div class="lead-right"><ul class="lead-side">{side_news}</ul>{also_html}</div>
   </section>
-  {also_html}
   {feature}
   <section><h2 class="section-title">新着記事<small>{md_date(latest)}更新</small></h2>{cards(news[4:7], "")}
     {f'<ul class="rows">{row_list(news[7:16], "")}</ul>' if len(news) > 7 else ""}</section>
