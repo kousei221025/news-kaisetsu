@@ -787,6 +787,14 @@ def build_article(a, all_arts, by_slug, backlinks):
             n = later[0]
             updated += (f'<a class="followup" href="{n["slug"]}.html"><b>続報があります</b>'
                         f'<span>{md_date(n["date"])}：{e(n["title"])}</span></a>')
+    if a["title"].startswith("【続報】") and "pre-read" not in a["body"]:  # 続報は前の記事を自動で案内
+        tp = set(topics_of(a))
+        prev = [x for x in all_arts if x["category"] != "basics" and x["slug"] != a["slug"]
+                and x["date"] <= a["date"] and not x["title"].startswith("【続報】") and tp & set(topics_of(x))]
+        if prev:
+            p0 = max(prev, key=lambda x: (x["date"], x.get("rank", 0)))
+            updated += (f'<p class="pre-read">はじめて読む人は：<a href="{p0["slug"]}.html">{e(p0["title"])}</a>'
+                        f'（{reading_minutes(p0["body"])}分）を先に読むと分かりやすくなります。</p>')
     same = [x for x in all_arts if (x["category"] == "basics") == (a["category"] == "basics")]
     i = next(n for n, x in enumerate(same) if x["slug"] == a["slug"])
     nxt = same[(i + 1) % len(same)] if len(same) > 1 else None
