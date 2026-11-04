@@ -1106,7 +1106,7 @@ def build_feed(arts):
     items = "".join(
         f"<item><title>{e(a['title'])}</title><link>{SITE_URL}articles/{a['slug']}.html</link>"
         f"<guid>{SITE_URL}articles/{a['slug']}.html</guid><pubDate>{rfc822(a['date'])}</pubDate>"
-        f"<category>{CATS[a['category']]}</category><description>{e(a['description'])}</description></item>\n"
+        f"<category>{CATS[a['category']]}</category><description>{e(a['description'] + ('【くらしへの影響】' + a['impact'] if a.get('impact') else ''))}</description></item>\n"
         for a in arts[:30]
     )
     (ROOT / "feed.xml").write_text(
