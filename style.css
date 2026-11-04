@@ -134,8 +134,10 @@ nav.cats .sep { width: 1px; height: 18px; background: rgba(255,255,255,.25); mar
   .art-cat, .art-logo { display: none; }
 }
 .mini-thumb.art .art-cat, .rank-thumb.art .art-cat, .mini-thumb.art .art-logo, .rank-thumb.art .art-logo { display: none; }
-.post-thumb.art { aspect-ratio: 16 / 5; }
-.post-thumb.art .art-word { font-size: 9cqi; }
+.post-thumb.art { aspect-ratio: 4 / 1; }
+.post-thumb.art .art-word { font-size: 7cqi; transform: translateY(-40%); }
+.post-thumb.art .art-cat { top: 3.2cqi; }
+.post-thumb.art .art-logo { bottom: 2.6cqi; }
 .post-thumb.art .art-cat { font-size: 1.6cqi; }
 .post-thumb.art .art-logo { font-size: 1.5cqi; }
 
