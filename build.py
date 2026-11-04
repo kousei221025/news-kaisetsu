@@ -611,7 +611,8 @@ def sidebar(arts, rel, toc_html="", exclude=(), home=False, extra="", show_diges
   <section class="side-box guide"><h2 class="side-title">このサイトの読み方</h2>
     <ol class="steps"><li><b>3行まとめ</b>で、何が起きたかを10秒でつかむ</li>
     <li><b>生活への影響</b>（オレンジの枠）で、自分のお金や仕事との関係を知る</li>
-    <li>点線の言葉をタップすると、<b>基礎解説</b>で用語が分かる</li></ol></section>
+    <li>点線の言葉をタップすると、<b>基礎解説</b>で用語が分かる</li>
+    <li>矢印の<b>流れ図</b>で、ニュースが生活に届くまでのつながりが分かる</li></ol></section>
   <section class="side-box sp-hide"><h2 class="side-title">注目のテーマ</h2><div class="chips-wrap">{topics}</div></section>
   <section class="side-box sp-hide"><h2 class="side-title">ジャンルから探す</h2><ul class="genre-list">{genres}</ul></section>
   <section class="side-box"><h2 class="side-title">用語さくいん<small>タップで基礎解説へ</small></h2><div class="glossary">{glossary}</div></section>
