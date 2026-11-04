@@ -197,6 +197,10 @@ nav.cats .sep { width: 1px; height: 18px; background: rgba(255,255,255,.25); mar
 .steps { margin: 0; padding-left: 1.3em; font-size: 14px; line-height: 1.65; }
 .steps li { margin-bottom: 8px; }
 .steps b { color: var(--accent); }
+.side-title small { font-size: 11px; font-weight: 400; color: var(--sub); margin-left: 8px; }
+.glossary { display: flex; flex-wrap: wrap; gap: 6px 4px; }
+.glossary a { font-size: 13px; padding: 3px 10px; border: 1px solid var(--line); border-radius: 4px; text-decoration: none; color: var(--text); background: var(--card); }
+.glossary a:hover { border-color: var(--basics); color: var(--basics); }
 .genre-list { list-style: none; margin: 0; padding: 0; }
 .genre-list li + li { border-top: 1px solid var(--line); }
 .genre-list a { display: flex; justify-content: space-between; padding: 9px 2px; text-decoration: none; color: var(--text); font-size: 14px; }

@@ -539,6 +539,8 @@ def sidebar(arts, rel, toc_html="", exclude=(), home=False, extra=""):
     basics_li = "".join(f'<li><a href="{rel}articles/{b["slug"]}.html">{e(b["title"])}</a></li>' for b in basics[:6])
     toc_box = f'<section class="side-box side-toc">{toc_html}</section>' if toc_html else ""
     if home:
+        glossary = "".join(f'<a href="{rel}articles/{b["slug"]}.html">{e(w)}</a>'
+                           for b in basics for w in b.get("keywords", []))
         genres = "".join(
             f'<li><a href="{rel}category/{k}.html"><b>{v}</b><span>{sum(1 for a in arts if a["category"] == k)}本</span></a></li>'
             for k, v in CATS.items())
@@ -549,6 +551,7 @@ def sidebar(arts, rel, toc_html="", exclude=(), home=False, extra=""):
     <li>点線の言葉をタップすると、<b>基礎解説</b>で用語が分かる</li></ol></section>
   <section class="side-box"><h2 class="side-title">注目のテーマ</h2><div class="chips-wrap">{topics}</div></section>
   <section class="side-box"><h2 class="side-title">ジャンルから探す</h2><ul class="genre-list">{genres}</ul></section>
+  <section class="side-box"><h2 class="side-title">用語さくいん<small>タップで基礎解説へ</small></h2><div class="glossary">{glossary}</div></section>
   <section class="side-box about-box"><h2 class="side-title">このサイトについて</h2>
     <p>ニュースを見ても「で、自分の生活にどう関係あるの？」と思う会社員のために、世界と経済のニュースを3分で読めるように解説しています。</p>
     <a class="more" href="{rel}about.html">運営者・記事の作り方 ›</a></section>
