@@ -27,7 +27,7 @@
 項目名|数字|単位
 出典：〇〇-->
 
-数字の帯：src/numbers.json（label・value・note（いつの数字か）・article（根拠の記事スラッグ））。
+数字の帯：src/numbers.json（"trend": "up"/"down"/"flat" と "trend_note" は、記事で上がった・下がったを確かめたときだけ入れる）（label・value・note（いつの数字か）・article（根拠の記事スラッグ））。
 記事で確かめた数字だけを入れ、古くなったら更新する。
 
 作られるもの：articles/*.html、index.html、category/*.html、search.html、search.json、
@@ -764,7 +764,9 @@ def numbers_html(by_slug, rel):
         return ""
     items = "".join(
         f'<li><a href="{rel}articles/{n["article"]}.html"><span class="nl">{e(n["label"])}</span>'
-        f'<b class="nv">{e(n["value"])}</b><span class="nn">{e(n["note"])}</span></a></li>'
+        f'<b class="nv">{e(n["value"])}'
+        + (f'<span class="nt nt-{n["trend"]}" title="{e(n.get("trend_note", ""))}">{ {"up": "▲", "down": "▼", "flat": "→"}[n["trend"]] }</span>' if n.get("trend") else "")
+        + f'</b><span class="nn">{e(n["note"])}</span></a></li>'
         for n in json.loads(f.read_text(encoding="utf-8")) if n["article"] in by_slug)
     return f'<section class="numbers" aria-label="数字で見るいま"><p class="numbers-h"><span>数字で</span><span>見るいま</span></p><ul>{items}</ul></section>'
 

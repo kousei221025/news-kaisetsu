@@ -1,6 +1,6 @@
 [
-  {"label": "ドル円", "value": "158円台", "note": "11月4日未明", "article": "2026-11-04-yen-158"},
+  {"label": "ドル円", "value": "158円台", "note": "11月4日未明", "article": "2026-11-04-yen-158", "trend": "up", "trend_note": "円安方向・10月20日以来の水準"},
   {"label": "ガソリン（全国平均）", "value": "170.2円", "note": "10月19日時点・1リットル", "article": "2026-11-04-gasoline-subsidy"},
-  {"label": "日銀の政策金利", "value": "1.25%", "note": "10月30日に据え置き", "article": "2026-11-04-boj-2percent"},
-  {"label": "所得税がかからない年収", "value": "178万円", "note": "2026年分から", "article": "2026-11-04-nenmatsu-178"}
+  {"label": "日銀の政策金利", "value": "1.25%", "note": "10月30日に据え置き", "article": "2026-11-04-boj-2percent", "trend": "flat", "trend_note": "据え置き"},
+  {"label": "所得税がかからない年収", "value": "178万円", "note": "2026年分から", "article": "2026-11-04-nenmatsu-178", "trend": "up", "trend_note": "160万円から引き上げ"}
 ]
