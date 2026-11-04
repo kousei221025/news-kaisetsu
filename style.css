@@ -266,6 +266,9 @@ article.post[data-fs="l"] .summary .impact { font-size: 18px !important; }
 .watch li { position: relative; padding: 10px 0 10px 32px; margin: 0 !important; }
 .watch li + li { border-top: 1px dashed var(--line); }
 .watch li::before { content: ""; position: absolute; left: 0; top: 15px; width: 20px; height: 20px; border-radius: 50%; background: var(--accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='6'/%3E%3Cpath d='M16 16l4 4'/%3E%3C/svg%3E") center / 13px no-repeat; }
+.followup { display: flex; gap: 10px; align-items: baseline; margin: 0 0 14px; padding: 10px 14px; border-radius: 6px; background: #fdf0e6; color: #5c2c06; text-decoration: none; font-size: 14px; line-height: 1.6; }
+.followup b { flex: none; font-size: 12px; color: #fff; background: #c8102e; padding: 1px 8px; border-radius: 3px; }
+.followup:hover span { text-decoration: underline; }
 .digest-cta { display: block; padding: 18px 20px; border-radius: var(--radius); background: linear-gradient(135deg, #a8500e, #d06a1e); color: #fff; text-decoration: none; box-shadow: var(--shadow); }
 .digest-cta span { font-size: 11px; font-weight: 700; background: rgba(255,255,255,.2); padding: 1px 8px; border-radius: 3px; }
 .digest-cta b { display: block; font-size: 19px; line-height: 1.45; margin: 8px 0 6px; }

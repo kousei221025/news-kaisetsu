@@ -661,6 +661,13 @@ def build_article(a, all_arts, by_slug, backlinks):
     extra = "".join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>\n' for x in ld)
 
     updated = f'<p class="updated">{jp_date(a["updated"])} 更新</p>' if a.get("updated") else ""
+    if a["category"] != "basics" and topics_of(a):  # 同じテーマで後の日付の記事があれば「続報」を案内
+        later = [x for x in all_arts if x["category"] != "basics" and x["date"] > a["date"]
+                 and set(topics_of(x)) & set(topics_of(a))]
+        if later:
+            n = later[0]
+            updated += (f'<a class="followup" href="{n["slug"]}.html"><b>続報があります</b>'
+                        f'<span>{md_date(n["date"])}：{e(n["title"])}</span></a>')
     toc_side = f'<h2 class="side-title">この記事の目次</h2><ol class="toc-list">{toc}</ol>'
     content = f"""<div class="progress" aria-hidden="true"></div>
 <nav class="crumbs" aria-label="現在地"><a href="{rel}index.html">トップ</a> <span aria-hidden="true">›</span> <a href="{rel}category/{a["category"]}.html">{CATS[a["category"]]}</a></nav>
