@@ -454,6 +454,13 @@ article.post[data-fs="l"] .summary .impact { font-size: 18px !important; }
 .dg-more { display: inline-block; margin-top: 10px; font-size: 13px; font-weight: 700; color: var(--accent); text-decoration: none; }
 .dg-nav { display: flex; justify-content: space-between; margin-top: 8px; font-weight: 700; font-size: 14px; }
 .dg-nav .next { margin-left: auto; }
+.dg-back { margin-top: 24px; background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px 20px; }
+.dg-back h2 { font-size: 16px; margin: 0 0 10px; }
+.dg-back ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.dg-back a { display: inline-flex; align-items: baseline; gap: 6px; padding: 6px 12px; border: 1px solid #ddd; border-radius: 999px; font-size: 14px; font-weight: 700; text-decoration: none; }
+.dg-back a small { font-size: 11px; font-weight: 400; color: #777; }
+.dg-back .on a { background: #a8500e; border-color: #a8500e; color: #fff; }
+.dg-back .on a small { color: #fff; }
 .day-imp { margin: 0 0 18px; padding: 18px 22px; background: var(--point-soft); border-radius: var(--radius); border-left: 5px solid var(--point); }
 .day-imp h2 { font-size: 16px; margin: 0 0 8px; color: var(--point); }
 .day-imp ol { margin: 0; padding-left: 1.4em; font-size: 15px; line-height: 1.8; }

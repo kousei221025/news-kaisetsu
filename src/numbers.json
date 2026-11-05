@@ -1,7 +1,36 @@
 [
-  {"label": "日経平均", "value": "6万2,188円", "note": "11月4日終値・893円安", "article": "2026-11-05-midterm-both-houses", "trend": "down", "trend_note": "3日続落"},
-  {"label": "ドル円", "value": "158円台", "note": "11月4日夕方・158円10〜20銭", "article": "2026-11-05-midterm-both-houses"},
-  {"label": "ガソリン（全国平均）", "value": "170.2円", "note": "10月19日時点・1リットル", "article": "2026-11-04-gasoline-subsidy"},
-  {"label": "日銀の政策金利", "value": "1.25%", "note": "10月30日に据え置き", "article": "2026-11-04-boj-2percent", "trend": "flat", "trend_note": "据え置き"},
-  {"label": "食料品の消費税", "value": "8%→1%案", "note": "2027年4月から2年間・審議中", "article": "2026-11-04-shohizei-genzei"}
+  {
+    "label": "日経平均",
+    "value": "6万1,077円",
+    "note": "11月5日終値・1,110円安",
+    "article": "2026-11-06-nikkei-ai-selloff",
+    "trend": "down",
+    "trend_note": "4日続落"
+  },
+  {
+    "label": "ドル円",
+    "value": "158円台",
+    "note": "11月4日夕方・158円10〜20銭",
+    "article": "2026-11-05-midterm-both-houses"
+  },
+  {
+    "label": "ガソリン（全国平均）",
+    "value": "170.2円",
+    "note": "10月19日時点・1リットル",
+    "article": "2026-11-04-gasoline-subsidy"
+  },
+  {
+    "label": "日銀の政策金利",
+    "value": "1.25%",
+    "note": "10月30日に据え置き",
+    "article": "2026-11-04-boj-2percent",
+    "trend": "flat",
+    "trend_note": "据え置き"
+  },
+  {
+    "label": "食料品の消費税",
+    "value": "8%→1%案",
+    "note": "2027年4月から2年間・審議中",
+    "article": "2026-11-04-shohizei-genzei"
+  }
 ]

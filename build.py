@@ -269,7 +269,7 @@ def make_og_images(arts):
     if not (out_dir / "default.png").exists():
         jobs.append({"slug": "default", "category": "world", "title": "むずかしいニュースを、会社員目線で3分で。",
                      "eyecatch": "3分解説", "body": "", "description": ""})
-    with tempfile.TemporaryDirectory() as tmp:
+    with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
         for a in jobs:
             title = a["title"]
             size = 54 if len(title) <= 30 else 48 if len(title) <= 40 else 44
@@ -315,7 +315,7 @@ def make_thumbs(arts):
     out_dir.mkdir(exist_ok=True)
     if not EDGE.exists():
         return
-    with tempfile.TemporaryDirectory() as tmp:
+    with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
         for a in arts:
             out = out_dir / f"{a['slug']}.png"
             if out.exists():
@@ -1021,7 +1021,7 @@ font-weight:900;font-size:{f}px}}</style></head><body>3</body></html>"""
 def make_icons():
     if not EDGE.exists():
         return
-    with tempfile.TemporaryDirectory() as tmp:
+    with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
         for name, s in [("apple-touch-icon.png", 180), ("icon-512.png", 512)]:
             if (ROOT / name).exists():
                 continue
@@ -1108,6 +1108,14 @@ def build_daily(arts):
     make_og_images([{"slug": "daily-" + d, "category": "world", "title": f"{jp_date(d)}のニュースを3分でまとめ読み",
                      "eyecatch": "まとめ読み", "body": "", "description": "", "og_cat": "まとめ読み",
                      "og_note": f"この日のニュース{sum(1 for a in news if a['date'] == d)}本を、3行まとめで一気に確認"} for d in days])
+    def backnumber(cur):  # 過去のまとめに戻れる日付一覧（2日分以上あるとき）
+        if len(days) < 2:
+            return ""
+        lis = "".join(
+            f'<li{" class=\"on\"" if x == cur else ""}><a href="{x}.html"{" aria-current=\"page\"" if x == cur else ""}>'
+            f'{md_date(x)}<small>{sum(1 for a in news if a["date"] == x)}本</small></a></li>' for x in days)
+        return f'<section class="dg-back"><h2>バックナンバー</h2><ul>{lis}</ul></section>'
+
     for i, d in enumerate(days):
         items = sorted([a for a in news if a["date"] == d], key=lambda a: -a.get("rank", 0))
         lis = "".join(
@@ -1128,7 +1136,8 @@ def build_daily(arts):
                 f'<a class="x" href="https://twitter.com/intent/tweet?url={quote(SITE_URL + "daily/" + d + ".html")}&text={quote(jp_date(d) + "のニュースを3分でまとめ読み｜" + SITE_NAME)}" target="_blank" rel="noopener">Xでポスト</a>'
                 f'<a class="line" href="https://social-plugins.line.me/lineit/share?url={quote(SITE_URL + "daily/" + d + ".html")}" target="_blank" rel="noopener">LINEで送る</a></div></div>' +
                 f'<div class="layout"><div class="main-col">{day_impacts(items)}<ol class="digest">{lis}</ol>'
-                + (f'<nav class="dg-nav">{nav}</nav>' if nav else "") + f'</div>{sidebar(arts, "../", show_digest=False)}</div>')
+                + (f'<nav class="dg-nav">{nav}</nav>' if nav else "") + backnumber(d)
+                + f'</div>{sidebar(arts, "../", show_digest=False)}</div>')
         (ROOT / "daily" / f"{d}.html").write_text(
             page("../", f"{jp_date(d)}のニュースまとめ読み", f"{jp_date(d)}の世界情勢・経済ニュース{len(items)}本を、3行まとめで確認できます。",
                  body, f"{SITE_URL}daily/{d}.html", active="daily", og_image=og_url("daily-" + d)), encoding="utf-8")
