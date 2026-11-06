@@ -163,7 +163,8 @@ def link_terms(body, arts, self_slug):
         if b["category"] != "basics" or b["slug"] == self_slug or not b["keywords"]:
             continue
         kws = sorted(b["keywords"], key=len, reverse=True)
-        pattern = re.compile("|".join(re.escape(k) for k in kws))
+        # 数字の直後（「1,110円安」のような値下がり幅など）はリンクしない
+        pattern = re.compile(r"(?<![\d,.０-９万千百十億兆])(?:" + "|".join(re.escape(k) for k in kws) + ")")
         parts = re.split(r"(<[^>]+>)", body)
         depth = 0  # a / h1-h3 / b の中はリンクしない
         done = False
