@@ -549,6 +549,20 @@ def dated_rows(arts, rel):
     return f'<div class="tl-days">{out}</div>'
 
 
+def month_rows(arts, rel, show=8):
+    """ジャンル別ページの続き：月ごとの見出し＋最初の show 本以降は「もっと見る」で開く。"""
+    out, n = "", 0
+    for m in sorted({a["date"][:7] for a in arts}, reverse=True):
+        mon = [a for a in arts if a["date"][:7] == m]
+        vis, hid = mon[:max(show - n, 0)], mon[max(show - n, 0):]
+        n += len(mon)
+        more = (f'<details class="more-list"><summary>もっと見る（残り{len(hid)}本）</summary>'
+                f'<ul class="rows">{row_list(hid, rel)}</ul></details>' if hid else "")
+        out += (f'<div class="month-block"><h3 class="month-h">{int(m[:4])}年{int(m[5:])}月<span>{len(mon)}本</span></h3>'
+                + (f'<ul class="rows">{row_list(vis, rel)}</ul>' if vis else "") + more + '</div>')
+    return out
+
+
 def genre_columns(news, rel):
     """トップ下部：世界情勢・経済・くらしの3列。"""
     cols = ""
@@ -963,7 +977,7 @@ def build_categories(arts):
             rest = items[1:]
             main = (cat_lead(items[0], "../")
                     + (f'<section><h2 class="section-title">{label}の記事</h2>{cards(rest[:6], "../")}'
-                       + (f'<ul class="rows">{row_list(rest[6:], "../")}</ul>' if len(rest) > 6 else "") + '</section>' if rest else "")
+                       + (month_rows(rest[6:], "../") if len(rest) > 6 else "") + '</section>' if rest else "")
                     + related_basics(items, arts, "../", f"{label}の基礎解説"))
         if key == "basics":  # 基礎解説は右列を省き、用語さくいん＋横幅いっぱいの4列
             gl = "".join(f'<a href="../articles/{b["slug"]}.html">{e(w)}</a>' for b in items for w in b.get("keywords", []))

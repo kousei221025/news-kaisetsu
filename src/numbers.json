@@ -1,11 +1,11 @@
 [
   {
     "label": "日経平均",
-    "value": "6万1,077円",
-    "note": "11月5日終値・1,110円安",
-    "article": "2026-11-06-nikkei-ai-selloff",
+    "value": "5万7,434円",
+    "note": "11月6日終値・3,643円安",
+    "article": "2026-11-08-nikkei-60000-wari",
     "trend": "down",
-    "trend_note": "4日続落"
+    "trend_note": "5日続落"
   },
   {
     "label": "ドル円",

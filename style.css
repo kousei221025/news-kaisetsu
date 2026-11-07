@@ -815,3 +815,12 @@ footer.site li { margin-bottom: 6px; }
   .sources a::after { content: "（" attr(href) "）"; font-size: 8pt; word-break: break-all; }
   body::after { content: "3分ニュース解説  https://kousei221025.github.io/news-kaisetsu/"; display: block; margin-top: 16pt; font-size: 8pt; color: #666; }
 }
+
+/* ジャンル別ページ：月ごとの見出しと「もっと見る」（2026-11-08） */
+.month-block { margin-top: 22px; }
+.month-h { display: flex; align-items: baseline; gap: 10px; margin: 0 0 8px; padding-bottom: 6px; border-bottom: 2px solid var(--line); font-size: 16px; font-weight: 900; }
+.month-h span { font-size: 12px; font-weight: 400; color: var(--sub); }
+.month-block .rows { margin-top: 0; }
+.more-list > summary { display: block; margin: 12px 0 0; padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); text-align: center; font-size: 14px; font-weight: 700; color: var(--accent); cursor: pointer; list-style: none; }
+.more-list > summary::-webkit-details-marker { display: none; }
+.more-list[open] > summary { display: none; }
