@@ -1,5 +1,8 @@
 [
+  {"date": "2026-11-10", "time": "22:30", "label": "アメリカの10月の消費者物価指数（CPI）", "note": "予想は前月比0.3%上昇。日本時間", "article": "2026-11-09-week-us-cpi", "source": "みんかぶ"},
   {"date": "2026-11-11", "time": "", "label": "消費税減税法案、参院本会議で審議入り", "note": "高市首相が出席して説明と質疑", "article": "2026-11-07-shohizei-shugiin-tsuka", "source": "時事通信"},
+  {"date": "2026-11-12", "time": "", "label": "日本の10月の企業物価指数", "note": "会社どうしの取引の値段", "article": "2026-11-09-week-us-cpi", "source": "外為どっとコム"},
+  {"date": "2026-11-13", "time": "", "label": "アメリカの10月の卸売物価指数（PPI）", "note": "予想は前月比0.4%上昇", "article": "2026-11-09-week-us-cpi", "source": "みんかぶ"},
   {"date": "2026-12-09", "time": "", "label": "FOMC（アメリカの金利を決める会議）の結果発表", "note": "会議は12月8〜9日。日本では10日の未明", "article": "basics-frb", "source": "FRB公式カレンダー"},
   {"date": "2026-12-12", "time": "", "label": "臨時国会の会期末", "note": "消費税減税法案の成立を目指す", "article": "2026-11-04-shohizei-genzei", "source": "日本経済新聞"},
   {"date": "2026-12-18", "time": "", "label": "日銀の金融政策決定会合の結果", "note": "会合は12月17〜18日", "article": "basics-boj", "source": "OANDA証券・投資情報サイトの日程表"},
