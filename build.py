@@ -33,6 +33,11 @@
 起きること
 生活への影響-->
 
+よくある疑問（基礎解説向け）：本文に次のように書く（記事の中で確かめた内容だけ）。
+<!--qa
+Q：質問
+A：答え（1〜2文）-->
+
 これからの予定：src/schedule.json（date・time・label・note・article（関係する基礎解説のスラッグ）・source。日付は出典で確かめたものだけ。過ぎた予定は自動で表示されない）
 
 数字の帯：src/numbers.json（"trend": "up"/"down"/"flat" と "trend_note" は、記事で上がった・下がったを確かめたときだけ入れる）（label・value・note（いつの数字か）・article（根拠の記事スラッグ））。
@@ -717,12 +722,27 @@ ARTICLE_JS = """<button class="to-top" type="button" aria-label="ページの先
 """
 
 
+# ---------- よくある疑問 ----------
+def render_qa(body):
+    """<!--qa Q：… A：… の組 -->  を「よくある疑問」の箱にする。"""
+    def repl(m):
+        items, q = [], None
+        for line in [x.strip() for x in m.group(1).strip().splitlines() if x.strip()]:
+            if line[:2] in ("Q：", "Q:"):
+                q = line[2:].strip()
+            elif line[:2] in ("A：", "A:") and q:
+                items.append((q, line[2:].strip())); q = None
+        dl = "".join(f'<div class="qa-item"><dt>{e(q)}</dt><dd>{e(a)}</dd></div>' for q, a in items)
+        return f'<section class="qa"><h3 class="qa-title">よくある疑問</h3><dl>{dl}</dl></section>'
+    return re.sub(r"<!--qa(.*?)-->", repl, body, flags=re.S)
+
+
 # ---------- 記事ページ ----------
 def build_article(a, all_arts, by_slug, backlinks):
     rel = "../"
     body = re.sub(r"(<h2>これからの注目点</h2>\s*)<ul>", r'\1<ul class="watch">', a["body"], count=1)
     body = re.sub(r'<div class="life"><b>(.*?)</b>', lambda m: f'<div class="life"><b>{life_icon(m.group(1))}{m.group(1)}</b>', body)
-    body, heads = add_heading_ids(render_flow(render_bars(body)))
+    body, heads = add_heading_ids(render_qa(render_flow(render_bars(body))))
     body, linked = link_terms(body, all_arts, a["slug"])
     body = bold_numbers(body)
     url = f"{SITE_URL}articles/{a['slug']}.html"

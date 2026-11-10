@@ -10,8 +10,10 @@
   {
     "label": "ドル円",
     "value": "158円台",
-    "note": "11月6日夜・雇用統計の後158.3円台",
-    "article": "2026-11-07-us-jobs-october"
+    "note": "11月10日夜・米物価の発表後に158.49円",
+    "article": "2026-11-11-us-cpi-result",
+    "trend": "up",
+    "trend_note": "円安方向"
   },
   {
     "label": "ガソリン（全国平均）",
