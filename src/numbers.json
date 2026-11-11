@@ -1,11 +1,11 @@
 [
   {
     "label": "日経平均",
-    "value": "5万8,775円",
-    "note": "11月9日終値・1,340円高",
+    "value": "6万1,248円",
+    "note": "11月11日終値・789円高（3日続伸）",
     "article": "2026-11-10-nikkei-hanpatsu",
     "trend": "up",
-    "trend_note": "6営業日ぶり反発"
+    "trend_note": "3日続伸"
   },
   {
     "label": "ドル円",
@@ -32,7 +32,7 @@
   {
     "label": "食料品の消費税",
     "value": "8%→1%案",
-    "note": "2027年4月から2年間・衆院通過、参院で審議へ",
-    "article": "2026-11-07-shohizei-shugiin-tsuka"
+    "note": "2027年4月から2年間・11月11日に参院で審議入り",
+    "article": "2026-11-12-shohizei-sangiin-shingi"
   }
 ]

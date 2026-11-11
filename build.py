@@ -586,10 +586,10 @@ def genre_columns(news, rel):
 def topic_band(news, rel):
     """横幅いっぱいの帯：テーマごとに記事数と最新の見出し。"""
     items = ""
-    for k, (label, intro, _) in TOPICS.items():
-        arts = [a for a in news if k in topics_of(a)]
-        if not arts:
-            continue
+    groups = [(k, label, intro, [a for a in news if k in topics_of(a)]) for k, (label, intro, _) in TOPICS.items()]
+    # 記事数の多い順（同じ数なら最新記事が新しい順）に並べる
+    groups = sorted((g for g in groups if g[3]), key=lambda g: (len(g[3]), g[3][0]["date"]), reverse=True)
+    for k, label, intro, arts in groups:
         items += (f'<a class="tcard" href="{rel}topic/{k}.html"><span class="tc-n">{len(arts)}本</span>'
                   f'<b>#{label}</b><span class="tc-i">{intro}</span>'
                   f'<span class="tc-l">最新：{e(arts[0]["title"])}</span></a>')
