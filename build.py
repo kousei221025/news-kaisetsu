@@ -110,6 +110,13 @@ FAVICON = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox
 e = html.escape
 
 
+def et(title):
+    """見出し用：先頭の【続報】を小さなバッジにして表示する"""
+    if title.startswith("【続報】"):
+        return '<span class="fu-badge">続報</span>' + e(title[len("【続報】"):])
+    return e(title)
+
+
 # ---------- 記事の読み込み ----------
 def load_articles():
     items = []
@@ -520,7 +527,7 @@ def list_items(arts, rel):
     """横長の一覧（小さいサムネイル付き）。"""
     return "".join(
         f'<li><a href="{rel}articles/{a["slug"]}.html">{thumb(a, rel, "mini-thumb")}'
-        f'<div>{tag(a["category"])} {meta_line(a)}<h3>{e(a["title"])}</h3></div></a></li>'
+        f'<div>{tag(a["category"])} {meta_line(a)}<h3>{et(a["title"])}</h3></div></a></li>'
         for a in arts
     )
 
@@ -529,7 +536,7 @@ def cards(arts, rel, cls="grid-3"):
     """サムネイルが上にあるカードの並び。"""
     items = "".join(
         f'<a class="card" data-cat="{a["category"]}" href="{rel}articles/{a["slug"]}.html">{thumb(a, rel)}'
-        f'<div class="card-body">{tag(a["category"])} {short_meta(a) if a["category"] != "basics" else ""}<h3>{e(a["title"])}</h3>'
+        f'<div class="card-body">{tag(a["category"])} {short_meta(a) if a["category"] != "basics" else ""}<h3>{et(a["title"])}</h3>'
         f'{impact(a) or "<p>" + e(lead_text(a)) + "</p>"}</div></a>'
         for a in arts
     )
@@ -540,7 +547,7 @@ def row_list(arts, rel):
     """新着の2段目以降：見出し＋くらしへの影響の横長一覧。"""
     return "".join(
         f'<li data-cat="{a["category"]}"><a href="{rel}articles/{a["slug"]}.html">{thumb(a, rel, "mini-thumb")}'
-        f'<div>{tag(a["category"])} {short_meta(a)}<h3>{e(a["title"])}</h3>{impact(a)}</div></a></li>'
+        f'<div>{tag(a["category"])} {short_meta(a)}<h3>{et(a["title"])}</h3>{impact(a)}</div></a></li>'
         for a in arts)
 
 
@@ -579,7 +586,7 @@ def genre_columns(news, rel):
         more = "".join(f'<li><a href="{rel}articles/{a["slug"]}.html">{e(a["title"])}</a></li>' for a in rest)
         cols += (f'<section class="gcol g-{k}"><h2><a href="{rel}category/{k}.html">{CATS[k]}<span>すべて見る ›</span></a></h2>'
                  f'<a class="gfirst" href="{rel}articles/{first["slug"]}.html">{thumb(first, rel, "mini-thumb")}'
-                 f'<h3>{e(first["title"])}</h3></a>' + (f'<ul>{more}</ul>' if more else "") + '</section>')
+                 f'<h3>{et(first["title"])}</h3></a>' + (f'<ul>{more}</ul>' if more else "") + '</section>')
     return f'<div class="genre-cols">{cols}</div>'
 
 
@@ -599,14 +606,14 @@ def topic_band(news, rel):
 
 def basics_rows(basics, rel):
     return "".join(
-        f'<a class="brow" href="{rel}articles/{a["slug"]}.html">{thumb(a, rel, "mini-thumb")}<span class="bt">{e(a["title"])}</span></a>'
+        f'<a class="brow" href="{rel}articles/{a["slug"]}.html">{thumb(a, rel, "mini-thumb")}<span class="bt">{et(a["title"])}</span></a>'
         for a in basics)
 
 
 def rank_list(arts, rel):
     return "".join(
         f'<li><a href="{rel}articles/{a["slug"]}.html"><span class="no">{i}</span>'
-        f'<span class="rt">{e(a["title"])}</span>{thumb(a, rel, "rank-thumb")}</a></li>' for i, a in enumerate(arts, 1)
+        f'<span class="rt">{et(a["title"])}</span>{thumb(a, rel, "rank-thumb")}</a></li>' for i, a in enumerate(arts, 1)
     )
 
 
@@ -834,7 +841,7 @@ def build_article(a, all_arts, by_slug, backlinks):
     i = next(n for n, x in enumerate(same) if x["slug"] == a["slug"])
     nxt = same[(i + 1) % len(same)] if len(same) > 1 else None
     next_card = (f'<a class="next-card" href="{nxt["slug"]}.html"><span class="nc-label">次に読む</span>{thumb(nxt, rel, "mini-thumb")}'
-                 f'<div>{tag(nxt["category"])}<h3>{e(nxt["title"])}</h3>{impact(nxt)}</div><span class="nc-arrow" aria-hidden="true">›</span></a>') if nxt else ""
+                 f'<div>{tag(nxt["category"])}<h3>{et(nxt["title"])}</h3>{impact(nxt)}</div><span class="nc-arrow" aria-hidden="true">›</span></a>') if nxt else ""
     toc_side = f'<h2 class="side-title">この記事の目次</h2><ol class="toc-list">{toc}</ol>'
     content = f"""<div class="progress" aria-hidden="true"></div>
 <nav class="crumbs" aria-label="現在地"><a href="{rel}index.html">トップ</a> <span aria-hidden="true">›</span> <a href="{rel}category/{a["category"]}.html">{CATS[a["category"]]}</a></nav>
@@ -842,7 +849,7 @@ def build_article(a, all_arts, by_slug, backlinks):
 <div class="main-col">
 <article class="post">
   <div class="post-meta">{tag(a["category"])} {meta_line(a)}</div>
-  <h1>{e(a["title"])}</h1>
+  <h1>{et(a["title"])}</h1>
   {updated}
   <div class="post-tools">
     <div class="share-mini"><a class="x" href="https://twitter.com/intent/tweet?url={quote(url)}&text={quote(share_text)}" target="_blank" rel="noopener" aria-label="Xでポスト">X</a><a class="line" href="https://social-plugins.line.me/lineit/share?url={quote(url)}" target="_blank" rel="noopener" aria-label="LINEで送る">LINE</a><button class="copy" type="button" data-url="{url}">URLをコピー</button></div>
@@ -912,7 +919,7 @@ def build_index(arts):
     lead_sum = "".join(f"<li>{e(s)}</li>" for s in lead.get("summary", []))
     side_news = "".join(
         f'<li><a href="articles/{a["slug"]}.html">{thumb(a, "", "mini-thumb")}<div>{tag(a["category"])}'
-        f'<h3>{e(a["title"])}</h3>{impact(a)}</div></a></li>' for a in news[1:4])
+        f'<h3>{et(a["title"])}</h3>{impact(a)}</div></a></li>' for a in news[1:4])
     by_slug = {a["slug"]: a for a in arts}
     also = "".join(f'<li><a href="articles/{s}.html">{e(by_slug[s]["title"])}</a></li>'
                    for s in lead["terms"][:2] if s in by_slug)
@@ -929,7 +936,7 @@ def build_index(arts):
     <a class="lead-main" href="articles/{lead["slug"]}.html">
       {thumb(lead, "", "lead-thumb", lazy=False)}
       <div class="lead-body"><span class="label">今日の1本目</span>{tag(lead["category"])} {meta_line(lead)}
-        <h2>{e(lead["title"])}</h2><ul>{lead_sum}</ul>{impact(lead)}<span class="lead-go">この記事を読む（{reading_minutes(lead["body"])}分） ›</span></div>
+        <h2>{et(lead["title"])}</h2><ul>{lead_sum}</ul>{impact(lead)}<span class="lead-go">この記事を読む（{reading_minutes(lead["body"])}分） ›</span></div>
     </a>
     <div class="lead-right"><ul class="lead-side">{side_news}</ul>{also_html}</div>
   </section>
@@ -971,7 +978,7 @@ def cat_lead(a, rel):
     """一覧ページの先頭の大きい記事。"""
     lis = "".join(f"<li>{e(s)}</li>" for s in a.get("summary", []))
     return (f'<a class="cat-lead" href="{rel}articles/{a["slug"]}.html">{thumb(a, rel, "lead-thumb", lazy=False)}'
-            f'<div>{tag(a["category"])} {meta_line(a)}<h2>{e(a["title"])}</h2><ul>{lis}</ul>{impact(a)}</div></a>')
+            f'<div>{tag(a["category"])} {meta_line(a)}<h2>{et(a["title"])}</h2><ul>{lis}</ul>{impact(a)}</div></a>')
 
 
 def related_basics(items, all_arts, rel, title):

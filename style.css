@@ -835,3 +835,7 @@ footer.site li { margin-bottom: 6px; }
 .qa dt::before, .qa dd::before { position: absolute; left: 0; top: 2px; width: 22px; height: 22px; border-radius: 999px; font-size: 12px; font-weight: 700; color: #fff; display: flex; align-items: center; justify-content: center; line-height: 1; }
 .qa dt::before { content: "Q"; background: var(--accent); }
 .qa dd::before { content: "A"; background: var(--point); }
+
+/* 続報バッジ（見出し先頭の【続報】を小さなラベルに） */
+.fu-badge { display: inline-block; margin-right: 6px; padding: 1px 7px; font-size: .72em; font-weight: 700; line-height: 1.5; color: #fff; background: var(--accent); border-radius: 4px; vertical-align: .12em; letter-spacing: .02em; }
+@media print { .fu-badge { color: #000; background: none; border: 1px solid #000; } }

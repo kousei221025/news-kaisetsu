@@ -1,5 +1,4 @@
 [
-  {"date": "2026-11-12", "time": "", "label": "日本の10月の企業物価指数", "note": "会社どうしの取引の値段", "article": "2026-11-09-week-us-cpi", "source": "外為どっとコム"},
   {"date": "2026-11-13", "time": "", "label": "アメリカの10月の卸売物価指数（PPI）", "note": "予想は前月比0.4%上昇", "article": "2026-11-11-us-cpi-result", "source": "OANDA証券"},
   {"date": "2026-12-04", "time": "", "label": "アメリカの11月の雇用統計", "note": "FOMCの前の大事な材料", "article": "2026-11-11-us-cpi-result", "source": "OANDA証券"},
   {"date": "2026-12-09", "time": "", "label": "FOMC（アメリカの金利を決める会議）の結果発表", "note": "会議は12月8〜9日。0.25%の利上げはほぼ確実の見方、0.5%もあるかが焦点。日本では10日の未明", "article": "2026-11-11-us-cpi-result", "source": "FRB公式カレンダー"},

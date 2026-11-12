@@ -1,17 +1,17 @@
 [
   {
     "label": "日経平均",
-    "value": "6万1,248円",
-    "note": "11月11日終値・789円高（3日続伸）",
-    "article": "2026-11-10-nikkei-hanpatsu",
-    "trend": "up",
-    "trend_note": "3日続伸"
+    "value": "6万819円",
+    "note": "11月12日終値・429円安（4営業日ぶり反落）",
+    "article": "2026-11-13-yen-160-kensei",
+    "trend": "down",
+    "trend_note": "反落"
   },
   {
     "label": "ドル円",
-    "value": "158円台",
-    "note": "11月10日夜・米物価の発表後に158.49円",
-    "article": "2026-11-11-us-cpi-result",
+    "value": "159円台",
+    "note": "11月12日夜・ニューヨークで一時160円05銭",
+    "article": "2026-11-13-yen-160-kensei",
     "trend": "up",
     "trend_note": "円安方向"
   },
