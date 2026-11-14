@@ -81,7 +81,7 @@ CAT_INTRO = {
 }
 # テーマ：タイトル・説明・3行まとめにキーワードが入っている記事を自動で集める
 BASICS_GROUPS = [  # 基礎解説ページの分野（キーワードはスラッグの一部。どれにも当たらなければ「その他」）
-    ("金利・円相場・物価", ["yen", "interest", "boj", "frb", "kawase", "inflation", "cpi", "jutaku"]),
+    ("金利・円相場・物価", ["yen", "interest", "boj", "frb", "kawase", "inflation", "cpi", "jutaku", "gdp"]),
     ("給料・税金・制度", ["nenmatsu", "nenshu", "furusato", "ideco", "shunto", "gasoline-tax", "saitei", "kakutei", "keigen"]),
     ("投資・株", ["nisa", "nikkei"]),
     ("エネルギー", ["crude", "hormuz", "denki"]),
@@ -342,7 +342,7 @@ def make_thumbs(arts):
 
 
 ICON_RULES = [  # 言葉 → サムネイルのアイコン（上から順に判定。どれにも当たらなければジャンルのアイコン）
-    ("chart", ["NISA", "株", "iDeCo", "日経平均"]),
+    ("chart", ["NISA", "株", "iDeCo", "日経平均", "GDP"]),
     ("person", ["雇用", "年収の壁", "春闘", "賃上げ", "最低賃金"]),
     ("bank", ["FRB", "住宅ローン"]),
     ("fuel", ["原油", "ガソリン", "ホルムズ", "中東"]),
@@ -482,7 +482,8 @@ if(L.length){{var S={{}};L.forEach(function(x){{S[x.s]=1}});document.querySelect
 var box=document.querySelector('.later-box');if(box&&L.length){{box.hidden=false;var ol=box.querySelector('.later-list'),r=box.closest('[data-rel]');L.forEach(function(x){{var li=document.createElement('li'),a=document.createElement('a');a.href='{rel}articles/'+x.s+'.html';a.textContent=x.t;var d=document.createElement('button');d.type='button';d.textContent='×';d.setAttribute('aria-label','リストから外す');d.onclick=function(){{L=L.filter(function(y){{return y.s!==x.s}});save();li.remove();if(!L.length)box.hidden=true}};li.appendChild(a);li.appendChild(d);ol.appendChild(li)}})}}
 }})();</script>
 <script>(function(){{var td=new Date(Date.now()+9*3600*1000).toISOString().slice(0,10);document.querySelectorAll('.sc-list li[data-date]').forEach(function(li){{if(li.dataset.date<td)li.remove()}});var sc=document.querySelector('.sched');if(sc&&!sc.querySelector('li'))sc.remove();}})();</script>
-<script>(function(){{var n=Date.now();document.querySelectorAll('time[datetime]').forEach(function(t){{var d=new Date(t.getAttribute('datetime')+'T00:00:00+09:00');if(n-d<36*3600*1000&&!t.closest('.post-meta,.timeline,.tl-date')){{var s=document.createElement('span');s.className='new';s.textContent='NEW';t.parentNode.insertBefore(s,t)}}}});}})();</script>
+<script>(function(){{var n=Date.now();document.querySelectorAll('time[datetime]').forEach(function(t){{var d=new Date(t.getAttribute('datetime')+'T00:00:00+09:00');if(n-d<36*3600*1000&&!t.closest('.post-meta,.timeline,.tl-date')){{var s=document.createElement('span');s.className='new';s.textContent='NEW';t.parentNode.insertBefore(s,t)}}}});
+var td=new Date(n+9*3600*1000).toISOString().slice(0,10),yd=new Date(n-15*3600*1000).toISOString().slice(0,10);document.querySelectorAll('time[datetime]').forEach(function(t){{var v=t.getAttribute('datetime');if(t.closest('.post-meta,.tl-date'))return;var w=v===td?'きょう':v===yd?'きのう':'';if(w){{t.title=t.textContent;t.textContent=w;t.classList.add('rel')}}}});}})();</script>
 <script>(function(){{var a=document.querySelectorAll('.latest-items a'),i=0;if(a.length<2||matchMedia('(prefers-reduced-motion: reduce)').matches)return;setInterval(function(){{a[i].classList.remove('on');i=(i+1)%a.length;a[i].classList.add('on')}},4500);}})();</script>
 <script>(function(){{var d=new Date(),w="日月火水木金土"[d.getDay()],el=document.querySelector('[data-today]');if(el)el.textContent=(d.getMonth()+1)+"月"+d.getDate()+"日（"+w+"）";}})();</script>
 {extra_body}</body>

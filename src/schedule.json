@@ -1,5 +1,7 @@
 [
-  {"date": "2026-11-13", "time": "", "label": "アメリカの10月の卸売物価指数（PPI）", "note": "予想は前月比0.4%上昇", "article": "2026-11-11-us-cpi-result", "source": "OANDA証券"},
+  {"date": "2026-11-16", "time": "8:50", "label": "日本の7〜9月期のGDP（1次速報）", "note": "民間予測の平均は年率0.11%のプラス。37人中11人はマイナス予想", "article": "2026-11-14-week-gdp-nvidia", "source": "朝日新聞・みんかぶ"},
+  {"date": "2026-11-18", "time": "早朝", "label": "エヌビディアの決算発表", "note": "アメリカ時間17日。CEO辞任後はじめての決算", "article": "2026-11-14-week-gdp-nvidia", "source": "財経新聞・外為どっとコム"},
+  {"date": "2026-11-20", "time": "8:30", "label": "日本の10月の全国消費者物価指数", "note": "9月は前年同月比2.1%上昇", "article": "2026-11-14-week-gdp-nvidia", "source": "総務省統計局"},
   {"date": "2026-12-04", "time": "", "label": "アメリカの11月の雇用統計", "note": "FOMCの前の大事な材料", "article": "2026-11-11-us-cpi-result", "source": "OANDA証券"},
   {"date": "2026-12-09", "time": "", "label": "FOMC（アメリカの金利を決める会議）の結果発表", "note": "会議は12月8〜9日。0.25%の利上げはほぼ確実の見方、0.5%もあるかが焦点。日本では10日の未明", "article": "2026-11-11-us-cpi-result", "source": "FRB公式カレンダー"},
   {"date": "2026-12-12", "time": "", "label": "臨時国会の会期末", "note": "消費税減税法案の成立を目指す", "article": "2026-11-12-shohizei-sangiin-shingi", "source": "日本経済新聞"},

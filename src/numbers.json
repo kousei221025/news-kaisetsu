@@ -1,19 +1,19 @@
 [
   {
     "label": "日経平均",
-    "value": "6万819円",
-    "note": "11月12日終値・429円安（4営業日ぶり反落）",
-    "article": "2026-11-13-yen-160-kensei",
-    "trend": "down",
-    "trend_note": "反落"
+    "value": "6万1,142円",
+    "note": "11月13日終値・322円高（反発）",
+    "article": "2026-11-14-week-gdp-nvidia",
+    "trend": "up",
+    "trend_note": "反発"
   },
   {
     "label": "ドル円",
-    "value": "159円台",
-    "note": "11月12日夜・ニューヨークで一時160円05銭",
-    "article": "2026-11-13-yen-160-kensei",
-    "trend": "up",
-    "trend_note": "円安方向"
+    "value": "159.71円",
+    "note": "11月13日・ニューヨークの終値（一時160円台）",
+    "article": "2026-11-14-week-gdp-nvidia",
+    "trend": "down",
+    "trend_note": "小幅に円高方向"
   },
   {
     "label": "ガソリン（全国平均）",
