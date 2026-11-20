@@ -211,10 +211,10 @@ def render_bars(body):
                 rows.append((label.lstrip("*"), float(val), unit, hot))
             else:
                 note = x
-        mx = max(r[1] for r in rows)
+        mx = max(abs(r[1]) for r in rows) or 1  # マイナスの値は長さを絶対値で描き、色を変える
         bars = "".join(
-            f'<div class="bar-row{" hot" if h else ""}"><span class="bar-label">{e(l)}</span><span class="bar-track">'
-            f'<span class="bar-fill" style="width:{v / mx * 100:.1f}%"></span></span>'
+            f'<div class="bar-row{" hot" if h else ""}{" neg" if v < 0 else ""}"><span class="bar-label">{e(l)}</span><span class="bar-track">'
+            f'<span class="bar-fill" style="width:{abs(v) / mx * 100:.1f}%"></span></span>'
             f'<span class="bar-val">{v:,g}{e(u)}</span></div>' for l, v, u, h in rows)
         return (f'<figure class="bars"><figcaption>{e(title)}</figcaption>{bars}'
                 + (f'<p class="bar-note">{e(note)}</p>' if note else "") + '</figure>')
@@ -902,13 +902,17 @@ def numbers_html(by_slug, rel):
     f = SRC / "numbers.json"
     if not f.exists():
         return ""
+    nums = [n for n in json.loads(f.read_text(encoding="utf-8")) if n["article"] in by_slug]
+    # 更新日：数字の根拠になっている記事のうち、いちばん新しい日付
+    upd = max((by_slug[n["article"]]["date"] for n in nums), default="")
+    upd_html = (f'<span class="numbers-upd">{int(upd[5:7])}月{int(upd[8:10])}日更新</span>' if upd else "")
     items = "".join(
         f'<li><a href="{rel}articles/{n["article"]}.html"><span class="nl">{e(n["label"])}</span>'
         f'<b class="nv">{e(n["value"])}'
         + (f'<span class="nt nt-{n["trend"]}" title="{e(n.get("trend_note", ""))}">{ {"up": "▲", "down": "▼", "flat": "→"}[n["trend"]] }</span>' if n.get("trend") else "")
         + f'</b><span class="nn">{e(n["note"])}</span></a></li>'
-        for n in json.loads(f.read_text(encoding="utf-8")) if n["article"] in by_slug)
-    return f'<section class="numbers" aria-label="数字で見るいま"><p class="numbers-h"><span>数字で</span><span>見るいま</span></p><ul>{items}</ul></section>'
+        for n in nums)
+    return f'<section class="numbers" aria-label="数字で見るいま"><p class="numbers-h"><span>数字で</span><span>見るいま</span>{upd_html}</p><ul>{items}</ul></section>'
 
 
 # ---------- トップ ----------

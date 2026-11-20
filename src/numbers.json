@@ -1,25 +1,25 @@
 [
   {
     "label": "日経平均",
-    "value": "6万1,142円",
-    "note": "11月13日終値・322円高（反発）",
-    "article": "2026-11-14-week-gdp-nvidia",
+    "value": "5万9,444円",
+    "note": "11月19日終値・419円高（続伸）",
+    "article": "2026-11-20-cpi-october",
     "trend": "up",
-    "trend_note": "反発"
+    "trend_note": "続伸"
   },
   {
     "label": "ドル円",
-    "value": "159.71円",
-    "note": "11月13日・ニューヨークの終値（一時160円台）",
-    "article": "2026-11-14-week-gdp-nvidia",
-    "trend": "down",
-    "trend_note": "小幅に円高方向"
+    "value": "159.61円",
+    "note": "11月19日・ニューヨーク（一時159.97円）",
+    "article": "2026-11-20-cpi-october"
   },
   {
-    "label": "ガソリン（全国平均）",
-    "value": "170.2円",
-    "note": "10月19日時点・1リットル",
-    "article": "2026-11-04-gasoline-subsidy"
+    "label": "消費者物価（生鮮除く）",
+    "value": "+2.2%",
+    "note": "10月・前年同月比（9月は2.1%）",
+    "article": "2026-11-20-cpi-october",
+    "trend": "up",
+    "trend_note": "伸びが拡大"
   },
   {
     "label": "日銀の政策金利",
