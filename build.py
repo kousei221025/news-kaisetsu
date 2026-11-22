@@ -843,6 +843,11 @@ def build_article(a, all_arts, by_slug, backlinks):
     nxt = same[(i + 1) % len(same)] if len(same) > 1 else None
     next_card = (f'<a class="next-card" href="{nxt["slug"]}.html"><span class="nc-label">次に読む</span>{thumb(nxt, rel, "mini-thumb")}'
                  f'<div>{tag(nxt["category"])}<h3>{et(nxt["title"])}</h3>{impact(nxt)}</div><span class="nc-arrow" aria-hidden="true">›</span></a>') if nxt else ""
+    genre5 = sorted([x for x in all_arts if x["category"] == a["category"] and x["slug"] != a["slug"]],
+                    key=lambda x: (x["date"], x.get("rank", 0)), reverse=True)[:5]  # 同じジャンルの新着5本（新着順）
+    genre_new = (f'<section class="genre-new"><h2>{CATS[a["category"]]}の新着5本</h2><ol>'
+                 + "".join(f'<li><a href="{x["slug"]}.html">{et(x["title"])}</a><time datetime="{x["date"]}">{md_date(x["date"])}</time></li>' for x in genre5)
+                 + f'</ol><a class="more" href="{rel}category/{a["category"]}.html">{CATS[a["category"]]}の記事をもっと見る ›</a></section>') if genre5 else ""
     n_src = len(a.get("sources", []))
     src_count = f'<a class="src-count" href="#sources">出典{n_src}件で確認</a>' if n_src else ""
     toc_side = f'<h2 class="side-title">この記事の目次</h2><ol class="toc-list">{toc}</ol>'
@@ -874,6 +879,7 @@ def build_article(a, all_arts, by_slug, backlinks):
     <div><p class="author-name">この記事を書いた人：{AUTHOR}（会社員）</p>
     <p>ニュースを「自分の生活にどう関係するか」の目線で解説しています。記事はAIの補助を受けて作成し、出典で内容を確かめています。<a href="{rel}about.html#policy">このサイトの5つの約束 ›</a></p></div></div>
 <div class="ask-box"><p><b>この記事、分かりやすかったですか？</b>分かりにくかった言葉や、もっと知りたいことがあれば教えてください。次の記事や基礎解説づくりの参考にします。</p><a href="https://docs.google.com/forms/d/e/1FAIpQLSdu8msfvuKb1s2RHIGpLfftHXKe3P_dkvoz3MX5pVMIugq-OA/viewform" target="_blank" rel="noopener">意見を送る（1分）›</a></div>
+{genre_new}
 {next_card}
 </article>
 </div>

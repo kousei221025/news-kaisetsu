@@ -849,3 +849,17 @@ footer.site li { margin-bottom: 6px; }
 @media print { .fu-badge { color: #000; background: none; border: 1px solid #000; } }
 
 time.rel { font-weight: 700; }
+
+/* 記事末尾：同じジャンルの新着5本（2026-11-23） */
+.genre-new { margin: 28px 0 0; padding: 18px 20px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--card); }
+.genre-new h2 { font-size: 17px; margin: 0 0 8px; padding: 0; border: 0; }
+.genre-new ol { list-style: none; counter-reset: gn; margin: 0; padding: 0; }
+.genre-new li { counter-increment: gn; display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 10px; align-items: baseline; padding: 9px 0; border-top: 1px solid var(--line); }
+.genre-new li:first-child { border-top: 0; }
+.genre-new li::before { content: counter(gn); font-weight: 700; font-size: 18px; color: var(--accent); text-align: center; }
+.genre-new li a { color: var(--text); text-decoration: none; font-weight: 700; font-size: 15px; line-height: 1.55; }
+.genre-new li a:hover { color: var(--accent); text-decoration: underline; }
+.genre-new time { font-size: 13px; color: var(--sub); white-space: nowrap; }
+.genre-new .more { display: inline-block; margin-top: 8px; font-size: 14px; color: var(--accent); }
+@media (max-width: 760px) { .genre-new li { grid-template-columns: 24px minmax(0, 1fr); } .genre-new time { grid-column: 2; } }
+@media print { .genre-new { display: none; } }
