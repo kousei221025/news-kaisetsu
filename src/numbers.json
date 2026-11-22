@@ -1,17 +1,19 @@
 [
   {
     "label": "日経平均",
-    "value": "5万9,444円",
-    "note": "11月19日終値・419円高（続伸）",
-    "article": "2026-11-20-cpi-october",
-    "trend": "up",
-    "trend_note": "続伸"
+    "value": "5万6,437円",
+    "note": "11月20日終値・3,007円安（約7か月ぶりの5万6,000円台）",
+    "article": "2026-11-22-nikkei-3000-yasu",
+    "trend": "down",
+    "trend_note": "大幅反落"
   },
   {
     "label": "ドル円",
-    "value": "159.61円",
-    "note": "11月19日・ニューヨーク（一時159.97円）",
-    "article": "2026-11-20-cpi-october"
+    "value": "158.54円",
+    "note": "11月20日・ニューヨーク終値（19日は一時159.97円）",
+    "article": "2026-11-22-nikkei-3000-yasu",
+    "trend": "down",
+    "trend_note": "円高方向"
   },
   {
     "label": "消費者物価（生鮮除く）",
@@ -32,7 +34,7 @@
   {
     "label": "食料品の消費税",
     "value": "8%→1%案",
-    "note": "2027年4月から2年間・11月11日に参院で審議入り",
-    "article": "2026-11-12-shohizei-sangiin-shingi"
+    "note": "2027年4月から2年間・参院で審議中（11月20日に公明党が修正要求）",
+    "article": "2026-11-22-shohizei-komei-shusei"
   }
 ]

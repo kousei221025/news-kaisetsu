@@ -576,6 +576,10 @@ article.post[data-fs="l"] .summary .impact { font-size: 18px !important; }
 article.post { background: var(--card); border-radius: var(--radius); padding: 36px 48px 40px; box-shadow: var(--shadow); font-size: 17px; line-height: 1.95; }
 article.post h1 { font-size: 30px; line-height: 1.5; margin: 10px 0 18px; }
 .post-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.src-count { font-size: 12px; color: var(--sub); text-decoration: none; border: 1px solid var(--line); border-radius: 999px; padding: 1px 9px; white-space: nowrap; }
+.src-count::before { content: "✓ "; color: var(--accent); font-weight: 700; }
+.src-count:hover { color: var(--accent); border-color: var(--accent); }
+.sources { scroll-margin-top: 80px; }
 .post-thumb { width: 100%; height: auto; aspect-ratio: 16 / 5; object-fit: cover; object-position: left 60%; border-radius: 8px; margin: 0 0 22px; }
 article.post h2 { font-size: 21px; line-height: 1.5; margin: 44px 0 14px; padding: 0 0 8px; border-bottom: 2px solid var(--line); scroll-margin-top: 130px; }
 article.post h2::before { content: ""; display: inline-block; width: 6px; height: 20px; background: var(--accent); border-radius: 3px; margin-right: 10px; vertical-align: -3px; }

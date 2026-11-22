@@ -843,13 +843,15 @@ def build_article(a, all_arts, by_slug, backlinks):
     nxt = same[(i + 1) % len(same)] if len(same) > 1 else None
     next_card = (f'<a class="next-card" href="{nxt["slug"]}.html"><span class="nc-label">次に読む</span>{thumb(nxt, rel, "mini-thumb")}'
                  f'<div>{tag(nxt["category"])}<h3>{et(nxt["title"])}</h3>{impact(nxt)}</div><span class="nc-arrow" aria-hidden="true">›</span></a>') if nxt else ""
+    n_src = len(a.get("sources", []))
+    src_count = f'<a class="src-count" href="#sources">出典{n_src}件で確認</a>' if n_src else ""
     toc_side = f'<h2 class="side-title">この記事の目次</h2><ol class="toc-list">{toc}</ol>'
     content = f"""<div class="progress" aria-hidden="true"></div>
 <nav class="crumbs" aria-label="現在地"><a href="{rel}index.html">トップ</a> <span aria-hidden="true">›</span> <a href="{rel}category/{a["category"]}.html">{CATS[a["category"]]}</a></nav>
 <div class="layout">
 <div class="main-col">
 <article class="post">
-  <div class="post-meta">{tag(a["category"])} {meta_line(a)}</div>
+  <div class="post-meta">{tag(a["category"])} {meta_line(a)}{src_count}</div>
   <h1>{et(a["title"])}</h1>
   {updated}
   <div class="post-tools">
@@ -862,7 +864,7 @@ def build_article(a, all_arts, by_slug, backlinks):
   <details class="toc"><summary>この記事の目次</summary><ol>{toc}</ol></details>
   {body}
   {terms_box}
-  <div class="sources">
+  <div class="sources" id="sources">
     <b>この記事の出典（確認した情報）</b><ul>{srcs}</ul>
     <p class="note-ai">この記事はAIの補助を受けて作成し、上記の出典で内容を確認しています。{caution}誤りに気づいた方は<a href="{rel}about.html#contact">お問い合わせ</a>からお知らせください。</p>
   </div>
