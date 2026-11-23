@@ -1241,11 +1241,36 @@ def build_404(arts):
 
 
 # ---------- 固定ページ ----------
+def source_media_html(arts):
+    """出典の媒体名（題名末尾の（）内、「・」「／」「、」の前）を数えて一覧にする（about.html の <!--source-media--> に入る）"""
+    from collections import Counter
+    cnt, total = Counter(), 0
+    for a in arts:
+        for src in a.get("sources", []):
+            total += 1
+            m = re.findall(r"（([^（）]*)）\s*$", src[0])
+            if not m:
+                continue
+            name = re.split(r"[・／、]", m[-1])[0].strip()
+            name = re.sub(r"\s*(マネ育チャンネル|マーケットニュース|FX)$", "", name)
+            if name and not name.startswith("20"):
+                cnt[name] += 1
+    top = cnt.most_common(24)
+    rest = len(cnt) - len(top)
+    items = "".join(f'<li>{e(n)}<span>{c}件</span></li>' for n, c in top)
+    more = f'<p class="media-more">ほか{rest}媒体。' if rest > 0 else '<p class="media-more">'
+    return (f'<ul class="media-list">{items}</ul>{more}出典は合計{total}件（{len(arts)}本の記事）。'
+            f'件数は出典に挙げた回数で、記事を書くたびに自動で数え直しています。</p>')
+
+
 def build_pages(arts):
     for f in (SRC / "pages").glob("*.html"):
         text = f.read_text(encoding="utf-8")
         m = re.match(r"\s*<!--(.*?)-->(.*)", text, re.S)
         meta = json.loads(m.group(1))
+        if "<!--source-media-->" in text:
+            text = text.replace("<!--source-media-->", source_media_html(arts))
+            m = re.match(r"\s*<!--(.*?)-->(.*)", text, re.S)
         content = (f'<div class="layout page-layout"><div class="main-col"><article class="post">{m.group(2).strip()}</article></div>'
                    f'{sidebar(arts, "", home=True)}</div>')
         (ROOT / f.name).write_text(

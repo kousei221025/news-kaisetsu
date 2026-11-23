@@ -340,6 +340,10 @@ nav.cats .sep { width: 1px; height: 18px; background: rgba(255,255,255,.25); mar
 .promises { list-style: none; counter-reset: pr; padding: 0 !important; margin: 16px 0 28px; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
 .promises li { grid-column: span 2; }
 .promises li:nth-child(n+4) { grid-column: span 3; }
+.media-list { list-style: none; padding: 0 !important; margin: 12px 0 8px; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 6px 16px; }
+.media-list li { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 14px; margin: 0 !important; }
+.media-list li span { color: var(--sub); font-size: 12px; white-space: nowrap; }
+.media-more { font-size: 13px; color: var(--sub); }
 @media (max-width: 760px) { .promises { grid-template-columns: minmax(0, 1fr); } .promises li, .promises li:nth-child(n+4) { grid-column: auto; } }
 .promises li { counter-increment: pr; margin: 0 !important; padding: 16px 16px 14px; background: var(--accent-soft); border-radius: 8px; border-top: 4px solid var(--accent); }
 .promises b { display: block; font-size: 16px; line-height: 1.5; }
