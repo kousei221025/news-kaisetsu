@@ -162,6 +162,21 @@ nav.cats .sep { width: 1px; height: 18px; background: rgba(255,255,255,.25); mar
 .strip span { color: var(--sub); }
 .strip-date { white-space: nowrap; font-weight: 700; color: var(--accent); font-size: 13px !important; }
 
+/* 注目ワード（この1週間の記事のキーワード → 検索） */
+.kwords { display: flex; align-items: center; gap: 10px; margin: -10px 0 22px; }
+.kwords p { margin: 0; font-size: 13px; font-weight: 700; white-space: nowrap; display: flex; flex-direction: column; line-height: 1.3; }
+.kwords p small { font-size: 10px; font-weight: 400; color: var(--sub); }
+.kwords ul { list-style: none; margin: 0; padding: 2px 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.kwords a { display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; border-radius: 999px; background: var(--accent-soft); color: var(--accent-dark); font-size: 13px; font-weight: 700; text-decoration: none; line-height: 1.5; }
+.kwords a:hover { background: var(--accent); color: #fff; }
+.kwords a span { font-size: 11px; font-weight: 400; opacity: .75; }
+@media (max-width: 760px) {
+  .kwords { margin: -4px 0 18px; }
+  .kwords ul { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .kwords ul::-webkit-scrollbar { display: none; }
+  .kwords a { white-space: nowrap; }
+}
+
 .numbers { display: flex; align-items: stretch; gap: 0; margin: -8px 0 24px; background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
 .numbers-h { margin: 0; padding: 12px 16px; background: var(--text); color: var(--bg); font-size: 13px; font-weight: 700; writing-mode: horizontal-tb; display: flex; align-items: center; white-space: nowrap; }
 .numbers-upd { font-size: 10px; font-weight: 400; opacity: .8; margin-top: 2px; }

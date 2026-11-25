@@ -85,7 +85,7 @@ BASICS_GROUPS = [  # 基礎解説ページの分野（キーワードはスラ�
     ("給料・税金・制度", ["nenmatsu", "nenshu", "furusato", "ideco", "shunto", "gasoline-tax", "saitei", "kakutei", "keigen"]),
     ("投資・株", ["nisa", "nikkei"]),
     ("エネルギー", ["crude", "hormuz", "denki"]),
-    ("世界・アメリカ", ["us-", "congress"]),
+    ("世界・アメリカ", ["us-", "congress", "kanzei"]),
 ]
 
 TOPICS = {
@@ -923,6 +923,27 @@ def numbers_html(by_slug, rel):
     return f'<section class="numbers" aria-label="数字で見るいま"><p class="numbers-h"><span>数字で</span><span>見るいま</span>{upd_html}</p><ul>{items}</ul></section>'
 
 
+# ---------- 注目ワード（NHKニュースの「きょうの注目ワード」を参考） ----------
+def keywords_html(news, rel):
+    """直近7日のニュース記事の eyecatch を、多い順（同数なら新しい順）にチップで並べ、検索ページへつなぐ。"""
+    if not news:
+        return ""
+    last = date.fromisoformat(news[0]["date"])
+    cnt, newest = {}, {}
+    for a in news:
+        w = (a.get("eyecatch") or "").strip()
+        if not w or (last - date.fromisoformat(a["date"])).days > 6:
+            continue
+        cnt[w] = cnt.get(w, 0) + 1
+        newest[w] = max(newest.get(w, ""), a["date"])
+    words = sorted(cnt, key=lambda w: (cnt[w], newest[w]), reverse=True)[:8]
+    if len(words) < 3:
+        return ""
+    chips = "".join(f'<li><a href="{rel}search.html?q={quote(w)}">#{e(w)}'
+                    + (f'<span>{cnt[w]}</span>' if cnt[w] > 1 else "") + '</a></li>' for w in words)
+    return f'<nav class="kwords" aria-label="注目ワード"><p>注目ワード<small>この1週間</small></p><ul>{chips}</ul></nav>'
+
+
 # ---------- トップ ----------
 def build_index(arts):
     news = [a for a in arts if a["category"] != "basics"]
@@ -943,6 +964,7 @@ def build_index(arts):
                f'<b>{TOPICS[top_topic][0]}</b><span class="fd">{TOPICS[top_topic][1]}</span><span class="fc">{tcount[top_topic]}本の記事 ›</span>'
                f'<span class="fl">{"".join("<span>" + e(a["title"]) + "</span>" for a in [x for x in news if top_topic in topics_of(x)][:3])}</span></a>')
     body = f"""{numbers_html(by_slug, "")}
+{keywords_html(news, "")}
 <div class="layout">
 <div class="main-col">
   <section class="lead" aria-label="今日の注目記事">
