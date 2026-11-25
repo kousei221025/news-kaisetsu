@@ -1,19 +1,17 @@
 [
   {
     "label": "日経平均",
-    "value": "5万8,644円",
-    "note": "11月24日終値・2,207円高（3営業日ぶりの上昇）",
-    "article": "2026-11-25-us-kanzei-hikiage",
-    "trend": "up",
-    "trend_note": "大幅反発"
+    "value": "5万7,011円",
+    "note": "11月25日終値・1,633円安（24日は5万8,644円）",
+    "article": "2026-11-26-ustr-kanzei-an",
+    "trend": "down",
+    "trend_note": "大幅反落"
   },
   {
     "label": "ドル円",
     "value": "159円台",
-    "note": "11月24日NY・159円00銭〜35銭（20日は158.54円）",
-    "article": "2026-11-25-us-kanzei-hikiage",
-    "trend": "up",
-    "trend_note": "円安方向"
+    "note": "11月25日NY・米物価の発表後に159円20銭→40銭",
+    "article": "2026-11-26-us-pce-october"
   },
   {
     "label": "消費者物価（生鮮除く）",

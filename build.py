@@ -110,11 +110,22 @@ FAVICON = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox
 e = html.escape
 
 
+DEEP_TITLES = set()  # 「詳しく」ラベルを付ける記事の題名（main で決める）
+
+
+def is_deep(a):
+    """解説を深めた記事：ニュースで、棒グラフ2つ以上・流れ図1つ以上・用語メモ5つ以上"""
+    b = a["body"]
+    return (a["category"] != "basics" and b.count("<!--bars") >= 2
+            and b.count("<!--flow") >= 1 and len(a["terms"]) >= 5)
+
+
 def et(title):
-    """見出し用：先頭の【続報】を小さなバッジにして表示する"""
+    """見出し用：先頭の【続報】を小さなバッジにし、解説を深めた記事には「詳しく」を付ける"""
+    deep = '<span class="deep-badge">詳しく</span>' if title in DEEP_TITLES else ""
     if title.startswith("【続報】"):
-        return '<span class="fu-badge">続報</span>' + e(title[len("【続報】"):])
-    return e(title)
+        return '<span class="fu-badge">続報</span>' + deep + e(title[len("【続報】"):])
+    return deep + e(title)
 
 
 # ---------- 記事の読み込み ----------
@@ -1337,6 +1348,7 @@ def main():
     sys.stdout.reconfigure(encoding="utf-8")
     arts = load_articles()
     by_slug = {a["slug"]: a for a in arts}
+    DEEP_TITLES.update(a["title"] for a in arts if is_deep(a))
     for a in arts:
         for t in a["terms"]:
             if t not in by_slug:
