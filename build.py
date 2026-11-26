@@ -649,6 +649,23 @@ def timeline_box(a, arts, rel):
             f'<ol class="timeline">{lis}</ol><a class="more" href="{rel}topic/{key}.html">このテーマの記事をすべて見る ›</a></section>')
 
 
+def article_schedule(a):
+    """記事ページ用：この記事に関係するこれからの予定（schedule.json の article が一致するもの）。"""
+    f = SRC / "schedule.json"
+    if not f.exists():
+        return ""
+    today = date.today().isoformat()
+    items = [x for x in json.loads(f.read_text(encoding="utf-8")) if x["date"] >= today and x.get("article") == a["slug"]]
+    if not items:
+        return ""
+    wd = "月火水木金土日"
+    lis = "".join(
+        f'<li data-date="{x["date"]}"><span class="sc-d"><b>{md_date(x["date"])}</b>（{wd[date.fromisoformat(x["date"]).weekday()]}）{(" " + x["time"]) if x.get("time") else ""}</span>'
+        f'<span class="ps-label">{e(x["label"])}</span><small>{e(x["note"])}</small></li>' for x in items)
+    return (f'<section class="post-sched"><h2>この記事に関係する予定</h2><ol class="sc-list">{lis}</ol>'
+            f'<p class="ps-note">予定の日に動きがあれば、続報でお伝えします。</p></section>')
+
+
 def schedule_box(rel):
     """これからの予定（src/schedule.json。過ぎた予定は表示しない）。"""
     f = SRC / "schedule.json"
@@ -879,6 +896,7 @@ def build_article(a, all_arts, by_slug, backlinks):
   {summary_box}
   <details class="toc"><summary>この記事の目次</summary><ol>{toc}</ol></details>
   {body}
+  {article_schedule(a)}
   {terms_box}
   <div class="sources" id="sources">
     <b>この記事の出典（確認した情報）</b><ul>{srcs}</ul>

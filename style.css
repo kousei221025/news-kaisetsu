@@ -883,3 +883,10 @@ time.rel { font-weight: 700; }
 .genre-new .more { display: inline-block; margin-top: 8px; font-size: 14px; color: var(--accent); }
 @media (max-width: 760px) { .genre-new li { grid-template-columns: 24px minmax(0, 1fr); } .genre-new time { grid-column: 2; } }
 @media print { .genre-new { display: none; } }
+
+/* 記事ページ：この記事に関係する予定（2026-11-27） */
+.post-sched { margin: 28px 0 8px; padding: 16px 18px 10px; border: 1px solid var(--line); border-radius: 10px; }
+.post-sched h2 { font-size: 16px; margin: 0 0 12px; padding: 0; border: 0; }
+.post-sched h2::before { content: "📅 "; }
+.post-sched .ps-label { font-size: 14px; font-weight: 700; line-height: 1.5; }
+.post-sched .ps-note { font-size: 12px; color: var(--sub); margin: 4px 0 6px; }
