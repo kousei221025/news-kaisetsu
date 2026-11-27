@@ -629,6 +629,25 @@ def rank_list(arts, rel):
     )
 
 
+def thread_count(a, arts):
+    """記事の主なテーマと、その記事までに同じテーマで出たニュース記事の本数（この記事を含む）。"""
+    tps = topics_of(a)
+    if not tps:
+        return None, 0
+    key = max(tps, key=lambda k: sum(a["title"].count(w) for w in TOPICS[k][2]))
+    n = sum(1 for x in arts if x["category"] != "basics" and key in topics_of(x) and x["date"] <= a["date"])
+    return key, n
+
+
+def thread_badge(a, arts, rel):
+    """トップの注目記事用：「#テーマ この話題〇本目」（2本目以降だけ）。"""
+    key, n = thread_count(a, arts)
+    if n < 2:
+        return ""
+    return (f'<span class="thread-n">#{e(TOPICS[key][0])}'
+            f'<b>この話題{n}本目</b></span>')
+
+
 def timeline_box(a, arts, rel):
     """同じテーマの記事を古い順に並べた「これまでの流れ」。"""
     tps = topics_of(a)
@@ -1000,7 +1019,7 @@ def build_index(arts):
     <a class="lead-main" href="articles/{lead["slug"]}.html">
       {thumb(lead, "", "lead-thumb", lazy=False)}
       <div class="lead-body"><span class="label">今日の1本目</span>{tag(lead["category"])} {meta_line(lead)}
-        <h2>{et(lead["title"])}</h2><ul>{lead_sum}</ul>{impact(lead)}<span class="lead-go">この記事を読む（{reading_minutes(lead["body"])}分） ›</span></div>
+        <h2>{et(lead["title"])}</h2>{thread_badge(lead, news, "")}<ul>{lead_sum}</ul>{impact(lead)}<span class="lead-go">この記事を読む（{reading_minutes(lead["body"])}分） ›</span></div>
     </a>
     <div class="lead-right"><ul class="lead-side">{side_news}</ul>{also_html}</div>
   </section>

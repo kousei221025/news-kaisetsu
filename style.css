@@ -229,6 +229,8 @@ nav.cats .sep { width: 1px; height: 18px; background: rgba(255,255,255,.25); mar
 .lead-body { padding-top: 14px; }
 .lead-body .label { display: inline-block; font-size: 11px; font-weight: 700; color: #fff; background: #c8102e; padding: 0 8px; border-radius: 4px; margin-right: 6px; line-height: 1.7; }
 .lead-body h2 { font-size: 27px; line-height: 1.45; margin: 8px 0 10px; }
+.thread-n { display: inline-flex; align-items: center; gap: 6px; margin: 0 0 10px; padding: 3px 10px; border: 1px solid #c9d6e6; border-radius: 999px; background: #f2f6fb; color: #123a69; font-size: 12.5px; }
+.thread-n b { font-weight: 700; color: var(--accent); }
 .lead-main:hover h2 { color: var(--accent); }
 .lead-body ul { margin: 0; padding-left: 1.2em; color: var(--sub); font-size: 15px; }
 .lead-side { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
